@@ -97,7 +97,215 @@
     <!-- Footer -->
     <footer class="footer">
       <p>DebtPayoff Planner &copy; 2026 · 数据仅在本地处理，不会上传</p>
-    </footer>
+    <!-- Shared Monetization Component -->
+<div class="monetize-section" id="monetizeSection">
+  <div class="monetize-grid">
+    <!-- Ad Slot 1 -->
+    <div class="ad-slot">
+      <div class="ad-placeholder">
+        <span class="ad-label">广告位</span>
+        <span class="ad-text">您的广告在此展示 · 联系 hi@finkit.dev</span>
+      </div>
+    </div>
+
+    <!-- Support / Buy Me a Coffee -->
+    <div class="support-card">
+      <div class="support-header">
+        <span class="support-icon">☕</span>
+        <span class="support-title">支持我们</span>
+      </div>
+      <p class="support-desc">FinKit 完全免费开源。如果这些工具帮到了你，请我们喝杯咖啡 ☕</p>
+      <div class="support-actions">
+        <a href="https://www.buymeacoffee.com/finkit" target="_blank" rel="noopener" class="btn btn-coffee">
+          ☕ Buy Me a Coffee
+        </a>
+        <span class="support-or">或</span>
+        <a href="/pro" class="btn btn-pro-upgrade">
+          ⚡ 升级 Pro 版
+        </a>
+      </div>
+    </div>
+
+    <!-- Ad Slot 2 -->
+    <div class="ad-slot">
+      <div class="ad-placeholder">
+        <span class="ad-label">广告位</span>
+        <span class="ad-text">您的广告在此展示 · 联系 hi@finkit.dev</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pro Teaser -->
+  <div class="pro-teaser" id="proTeaser" style="display:none;">
+    <button class="pro-close" onclick="document.getElementById('proTeaser').style.display='none'">&times;</button>
+    <div class="pro-teaser-content">
+      <strong>⚡ FinKit Pro 即将推出</strong>
+      <ul>
+        <li>📊 多币种支持 & 实时汇率</li>
+        <li>☁️ 云端数据同步 & 多设备访问</li>
+        <li>📄 导出 PDF 专业报表</li>
+        <li>🔔 还款提醒邮件通知</li>
+        <li>🎨 自定义主题 & 品牌水印</li>
+      </ul>
+      <p class="pro-price">预售价 <em>¥9.9/月</em>（正式上线后 ¥19.9/月）</p>
+      <a href="/pro" class="btn btn-pro-cta">🔒 立即预留 Pro 名额</a>
+    </div>
+  </div>
+</div>
+
+<script>
+// Show Pro teaser after 30 seconds of engagement
+let proTimer = null;
+function resetProTimer() {
+  if (proTimer) clearTimeout(proTimer);
+  proTimer = setTimeout(() => {
+    const teaser = document.getElementById('proTeaser');
+    if (teaser && !sessionStorage.getItem('proTeaserDismissed')) {
+      teaser.style.display = 'block';
+    }
+  }, 30000);
+}
+document.addEventListener('click', resetProTimer);
+document.addEventListener('scroll', resetProTimer);
+resetProTimer();
+
+// Track engagement for AdSense optimization
+(function() {
+  var startTime = Date.now();
+  window.addEventListener('beforeunload', function() {
+    var duration = Math.round((Date.now() - startTime) / 1000);
+    // In production, send to analytics
+    console.log('[FinKit] Session: ' + duration + 's');
+  });
+})();
+</script>
+
+<style>
+.monetize-section {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border, #252d3a);
+}
+.monetize-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+@media (max-width: 800px) {
+  .monetize-grid { grid-template-columns: 1fr; }
+  .ad-slot { display: none; }
+}
+.ad-slot { min-height: 120px; }
+.ad-placeholder {
+  background: rgba(255,255,255,0.02);
+  border: 1px dashed var(--border, #252d3a);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+.ad-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted, #586585);
+  opacity: 0.5;
+}
+.ad-text {
+  font-size: 0.75rem;
+  color: var(--text-muted, #586585);
+  opacity: 0.4;
+}
+
+.support-card {
+  background: linear-gradient(135deg, rgba(74,127,206,0.06), rgba(58,158,176,0.06));
+  border: 1px solid rgba(74,127,206,0.15);
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+}
+.support-header { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px; }
+.support-icon { font-size: 1.2rem; }
+.support-title { font-weight: 600; font-size: 0.95rem; color: var(--text-primary, #e2e6f0); }
+.support-desc { font-size: 0.82rem; color: var(--text-secondary, #8896b4); margin-bottom: 14px; line-height: 1.5; }
+.support-actions { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.support-or { font-size: 0.8rem; color: var(--text-muted, #586585); }
+
+.btn-coffee {
+  background: #FF813F;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.15s;
+}
+.btn-coffee:hover { background: #e07030; }
+
+.btn-pro-upgrade {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: opacity 0.15s;
+}
+.btn-pro-upgrade:hover { opacity: 0.9; }
+
+/* Pro Teaser Modal */
+.pro-teaser {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  background: var(--bg-card, #181d2a);
+  border: 1px solid #6366f1;
+  border-radius: 14px;
+  padding: 0;
+  max-width: 340px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+  animation: slideUp 0.3s ease;
+}
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.pro-close {
+  position: absolute; top: 8px; right: 12px;
+  background: none; border: none; color: var(--text-muted, #586585);
+  font-size: 1.2rem; cursor: pointer; padding: 4px; line-height: 1;
+}
+.pro-teaser-content { padding: 20px; }
+.pro-teaser-content strong { display: block; font-size: 0.95rem; margin-bottom: 10px; color: var(--text-primary, #e2e6f0); }
+.pro-teaser-content ul { list-style: none; margin-bottom: 12px; }
+.pro-teaser-content li { font-size: 0.8rem; color: var(--text-secondary, #8896b4); padding: 3px 0; }
+.pro-price { font-size: 0.82rem; color: var(--text-secondary, #8896b4); text-align: center; margin-bottom: 12px; }
+.pro-price em { color: var(--accent-green-bright, #4ac878); font-style: normal; font-weight: 700; font-size: 1rem; }
+.btn-pro-cta {
+  display: block; text-align: center;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff; padding: 10px 20px; border-radius: 8px;
+  font-weight: 600; font-size: 0.85rem; text-decoration: none;
+}
+.btn-pro-cta:hover { opacity: 0.9; }
+
+@media (max-width: 600px) {
+  .pro-teaser { left: 16px; right: 16px; bottom: 16px; max-width: none; }
+}
+</style>
+
+</footer>
   </div>
 
   <script src="app.js"></script>
