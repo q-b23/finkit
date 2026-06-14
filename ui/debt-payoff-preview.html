@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debt Payoff Planner — FinKit</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-zinc-50 dark:bg-zinc-950">
+
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@19/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@19/umd/react-dom.development.js" crossorigin></script>
+<script type="text/babel">
+const { useState } = React;
+
+/* ── Icons ── */
+const PlusIcon = () => (
+  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+    <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+  </svg>
+);
+
+const TrashIcon = () => (
+  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+    <polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6" /><path d="M14 11v6" />
+  </svg>
+);
+
+const ChevronDown = () => (
+  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+    <polyline points="6 9 12 15 18 9" />
+  </svg>
+);
+
+const SnowflakeIcon = () => <span className="text-lg">❄️</span>;
+const MountainIcon = () => <span className="text-lg">🏔️</span>;
+
+/* ── Helpers ── */
+const fmt = (n) => {
+  if (Math.abs(n) >= 1_000_000) return '$' + (n / 1_000_000).toFixed(2) + 'M';
+  if (Math.abs(n) >= 1_000) return '$' + (n / 1_000).toFixed(1) + 'K';
+  return '$' + n.toLocaleString('en-US', { maximumFractionDigits: 0 });
+};
+
+/* ── Simulation Engine ── */
+function simulate(debts, extra, sortFn) {
+  let list = debts.map(d => ({ ...d, balance: d.balance, rate: d.rate / 100 }));
+  let month = 0, totalInterest = 0;
+  const timeline = [];
+  const milestones = [];
+  const paid = new Set();
+
+  while (list.some(d => d.balance > 0.01) && month < 600) {
+    month++;
+    let remaining = extra;
+    for (const d of [...list].sort(sortFn)) {
+      if (d.balance <= 0.01) continue;
+      const interest = d.balance * d.rate / 12;
+      totalInterest += interest;
+      d.balance += interest;
+      let payment = Math.min(d.minPayment, d.balance);
+      const extraPay = remaining > 0 ? Math.min(remaining, d.balance - payment) : 0;
+      payment += extraPay;
+      remaining -= extraPay;
+      d.balance = Math.max(0, d.balance - payment);
+      timeline.push({ month, name: d.name, payment: +payment.toFixed(2), interest: +interest.toFixed(2), remaining: +d.balance.toFixed(2) });
+      if (d.balance <= 0.01 && !paid.has(d.id)) {
+        paid.add(d.id);
+        milestones.push({ name: d.name, month });
+      }
+    }
+    list = list.filter(d => d.balance > 0.01);
+  }
+  return { months: month, totalInterest: +totalInterest.toFixed(2), timeline, milestones };
+}
+
+/* ── Debt Row ── */
+function DebtRow({ debt, onChange, onRemove, index }) {
+  return (
+    <div className="group relative rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+      <button
+        onClick={() => onRemove(debt.id)}
+        className="absolute right-3 top-3 rounded-md p-1.5 text-zinc-300 opacity-0 transition-all hover:bg-red-50 hover:text-red-500 group-hover:opacity-100 dark:text-zinc-600 dark:hover:bg-red-950 dark:hover:text-red-400"
+        title="Remove debt"
+      >
+        <TrashIcon />
+      </button>
+
+      <div className="mb-3">
+        <input
+          type="text"
+          value={debt.name}
+          onChange={(e) => onChange(debt.id, "name", e.target.value)}
+          placeholder={`Debt ${index + 1}`}
+          className="w-full border-0 bg-transparent text-sm font-semibold text-zinc-900 outline-none placeholder:text-zinc-300 dark:text-zinc-100 dark:placeholder:text-zinc-600"
+        />
+      </div>
+
+      <div className="grid grid-cols-3 gap-3">
+        {[
+          { key: "balance", label: "Balance", prefix: "$", placeholder: "5,000" },
+          { key: "rate", label: "APR", prefix: "%", placeholder: "18.9" },
+          { key: "minPayment", label: "Min Payment", prefix: "$", placeholder: "150" },
+        ].map((f) => (
+          <div key={f.key}>
+            <label className="mb-1 block text-xs font-medium text-zinc-400 dark:text-zinc-500">{f.label}</label>
+            <div className="flex items-center rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 focus-within:border-zinc-400 focus-within:ring-1 focus-within:ring-zinc-200 dark:border-zinc-700 dark:bg-zinc-800 dark:focus-within:border-zinc-500 dark:focus-within:ring-zinc-700">
+              <span className="mr-1 text-sm text-zinc-400 dark:text-zinc-500">{f.prefix}</span>
+              <input
+                type="number"
+                value={debt[f.key] || ""}
+                onChange={(e) => onChange(debt.id, f.key, e.target.value)}
+                placeholder={f.placeholder}
+                min="0"
+                step={f.key === "rate" ? "0.1" : "100"}
+                className="w-full border-0 bg-transparent text-sm text-zinc-900 outline-none placeholder:text-zinc-300 dark:text-zinc-100 dark:placeholder:text-zinc-600 [&::-webkit-inner-spin-button]:opacity-100"
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── Strategy Card ── */
+function StrategyCard({ name, icon, data, isWinner, savings, totalPrincipal }) {
+  return (
+    <div className={`relative rounded-2xl border p-6 shadow-sm transition-all ${isWinner ? 'border-emerald-200 bg-emerald-50/30 dark:border-emerald-800 dark:bg-emerald-950/20' : 'border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900'}`}>
+      {isWinner && (
+        <span className="absolute -top-2.5 right-4 rounded-full bg-emerald-500 px-3 py-0.5 text-xs font-semibold text-white">Best</span>
+      )}
+      <div className="mb-1 flex items-center gap-2">{icon}<h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">{name}</h3></div>
+      <p className="mb-4 text-xs text-zinc-400 dark:text-zinc-500">{name === "Snowball" ? "Smallest balance first" : "Highest APR first"}</p>
+
+      <div className="grid grid-cols-2 gap-4">
+        {[
+          { value: `${data.months} mo`, label: "Time to Payoff" },
+          { value: fmt(data.totalInterest), label: "Total Interest" },
+          { value: fmt(totalPrincipal + data.totalInterest), label: "Total Paid" },
+          { value: isWinner ? `-${fmt(savings)}` : `+${fmt(savings)}`, label: isWinner ? "You Save" : "Extra Cost" },
+        ].map((s) => (
+          <div key={s.label}>
+            <p className={`text-lg font-semibold tracking-tight ${isWinner ? 'text-emerald-600 dark:text-emerald-400' : 'text-zinc-900 dark:text-zinc-100'}`}>{s.value}</p>
+            <p className="text-xs text-zinc-400 dark:text-zinc-500">{s.label}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── Milestone Row ── */
+function Milestone({ name, month, rank, maxMonths }) {
+  const pct = (month / maxMonths) * 100;
+  return (
+    <div className="flex items-center gap-3 py-2">
+      <span className="w-6 text-center text-xs font-semibold text-zinc-400 dark:text-zinc-500">#{rank}</span>
+      <span className="w-32 truncate text-sm font-medium text-zinc-700 dark:text-zinc-300">{name}</span>
+      <span className="text-xs text-zinc-400 dark:text-zinc-500">Month {month}</span>
+      <div className="ml-auto h-1.5 flex-1 max-w-[120px] overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
+        <div className="h-full rounded-full bg-emerald-400 transition-all" style={{ width: `${pct}%` }} />
+      </div>
+    </div>
+  );
+}
+
+/* ── Main App ── */
+function App() {
+  const [dark, setDark] = useState(true);
+  const [debts, setDebts] = useState([
+    { id: 1, name: "Credit Card A", balance: 5000, rate: 24.9, minPayment: 150 },
+    { id: 2, name: "Auto Loan", balance: 18000, rate: 6.5, minPayment: 380 },
+    { id: 3, name: "Student Loan", balance: 32000, rate: 4.8, minPayment: 350 },
+  ]);
+  const [extra, setExtra] = useState(500);
+  const [result, setResult] = useState(null);
+  const [tab, setTab] = useState("snowball");
+
+  const nextId = () => Math.max(0, ...debts.map(d => d.id)) + 1;
+
+  const addDebt = () => setDebts([...debts, { id: nextId(), name: "", balance: 0, rate: 0, minPayment: 0 }]);
+
+  const removeDebt = (id) => setDebts(debts.filter(d => d.id !== id));
+
+  const updateDebt = (id, field, value) => {
+    setDebts(debts.map(d => d.id === id ? { ...d, [field]: field === "name" ? value : parseFloat(value) || 0 } : d));
+  };
+
+  const calculate = () => {
+    const valid = debts.filter(d => d.balance > 0 && d.minPayment > 0);
+    if (valid.length === 0) return;
+    const snow = simulate(valid, extra, (a, b) => a.balance - b.balance);
+    const ava = simulate(valid, extra, (a, b) => b.rate - a.rate);
+    const principal = valid.reduce((s, d) => s + d.balance, 0);
+    const snowTotal = principal + snow.totalInterest;
+    const avaTotal = principal + ava.totalInterest;
+    setResult({
+      snowball: { ...snow, totalPaid: +snowTotal.toFixed(2) },
+      avalanche: { ...ava, totalPaid: +avaTotal.toFixed(2) },
+      totalPrincipal: principal,
+      savings: Math.abs(snowTotal - avaTotal),
+      winner: snowTotal <= avaTotal ? "snowball" : "avalanche",
+    });
+  };
+
+  const totalDebt = debts.reduce((s, d) => s + (d.balance || 0), 0);
+  const totalMin = debts.reduce((s, d) => s + (d.minPayment || 0), 0);
+  const avgAPR = totalDebt > 0 ? debts.reduce((s, d) => s + (d.balance || 0) * (d.rate || 0), 0) / totalDebt : 0;
+
+  return (
+    <div className={dark ? "dark" : ""}>
+      <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 transition-colors">
+
+        {/* Navbar */}
+        <nav className="flex items-center justify-between border-b border-zinc-200 bg-white px-6 py-3 dark:border-zinc-800 dark:bg-zinc-950">
+          <div className="flex items-center gap-3">
+            <a href="#" className="text-sm text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300">← Tools</a>
+            <span className="text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">Debt Payoff Planner</span>
+          </div>
+          <button
+            onClick={() => setDark(!dark)}
+            className="rounded-full border border-zinc-200 px-3 py-1 text-xs font-medium text-zinc-500 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-700"
+          >
+            {dark ? "☀️" : "🌙"}
+          </button>
+        </nav>
+
+        {/* Layout */}
+        <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+          <div className="grid gap-8 lg:grid-cols-[400px_1fr]">
+
+            {/* LEFT — Input Panel */}
+            <div className="space-y-5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">Your Debts</h2>
+                  <p className="text-xs text-zinc-400 dark:text-zinc-500">Add each debt you want to pay off.</p>
+                </div>
+                <button onClick={addDebt} className="flex items-center gap-1.5 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-xs font-medium text-zinc-600 shadow-sm transition-all hover:border-zinc-400 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:border-zinc-600 dark:hover:bg-zinc-700">
+                  <PlusIcon /> Add Debt
+                </button>
+              </div>
+
+              {/* Debt Cards */}
+              <div className="max-h-[420px] space-y-3 overflow-y-auto pr-1">
+                {debts.map((d, i) => (
+                  <DebtRow key={d.id} debt={d} index={i} onChange={updateDebt} onRemove={removeDebt} />
+                ))}
+                {debts.length === 0 && (
+                  <p className="py-12 text-center text-sm text-zinc-400 dark:text-zinc-500">Click &ldquo;Add Debt&rdquo; to get started.</p>
+                )}
+              </div>
+
+              {/* Summary */}
+              {totalDebt > 0 && (
+                <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
+                  <div className="flex justify-between py-1 text-sm"><span className="text-zinc-500 dark:text-zinc-400">Total Debt</span><span className="font-semibold text-zinc-900 dark:text-zinc-100">{fmt(totalDebt)}</span></div>
+                  <div className="flex justify-between border-t border-zinc-100 py-1 text-sm dark:border-zinc-800"><span className="text-zinc-500 dark:text-zinc-400">Total Min Payments</span><span className="font-medium text-zinc-700 dark:text-zinc-300">{fmt(totalMin)}/mo</span></div>
+                  <div className="flex justify-between border-t border-zinc-100 py-1 text-sm dark:border-zinc-800"><span className="text-zinc-500 dark:text-zinc-400">Avg APR</span><span className="font-medium text-zinc-700 dark:text-zinc-300">{avgAPR.toFixed(1)}%</span></div>
+                </div>
+              )}
+
+              {/* Extra Payment */}
+              <div>
+                <label className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300">Extra Monthly Budget</label>
+                <div className="flex items-center rounded-lg border border-zinc-200 bg-white px-3 py-2.5 focus-within:border-zinc-400 focus-within:ring-1 focus-within:ring-zinc-200 dark:border-zinc-700 dark:bg-zinc-800 dark:focus-within:border-zinc-500">
+                  <span className="mr-1 text-sm text-zinc-400">$</span>
+                  <input type="number" value={extra} onChange={(e) => setExtra(parseFloat(e.target.value) || 0)} min="0" step="50" className="w-full border-0 bg-transparent text-sm text-zinc-900 outline-none dark:text-zinc-100 [&::-webkit-inner-spin-button]:opacity-100" />
+                </div>
+                <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">Applied on top of minimum payments.</p>
+              </div>
+
+              {/* CTA */}
+              <button
+                onClick={calculate}
+                disabled={!debts.some(d => d.balance > 0 && d.minPayment > 0)}
+                className="w-full rounded-xl bg-zinc-900 px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+              >
+                Compare Strategies
+              </button>
+            </div>
+
+            {/* RIGHT — Results */}
+            <div>
+              {!result ? (
+                <div className="flex h-full min-h-[400px] items-center justify-center rounded-2xl border border-dashed border-zinc-200 p-12 dark:border-zinc-800">
+                  <p className="text-center text-sm text-zinc-400 dark:text-zinc-500">
+                    Add your debts and click<br /><strong className="text-zinc-500 dark:text-zinc-400">Compare Strategies</strong> to see results.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {/* Strategy Cards */}
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <StrategyCard name="Snowball" icon={<SnowflakeIcon />} data={result.snowball} isWinner={result.winner === "snowball"} savings={result.savings} totalPrincipal={result.totalPrincipal} />
+                    <StrategyCard name="Avalanche" icon={<MountainIcon />} data={result.avalanche} isWinner={result.winner === "avalanche"} savings={result.savings} totalPrincipal={result.totalPrincipal} />
+                  </div>
+
+                  {/* Winner Callout */}
+                  {result.savings > 0 && (
+                    <div className="rounded-xl border border-emerald-200 bg-emerald-50/50 px-5 py-3 dark:border-emerald-800 dark:bg-emerald-950/20">
+                      <p className="text-sm text-emerald-700 dark:text-emerald-300">
+                        <strong>{result.winner === "avalanche" ? "Avalanche" : "Snowball"}</strong> saves you <strong>{fmt(result.savings)}</strong> in total interest.
+                        {result.winner === "avalanche" ? " Snowball gives quicker psychological wins if you need motivation." : ""}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Milestones */}
+                  <div className="rounded-2xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
+                    <div className="mb-3 flex items-center gap-2">
+                      <h3 className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Payoff Milestones</h3>
+                      <div className="flex rounded-lg border border-zinc-200 bg-zinc-50 p-0.5 dark:border-zinc-700 dark:bg-zinc-800">
+                        {["snowball", "avalanche"].map((m) => (
+                          <button key={m} onClick={() => setTab(m)} className={`rounded-md px-3 py-1 text-xs font-medium transition-all ${tab === m ? 'bg-white text-zinc-900 shadow-sm dark:bg-zinc-700 dark:text-zinc-100' : 'text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300'}`}>{m === "snowball" ? "Snowball" : "Avalanche"}</button>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
+                      {result[tab].milestones.sort((a, b) => a.month - b.month).map((m, i) => (
+                        <Milestone key={m.name} name={m.name} month={m.month} rank={i + 1} maxMonths={result[tab].months} />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Footer */}
+          <p className="mt-12 text-center text-xs text-zinc-400 dark:text-zinc-500">
+            All calculations happen locally in your browser. We never store or share your financial data.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+
+
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+</body>
+</html>
