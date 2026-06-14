@@ -97,3 +97,21 @@ Maker here. I built FinKit because I was tired of financial apps that require ac
 | 🥉 | ProductHunt | 周三 0:00 PST | 国际曝光 |
 | 4 | 知乎 | 回答「如何高效还债」类问题 | SEO 长尾 |
 | 5 | Reddit r/personalfinance | 周末 | 海外用户 |
+
+---
+
+## 备选渠道（无需邀请码）
+
+### 掘金 juejin.cn
+免费注册，直接发到「程序员」或「前端」分类。文案同 V2EX，标题改为：
+「开源了一套纯前端理财工具：债务规划 / 贷款对比 / FIRE计算（零依赖，数据不上传）」
+
+### 知乎
+回答以下问题时植入工具链接：
+- 「有哪些好用的个人理财工具？」
+- 「信用卡负债太高怎么还？」
+- 「如何计算自己的 FIRE 财务自由目标？」
+
+### Hacker News
+免费注册，标题：`Show HN: FinKit — Free open-source personal finance toolkit`
+文案见 awesome-submissions.md
