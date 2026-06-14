@@ -1,84 +1,71 @@
-<!-- Shared Monetization Component -->
-<div class="monetize-section" id="monetizeSection">
-  <div class="monetize-grid">
-    <!-- Ad Slot 1 -->
-    <div class="ad-slot">
-      <div class="ad-placeholder">
-        <span class="ad-label">广告位</span>
-        <span class="ad-text">您的广告在此展示 · 联系 hi@finkit.dev</span>
+<!-- Monetization v2: No AdSense, all direct revenue -->
+<div class="monetize-section">
+  <!-- Primary CTA: Support -->
+  <div class="support-banner">
+    <div class="support-banner-left">
+      <span class="support-emoji">☕</span>
+      <div>
+        <strong>喜欢 FinKit？请我们喝杯咖啡</strong>
+        <p>这些工具永远免费开源。你的支持让我们能持续改进和开发新功能。</p>
       </div>
     </div>
-
-    <!-- Support / Buy Me a Coffee -->
-    <div class="support-card">
-      <div class="support-header">
-        <span class="support-icon">☕</span>
-        <span class="support-title">支持我们</span>
-      </div>
-      <p class="support-desc">FinKit 完全免费开源。如果这些工具帮到了你，请我们喝杯咖啡 ☕</p>
-      <div class="support-actions">
-        <a href="https://www.buymeacoffee.com/finkit" target="_blank" rel="noopener" class="btn btn-coffee">
-          ☕ Buy Me a Coffee
-        </a>
-        <span class="support-or">或</span>
-        <a href="/pro" class="btn btn-pro-upgrade">
-          ⚡ 升级 Pro 版
-        </a>
-      </div>
-    </div>
-
-    <!-- Ad Slot 2 -->
-    <div class="ad-slot">
-      <div class="ad-placeholder">
-        <span class="ad-label">广告位</span>
-        <span class="ad-text">您的广告在此展示 · 联系 hi@finkit.dev</span>
-      </div>
+    <div class="support-banner-right">
+      <a href="https://www.buymeacoffee.com/finkit" target="_blank" rel="noopener" class="btn-coffee-lg">☕ Buy Me a Coffee</a>
+      <span class="or-divider">或</span>
+      <a href="https://ko-fi.com/finkit" target="_blank" rel="noopener" class="btn-kofi">❤️ Ko-fi</a>
     </div>
   </div>
 
-  <!-- Pro Teaser -->
-  <div class="pro-teaser" id="proTeaser" style="display:none;">
-    <button class="pro-close" onclick="document.getElementById('proTeaser').style.display='none'">&times;</button>
-    <div class="pro-teaser-content">
-      <strong>⚡ FinKit Pro 即将推出</strong>
+  <!-- Revenue Row: Pro + Affiliate -->
+  <div class="revenue-row">
+    <!-- Pro Subscription -->
+    <div class="revenue-card pro-card">
+      <div class="revenue-badge">🔥 热门</div>
+      <h4>FinKit Pro</h4>
+      <p class="revenue-price"><em>¥9.9</em>/月</p>
       <ul>
-        <li>📊 多币种支持 & 实时汇率</li>
-        <li>☁️ 云端数据同步 & 多设备访问</li>
-        <li>📄 导出 PDF 专业报表</li>
-        <li>🔔 还款提醒邮件通知</li>
-        <li>🎨 自定义主题 & 品牌水印</li>
+        <li>☁️ 云端同步 & 多设备</li>
+        <li>📊 多币种 & 实时汇率</li>
+        <li>📄 PDF 专业报表导出</li>
+        <li>🔔 还款提醒通知</li>
+        <li>🎨 自定义主题</li>
       </ul>
-      <p class="pro-price">预售价 <em>¥9.9/月</em>（正式上线后 ¥19.9/月）</p>
-      <a href="/pro" class="btn btn-pro-cta">🔒 立即预留 Pro 名额</a>
+      <a href="mailto:hi@finkit.dev?subject=FinKit Pro 订阅" class="btn-pro-buy">⚡ 立即订阅</a>
     </div>
+
+    <!-- Direct Consulting -->
+    <div class="revenue-card consult-card">
+      <h4>理财规划咨询</h4>
+      <p class="revenue-desc">需要个性化的还债方案或 FIRE 规划？预约一对一咨询。</p>
+      <p class="revenue-price"><em>¥299</em>/次</p>
+      <a href="mailto:hi@finkit.dev?subject=理财规划咨询" class="btn-consult">📅 预约咨询</a>
+    </div>
+
+    <!-- Sponsor Slot -->
+    <div class="revenue-card sponsor-card">
+      <h4>赞助 & 广告合作</h4>
+      <p class="revenue-desc">将你的理财产品、信用卡或平台展示给精准的理财用户群体。</p>
+      <p class="revenue-price"><em>¥500</em>起/月</p>
+      <a href="mailto:hi@finkit.dev?subject=广告合作" class="btn-sponsor">🤝 合作咨询</a>
+    </div>
+  </div>
+
+  <!-- Urgency CTA -->
+  <div class="urgency-banner" id="urgencyBanner">
+    <button class="urgency-close" onclick="document.getElementById('urgencyBanner').style.display='none';sessionStorage.setItem('urgencyDismissed','1')">&times;</button>
+    <span>⚡ Pro 预售价 ¥9.9/月 — 正式上线后恢复 ¥19.9/月</span>
+    <a href="mailto:hi@finkit.dev?subject=FinKit Pro 预约" class="btn-urgency">锁定优惠</a>
   </div>
 </div>
 
 <script>
-// Show Pro teaser after 30 seconds of engagement
-let proTimer = null;
-function resetProTimer() {
-  if (proTimer) clearTimeout(proTimer);
-  proTimer = setTimeout(() => {
-    const teaser = document.getElementById('proTeaser');
-    if (teaser && !sessionStorage.getItem('proTeaserDismissed')) {
-      teaser.style.display = 'block';
-    }
-  }, 30000);
-}
-document.addEventListener('click', resetProTimer);
-document.addEventListener('scroll', resetProTimer);
-resetProTimer();
-
-// Track engagement for AdSense optimization
-(function() {
-  var startTime = Date.now();
-  window.addEventListener('beforeunload', function() {
-    var duration = Math.round((Date.now() - startTime) / 1000);
-    // In production, send to analytics
-    console.log('[FinKit] Session: ' + duration + 's');
-  });
-})();
+// Show urgency banner after 20 seconds
+setTimeout(function() {
+  var banner = document.getElementById('urgencyBanner');
+  if (banner && !sessionStorage.getItem('urgencyDismissed')) {
+    banner.style.display = 'flex';
+  }
+}, 20000);
 </script>
 
 <style>
@@ -87,121 +74,100 @@ resetProTimer();
   padding-top: 24px;
   border-top: 1px solid var(--border, #252d3a);
 }
-.monetize-grid {
+
+/* Support Banner */
+.support-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  background: linear-gradient(135deg, rgba(255,129,63,0.08), rgba(255,129,63,0.02));
+  border: 1px solid rgba(255,129,63,0.2);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+}
+.support-banner-left { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 200px; }
+.support-emoji { font-size: 2rem; }
+.support-banner-left strong { font-size: 0.95rem; color: var(--text-primary, #e6e9ef); display: block; margin-bottom: 2px; }
+.support-banner-left p { font-size: 0.8rem; color: var(--text-secondary, #8a94a6); margin: 0; }
+.support-banner-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; flex-shrink: 0; }
+.btn-coffee-lg {
+  background: #FF813F; color: #fff; padding: 12px 24px; border-radius: 8px;
+  font-weight: 600; font-size: 0.9rem; text-decoration: none; white-space: nowrap;
+}
+.btn-coffee-lg:hover { background: #e07030; }
+.btn-kofi {
+  background: #29abe0; color: #fff; padding: 12px 24px; border-radius: 8px;
+  font-weight: 600; font-size: 0.9rem; text-decoration: none; white-space: nowrap;
+}
+.btn-kofi:hover { background: #1e8ab8; }
+.or-divider { color: var(--text-muted, #586585); font-size: 0.8rem; }
+
+/* Revenue Row */
+.revenue-row {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
   margin-bottom: 20px;
 }
-@media (max-width: 800px) {
-  .monetize-grid { grid-template-columns: 1fr; }
-  .ad-slot { display: none; }
-}
-.ad-slot { min-height: 120px; }
-.ad-placeholder {
-  background: rgba(255,255,255,0.02);
-  border: 1px dashed var(--border, #252d3a);
-  border-radius: 8px;
-  padding: 20px;
-  text-align: center;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 8px;
-}
-.ad-label {
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--text-muted, #586585);
-  opacity: 0.5;
-}
-.ad-text {
-  font-size: 0.75rem;
-  color: var(--text-muted, #586585);
-  opacity: 0.4;
-}
+@media (max-width: 800px) { .revenue-row { grid-template-columns: 1fr; } }
 
-.support-card {
-  background: linear-gradient(135deg, rgba(74,127,206,0.06), rgba(58,158,176,0.06));
-  border: 1px solid rgba(74,127,206,0.15);
-  border-radius: 10px;
-  padding: 20px;
-  text-align: center;
-}
-.support-header { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px; }
-.support-icon { font-size: 1.2rem; }
-.support-title { font-weight: 600; font-size: 0.95rem; color: var(--text-primary, #e2e6f0); }
-.support-desc { font-size: 0.82rem; color: var(--text-secondary, #8896b4); margin-bottom: 14px; line-height: 1.5; }
-.support-actions { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
-.support-or { font-size: 0.8rem; color: var(--text-muted, #586585); }
-
-.btn-coffee {
-  background: #FF813F;
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 0.85rem;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: background 0.15s;
-}
-.btn-coffee:hover { background: #e07030; }
-
-.btn-pro-upgrade {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 0.85rem;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: opacity 0.15s;
-}
-.btn-pro-upgrade:hover { opacity: 0.9; }
-
-/* Pro Teaser Modal */
-.pro-teaser {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 1000;
+.revenue-card {
   background: var(--bg-card, #181d2a);
-  border: 1px solid #6366f1;
-  border-radius: 14px;
-  padding: 0;
-  max-width: 340px;
-  box-shadow: 0 16px 48px rgba(0,0,0,0.5);
-  animation: slideUp 0.3s ease;
+  border: 1px solid var(--border, #252d3a);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  position: relative;
 }
-@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-.pro-close {
-  position: absolute; top: 8px; right: 12px;
-  background: none; border: none; color: var(--text-muted, #586585);
-  font-size: 1.2rem; cursor: pointer; padding: 4px; line-height: 1;
-}
-.pro-teaser-content { padding: 20px; }
-.pro-teaser-content strong { display: block; font-size: 0.95rem; margin-bottom: 10px; color: var(--text-primary, #e2e6f0); }
-.pro-teaser-content ul { list-style: none; margin-bottom: 12px; }
-.pro-teaser-content li { font-size: 0.8rem; color: var(--text-secondary, #8896b4); padding: 3px 0; }
-.pro-price { font-size: 0.82rem; color: var(--text-secondary, #8896b4); text-align: center; margin-bottom: 12px; }
-.pro-price em { color: var(--accent-green-bright, #4ac878); font-style: normal; font-weight: 700; font-size: 1rem; }
-.btn-pro-cta {
-  display: block; text-align: center;
+.revenue-badge {
+  position: absolute; top: -10px; right: 16px;
   background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  color: #fff; padding: 10px 20px; border-radius: 8px;
+  color: #fff; font-size: 0.68rem; font-weight: 700;
+  padding: 3px 12px; border-radius: 10px;
+}
+.revenue-card h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 8px; }
+.revenue-desc { font-size: 0.8rem; color: var(--text-secondary, #8896b4); margin-bottom: 10px; line-height: 1.5; }
+.revenue-price { margin-bottom: 12px; }
+.revenue-price em {
+  font-style: normal; font-size: 1.3rem; font-weight: 700;
+  color: var(--accent-green-bright, #4ae08a);
+}
+.revenue-card ul { list-style: none; text-align: left; margin-bottom: 14px; }
+.revenue-card li { font-size: 0.78rem; color: var(--text-secondary, #8896b4); padding: 2px 0; }
+.pro-card { border-color: rgba(99,102,241,0.25); }
+.consult-card { border-color: rgba(74,224,138,0.2); }
+.sponsor-card { border-color: rgba(240,208,96,0.2); }
+
+.btn-pro-buy, .btn-consult, .btn-sponsor {
+  display: inline-block; padding: 10px 24px; border-radius: 8px;
   font-weight: 600; font-size: 0.85rem; text-decoration: none;
 }
-.btn-pro-cta:hover { opacity: 0.9; }
+.btn-pro-buy { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; }
+.btn-consult { background: var(--accent-green, #3a7d5f); color: #fff; }
+.btn-sponsor { background: var(--accent-gold, #c9a84c); color: #1a1a1a; }
 
-@media (max-width: 600px) {
-  .pro-teaser { left: 16px; right: 16px; bottom: 16px; max-width: none; }
+/* Urgency Banner */
+.urgency-banner {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1));
+  border: 1px solid rgba(99,102,241,0.3);
+  border-radius: 10px;
+  padding: 14px 20px;
+  animation: slideUp 0.3s ease;
 }
+@keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.urgency-banner span { font-size: 0.85rem; color: var(--text-primary, #e6e9ef); }
+.btn-urgency {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff;
+  padding: 8px 20px; border-radius: 6px; font-weight: 600; font-size: 0.82rem;
+  text-decoration: none; white-space: nowrap;
+}
+.urgency-close { background: none; border: none; color: var(--text-muted, #586585); cursor: pointer; font-size: 1.1rem; }
 </style>

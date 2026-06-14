@@ -10,7 +10,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DebtPayoff Planner — 债务还款规划器</title>
   <link rel="stylesheet" href="styles.css">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1379479056263282" crossorigin="anonymous"></script>
+  
 </head>
 <body>
   <div class="app">
@@ -102,7 +102,7 @@
 <div class="monetize-section" id="monetizeSection">
   <div class="monetize-grid">
     <!-- Ad Slot 1 -->
-    <ins class="adsbygoogle" style="display:block;min-height:120px" data-ad-client="ca-pub-1379479056263282" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+    <div class="affiliate-cta">💰 <strong>推荐理财产品</strong><br><small>通过以下链接开户可获奖励</small></div>
 
     <!-- Support / Buy Me a Coffee -->
     <div class="support-card">
@@ -123,7 +123,7 @@
     </div>
 
     <!-- Ad Slot 2 -->
-    <ins class="adsbygoogle" style="display:block;min-height:120px" data-ad-client="ca-pub-1379479056263282" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+    <div class="affiliate-cta">💰 <strong>推荐理财产品</strong><br><small>通过以下链接开户可获奖励</small></div>
   </div>
 
   <!-- Pro Teaser -->
@@ -296,6 +296,179 @@ resetProTimer();
 }
 </style>
 
+<!-- Monetization v2: No AdSense, all direct revenue -->
+<div class="monetize-section">
+  <!-- Primary CTA: Support -->
+  <div class="support-banner">
+    <div class="support-banner-left">
+      <span class="support-emoji">☕</span>
+      <div>
+        <strong>喜欢 FinKit？请我们喝杯咖啡</strong>
+        <p>这些工具永远免费开源。你的支持让我们能持续改进和开发新功能。</p>
+      </div>
+    </div>
+    <div class="support-banner-right">
+      <a href="https://www.buymeacoffee.com/finkit" target="_blank" rel="noopener" class="btn-coffee-lg">☕ Buy Me a Coffee</a>
+      <span class="or-divider">或</span>
+      <a href="https://ko-fi.com/finkit" target="_blank" rel="noopener" class="btn-kofi">❤️ Ko-fi</a>
+    </div>
+  </div>
+
+  <!-- Revenue Row: Pro + Affiliate -->
+  <div class="revenue-row">
+    <!-- Pro Subscription -->
+    <div class="revenue-card pro-card">
+      <div class="revenue-badge">🔥 热门</div>
+      <h4>FinKit Pro</h4>
+      <p class="revenue-price"><em>¥9.9</em>/月</p>
+      <ul>
+        <li>☁️ 云端同步 & 多设备</li>
+        <li>📊 多币种 & 实时汇率</li>
+        <li>📄 PDF 专业报表导出</li>
+        <li>🔔 还款提醒通知</li>
+        <li>🎨 自定义主题</li>
+      </ul>
+      <a href="mailto:hi@finkit.dev?subject=FinKit Pro 订阅" class="btn-pro-buy">⚡ 立即订阅</a>
+    </div>
+
+    <!-- Direct Consulting -->
+    <div class="revenue-card consult-card">
+      <h4>理财规划咨询</h4>
+      <p class="revenue-desc">需要个性化的还债方案或 FIRE 规划？预约一对一咨询。</p>
+      <p class="revenue-price"><em>¥299</em>/次</p>
+      <a href="mailto:hi@finkit.dev?subject=理财规划咨询" class="btn-consult">📅 预约咨询</a>
+    </div>
+
+    <!-- Sponsor Slot -->
+    <div class="revenue-card sponsor-card">
+      <h4>赞助 & 广告合作</h4>
+      <p class="revenue-desc">将你的理财产品、信用卡或平台展示给精准的理财用户群体。</p>
+      <p class="revenue-price"><em>¥500</em>起/月</p>
+      <a href="mailto:hi@finkit.dev?subject=广告合作" class="btn-sponsor">🤝 合作咨询</a>
+    </div>
+  </div>
+
+  <!-- Urgency CTA -->
+  <div class="urgency-banner" id="urgencyBanner">
+    <button class="urgency-close" onclick="document.getElementById('urgencyBanner').style.display='none';sessionStorage.setItem('urgencyDismissed','1')">&times;</button>
+    <span>⚡ Pro 预售价 ¥9.9/月 — 正式上线后恢复 ¥19.9/月</span>
+    <a href="mailto:hi@finkit.dev?subject=FinKit Pro 预约" class="btn-urgency">锁定优惠</a>
+  </div>
+</div>
+
+<script>
+// Show urgency banner after 20 seconds
+setTimeout(function() {
+  var banner = document.getElementById('urgencyBanner');
+  if (banner && !sessionStorage.getItem('urgencyDismissed')) {
+    banner.style.display = 'flex';
+  }
+}, 20000);
+</script>
+
+<style>
+.monetize-section {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border, #252d3a);
+}
+
+/* Support Banner */
+.support-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  background: linear-gradient(135deg, rgba(255,129,63,0.08), rgba(255,129,63,0.02));
+  border: 1px solid rgba(255,129,63,0.2);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+}
+.support-banner-left { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 200px; }
+.support-emoji { font-size: 2rem; }
+.support-banner-left strong { font-size: 0.95rem; color: var(--text-primary, #e6e9ef); display: block; margin-bottom: 2px; }
+.support-banner-left p { font-size: 0.8rem; color: var(--text-secondary, #8a94a6); margin: 0; }
+.support-banner-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; flex-shrink: 0; }
+.btn-coffee-lg {
+  background: #FF813F; color: #fff; padding: 12px 24px; border-radius: 8px;
+  font-weight: 600; font-size: 0.9rem; text-decoration: none; white-space: nowrap;
+}
+.btn-coffee-lg:hover { background: #e07030; }
+.btn-kofi {
+  background: #29abe0; color: #fff; padding: 12px 24px; border-radius: 8px;
+  font-weight: 600; font-size: 0.9rem; text-decoration: none; white-space: nowrap;
+}
+.btn-kofi:hover { background: #1e8ab8; }
+.or-divider { color: var(--text-muted, #586585); font-size: 0.8rem; }
+
+/* Revenue Row */
+.revenue-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+@media (max-width: 800px) { .revenue-row { grid-template-columns: 1fr; } }
+
+.revenue-card {
+  background: var(--bg-card, #181d2a);
+  border: 1px solid var(--border, #252d3a);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  position: relative;
+}
+.revenue-badge {
+  position: absolute; top: -10px; right: 16px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff; font-size: 0.68rem; font-weight: 700;
+  padding: 3px 12px; border-radius: 10px;
+}
+.revenue-card h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 8px; }
+.revenue-desc { font-size: 0.8rem; color: var(--text-secondary, #8896b4); margin-bottom: 10px; line-height: 1.5; }
+.revenue-price { margin-bottom: 12px; }
+.revenue-price em {
+  font-style: normal; font-size: 1.3rem; font-weight: 700;
+  color: var(--accent-green-bright, #4ae08a);
+}
+.revenue-card ul { list-style: none; text-align: left; margin-bottom: 14px; }
+.revenue-card li { font-size: 0.78rem; color: var(--text-secondary, #8896b4); padding: 2px 0; }
+.pro-card { border-color: rgba(99,102,241,0.25); }
+.consult-card { border-color: rgba(74,224,138,0.2); }
+.sponsor-card { border-color: rgba(240,208,96,0.2); }
+
+.btn-pro-buy, .btn-consult, .btn-sponsor {
+  display: inline-block; padding: 10px 24px; border-radius: 8px;
+  font-weight: 600; font-size: 0.85rem; text-decoration: none;
+}
+.btn-pro-buy { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; }
+.btn-consult { background: var(--accent-green, #3a7d5f); color: #fff; }
+.btn-sponsor { background: var(--accent-gold, #c9a84c); color: #1a1a1a; }
+
+/* Urgency Banner */
+.urgency-banner {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1));
+  border: 1px solid rgba(99,102,241,0.3);
+  border-radius: 10px;
+  padding: 14px 20px;
+  animation: slideUp 0.3s ease;
+}
+@keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.urgency-banner span { font-size: 0.85rem; color: var(--text-primary, #e6e9ef); }
+.btn-urgency {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff;
+  padding: 8px 20px; border-radius: 6px; font-weight: 600; font-size: 0.82rem;
+  text-decoration: none; white-space: nowrap;
+}
+.urgency-close { background: none; border: none; color: var(--text-muted, #586585); cursor: pointer; font-size: 1.1rem; }
+</style>
 </footer>
   </div>
 
