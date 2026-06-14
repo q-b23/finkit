@@ -2,6 +2,11 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
+  <meta name="description" content="FinKit 个人理财工具箱 — 债务规划、贷款对比、FIRE财务自由计算，开源免费，数据本地处理">
+  <meta name="keywords" content="理财工具,债务计算,FIRE计算,贷款对比,财务规划,开源">
+  <meta property="og:title" content="FinKit · 个人理财工具箱">
+  <meta property="og:description" content="开源免费的极简财务工具套装：债务规划、贷款对比、FIRE计算">
+  <meta property="og:type" content="website">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FinKit · 个人理财工具箱</title>
   <style>
@@ -18,6 +23,8 @@
       --gold: #c9a84c;
       --gold-bright: #f0d060;
       --amber: #c9712c;
+      --accent-blue: #4a7fce;
+      --accent-cyan: #3a9eb0;
       --teal: #3a8a7e;
     }
     body {
@@ -79,11 +86,12 @@
     /* Tool Cards */
     .tools {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(3, 1fr);
       gap: 24px;
       margin-bottom: 48px;
     }
-    @media (max-width: 680px) { .tools { grid-template-columns: 1fr; } }
+    @media (max-width: 900px) { .tools { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .tools { grid-template-columns: 1fr; } }
 
     .tool-card {
       background: var(--card-bg);
@@ -112,6 +120,9 @@
     }
     .tool-card.fire::after {
       background: linear-gradient(90deg, var(--amber), var(--gold));
+    }
+    .tool-card.loan::after {
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
     }
     .tool-icon {
       font-size: 2.2rem;
@@ -172,6 +183,19 @@
           <span class="feature-tag">利息对比</span>
           <span class="feature-tag">导出 CSV</span>
           <span class="feature-tag">打印报表</span>
+        </div>
+      </a>
+
+      <a href="loan-compare/index.html" class="tool-card loan">
+        <div class="tool-icon">🏦</div>
+        <h2>LoanCompare</h2>
+        <p class="desc">贷款方案对比 — 同时比较多笔贷款，月供、总利息、总成本横向对比，找到最优方案。</p>
+        <div class="tool-features">
+          <span class="feature-tag">多方案对比</span>
+          <span class="feature-tag">月供计算</span>
+          <span class="feature-tag">总利息分析</span>
+          <span class="feature-tag">综合评分</span>
+          <span class="feature-tag">可视化图表</span>
         </div>
       </a>
 

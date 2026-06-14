@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "name": "finkit",
+  "builds": [],
+  "routes": [
+    { "src": "/(.*)", "dest": "/$1" }
+  ]
+}
