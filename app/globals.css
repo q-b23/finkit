@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-white text-zinc-900 antialiased;
+  }
+
+  /* Inter font via next/font in layout — this is the fallback stack */
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

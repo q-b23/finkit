@@ -14,40 +14,50 @@ interface Tool {
 
 const tools: Tool[] = [
   {
-    id: "debt",
-    name: "Debt Payoff Planner",
-    description: "Compare snowball vs avalanche strategies. See your exact debt-free date and track every milestone.",
-    icon: "📋",
-    href: "/tools/debt-payoff",
-    tags: ["Snowball vs Avalanche", "Amortization Table", "CSV Export"],
-    accent: "bg-emerald-500",
-  },
-  {
-    id: "loan",
-    name: "Loan Comparison",
-    description: "Compare multiple loan offers side by side. Monthly payments, total cost, and a composite score for the best deal.",
-    icon: "🏦",
-    href: "/tools/loan-compare",
-    tags: ["Multi-Loan Compare", "PMT Calculator", "Visual Charts"],
-    accent: "bg-blue-500",
-  },
-  {
     id: "fire",
     name: "FIRE Calculator",
     description: "Project compound growth, find your FIRE number, and discover your Coast FIRE age — all inflation-adjusted.",
     icon: "🔥",
-    href: "/tools/fire-calc",
+    href: "/dashboard/fire",
     tags: ["Compound Growth", "4% Rule", "Coast FIRE"],
     accent: "bg-amber-500",
+  },
+  {
+    id: "debt",
+    name: "Debt Payoff Planner",
+    description: "Compare snowball vs avalanche strategies. See your exact debt-free date and track every milestone.",
+    icon: "📋",
+    href: "/dashboard/debt",
+    tags: ["Snowball vs Avalanche", "Amortization Table", "CSV Export"],
+    accent: "bg-emerald-500",
+  },
+  {
+    id: "loan-compare",
+    name: "Loan Comparison",
+    description: "Compare multiple loan offers side by side. Monthly payments, total cost, and a composite score for the best deal.",
+    icon: "🏦",
+    href: "/dashboard/loan",
+    tags: ["Multi-Loan Compare", "PMT Calculator", "Visual Charts"],
+    accent: "bg-blue-500",
+  },
+  {
+    id: "loan-matrix",
+    name: "Loan Matrix",
+    description: "Head-to-head loan comparison. See which option saves you the most in interest and monthly payments.",
+    icon: "📊",
+    href: "/dashboard/loans",
+    tags: ["Side-by-Side", "Interest Savings", "2-Option Compare"],
+    accent: "bg-violet-500",
   },
 ];
 
 const StatsBar = () => (
-  <div className="grid grid-cols-3 gap-4">
+  <div className="grid grid-cols-4 gap-4">
     {[
-      { value: "3", label: "Core Tools" },
+      { value: "4", label: "Core Tools" },
       { value: "0", label: "Data Uploaded" },
       { value: "100%", label: "Open Source" },
+      { value: "Local", label: "All Computation" },
     ].map((stat) => (
       <div
         key={stat.label}
@@ -85,23 +95,14 @@ const ToolCard = ({ tool }: { tool: Tool }) => (
     href={tool.href}
     className="group relative flex flex-col rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
   >
-    {/* Accent bar */}
     <div className={`absolute inset-x-0 top-0 h-1 rounded-t-2xl ${tool.accent}`} />
-
-    {/* Icon */}
     <span className="mb-4 text-2xl">{tool.icon}</span>
-
-    {/* Title */}
     <h3 className="text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
       {tool.name}
     </h3>
-
-    {/* Description */}
     <p className="mt-2 flex-1 text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">
       {tool.description}
     </p>
-
-    {/* Tags */}
     <div className="mt-4 flex flex-wrap gap-2">
       {tool.tags.map((tag) => (
         <span
@@ -138,7 +139,6 @@ export default function Dashboard() {
       <Navbar />
 
       <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
-        {/* Greeting */}
         <div className="mb-8">
           <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
             {greeting}
@@ -148,10 +148,8 @@ export default function Dashboard() {
           </p>
         </div>
 
-        {/* Stats */}
         <StatsBar />
 
-        {/* Tools Grid */}
         <div className="mt-8">
           <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
             Your Tools
@@ -163,7 +161,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Footer */}
         <div className="mt-12">
           <Footer />
         </div>
