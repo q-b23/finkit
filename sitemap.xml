@@ -3,12 +3,11 @@
   <url><loc>https://finkit-topaz.vercel.app/en/</loc><priority>1.0</priority></url>
   <url><loc>https://finkit-topaz.vercel.app/en/compare/</loc><priority>0.9</priority></url>
   <url><loc>https://finkit-topaz.vercel.app/en/guides/fire-number-guide.html</loc><priority>0.9</priority></url>
+  <url><loc>https://finkit-topaz.vercel.app/en/guides/coast-fire.html</loc><priority>0.9</priority></url>
+  <url><loc>https://finkit-topaz.vercel.app/en/guides/debt-payoff-timeline.html</loc><priority>0.9</priority></url>
+  <url><loc>https://finkit-topaz.vercel.app/en/guides/four-percent-rule.html</loc><priority>0.9</priority></url>
+  <url><loc>https://finkit-topaz.vercel.app/en/guides/compound-interest.html</loc><priority>0.9</priority></url>
   <url><loc>https://finkit-topaz.vercel.app/en/debt-payoff-planner/</loc><priority>0.9</priority></url>
   <url><loc>https://finkit-topaz.vercel.app/en/loan-compare/</loc><priority>0.9</priority></url>
   <url><loc>https://finkit-topaz.vercel.app/en/fire-calculator/</loc><priority>0.9</priority></url>
-  <url><loc>https://finkit-topaz.vercel.app/</loc><priority>0.7</priority></url>
-  <url><loc>https://finkit-topaz.vercel.app/debt-payoff-planner/</loc><priority>0.7</priority></url>
-  <url><loc>https://finkit-topaz.vercel.app/loan-compare/</loc><priority>0.7</priority></url>
-  <url><loc>https://finkit-topaz.vercel.app/fire-calculator/</loc><priority>0.7</priority></url>
-  <url><loc>https://finkit-topaz.vercel.app/blog/debt-snowball-vs-avalanche.html</loc><priority>0.6</priority></url>
 </urlset>
