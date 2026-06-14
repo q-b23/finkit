@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FinKit — Free & open-source personal finance toolkit. Debt payoff planner, loan comparison, and FIRE calculator. No sign-up, no tracking, all local.">
+  <meta name="keywords" content="personal finance,debt calculator,FIRE calculator,loan comparison,open source,privacy">
+  <meta property="og:title" content="FinKit · Free Personal Finance Toolkit">
+  <meta property="og:description" content="Open-source, privacy-first tools for debt payoff, loan comparison, and FIRE planning. No sign-ups, no data collection.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://finkit-topaz.vercel.app/en/">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="FinKit · Free Personal Finance Toolkit">
+  <meta name="twitter:description" content="Open-source, privacy-first. Debt planner, loan comparison, FIRE calculator. All local.">
+  <link rel="canonical" href="https://finkit-topaz.vercel.app/en/">
+  <meta name="robots" content="index, follow">
+  <title>FinKit · Free Personal Finance Toolkit</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0e14; --card-bg: #12171f; --border: #1e2736;
+      --text: #e6e9ef; --text2: #8a94a6; --text3: #5a6377;
+      --green: #3a7d5f; --green-bright: #4ae08a;
+      --gold: #c9a84c; --gold-bright: #f0d060;
+      --amber: #c9712c; --teal: #3a8a7e;
+      --accent-blue: #4a7fce; --accent-cyan: #3a9eb0;
+      --purple: #6366f1;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg); color: var(--text); min-height: 100vh;
+      -webkit-font-smoothing: antialiased; line-height: 1.6;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 40% at 20% 20%, rgba(58,125,95,0.04) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 30% at 80% 70%, rgba(201,168,76,0.03) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 30% at 50% 50%, rgba(99,102,241,0.02) 0%, transparent 60%);
+      pointer-events: none; z-index: 0;
+    }
+    .page { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+
+    /* Lang switcher */
+    .lang-bar { text-align: right; padding: 16px 0 0; }
+    .lang-bar a { color: var(--text3); text-decoration: none; font-size: 0.85rem; }
+    .lang-bar a:hover { color: var(--green-bright); }
+
+    /* Hero */
+    .hero { text-align: center; padding: 64px 0 52px; }
+    .hero-tag {
+      display: inline-block; background: rgba(74,224,138,0.1); color: var(--green-bright);
+      font-size: 0.78rem; font-weight: 600; padding: 4px 14px; border-radius: 20px;
+      margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .hero h1 { font-size: 2.6rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 8px; }
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--green-bright), var(--gold-bright));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero p { color: var(--text2); font-size: 1.05rem; max-width: 540px; margin: 0 auto 24px; }
+    .hero-cta {
+      display: inline-flex; align-items: center; gap: 12px;
+      background: linear-gradient(135deg, var(--purple), #8b5cf6);
+      color: #fff; padding: 14px 32px; border-radius: 10px;
+      font-size: 1rem; font-weight: 600; text-decoration: none;
+    }
+    .hero-cta:hover { opacity: 0.9; }
+    .hero-cta-sub { font-size: 0.78rem; color: var(--text3); margin-top: 8px; }
+    .hero-stats { display: flex; justify-content: center; gap: 40px; margin-top: 32px; }
+    .hero-stat { text-align: center; }
+    .hero-stat .num { font-family: 'SF Mono', monospace; font-size: 1.4rem; font-weight: 700; color: var(--gold-bright); }
+    .hero-stat .lbl { font-size: 0.75rem; color: var(--text3); margin-top: 2px; }
+
+    /* Tools */
+    .tools {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 40px;
+    }
+    @media (max-width: 900px) { .tools { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .tools { grid-template-columns: 1fr; } }
+    .tool-card {
+      background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px;
+      padding: 28px; text-decoration: none; color: inherit;
+      transition: all 0.2s ease; position: relative; overflow: hidden;
+    }
+    .tool-card:hover { border-color: #3a4a60; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+    .tool-card::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; }
+    .tool-card.debt::after { background: linear-gradient(90deg, var(--green), var(--teal)); }
+    .tool-card.loan::after { background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan)); }
+    .tool-card.fire::after { background: linear-gradient(90deg, var(--amber), var(--gold)); }
+    .tool-icon { font-size: 2rem; margin-bottom: 14px; }
+    .tool-card h2 { font-size: 1.15rem; font-weight: 600; margin-bottom: 6px; }
+    .tool-card .desc { color: var(--text2); font-size: 0.85rem; margin-bottom: 14px; line-height: 1.5; }
+    .tool-features { display: flex; flex-wrap: wrap; gap: 6px; }
+    .feature-tag {
+      font-size: 0.7rem; padding: 2px 8px; border-radius: 4px;
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--text3);
+    }
+
+    /* Pro Banner */
+    .pro-banner {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.08));
+      border: 1px solid rgba(99,102,241,0.2); border-radius: 14px;
+      padding: 28px 32px; margin-bottom: 40px;
+      display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+    }
+    .pro-banner-icon { font-size: 2.4rem; flex-shrink: 0; }
+    .pro-banner-body { flex: 1; min-width: 200px; }
+    .pro-banner-body h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 4px; color: var(--purple); }
+    .pro-banner-body p { font-size: 0.85rem; color: var(--text2); line-height: 1.5; }
+    .pro-banner-body ul { list-style: none; margin-top: 8px; display: flex; flex-wrap: wrap; gap: 8px 18px; }
+    .pro-banner-body li { font-size: 0.78rem; color: var(--text3); }
+    .pro-banner-body li::before { content: '✓ '; color: var(--green-bright); }
+    .pro-banner-cta {
+      flex-shrink: 0;
+      background: linear-gradient(135deg, var(--purple), #8b5cf6); color: #fff;
+      padding: 12px 28px; border-radius: 8px; font-weight: 600; font-size: 0.9rem;
+      text-decoration: none; text-align: center;
+    }
+    .pro-banner-cta:hover { opacity: 0.9; }
+
+    /* How it works */
+    .how-section { margin-bottom: 40px; }
+    .how-section h2 { font-size: 1.3rem; font-weight: 600; text-align: center; margin-bottom: 24px; }
+    .how-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    @media (max-width: 680px) { .how-steps { grid-template-columns: 1fr; } }
+    .how-step {
+      background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px;
+      padding: 24px; text-align: center;
+    }
+    .how-step .step-num {
+      display: inline-block; width: 36px; height: 36px; line-height: 36px;
+      border-radius: 50%; background: rgba(74,224,138,0.1); color: var(--green-bright);
+      font-weight: 700; font-size: 0.9rem; margin-bottom: 12px;
+    }
+    .how-step h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
+    .how-step p { font-size: 0.8rem; color: var(--text2); }
+
+    /* Support */
+    .support-banner {
+      display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+      background: linear-gradient(135deg, rgba(255,129,63,0.08), rgba(255,129,63,0.02));
+      border: 1px solid rgba(255,129,63,0.2); border-radius: 12px;
+      padding: 20px 24px; margin-bottom: 40px;
+    }
+    .support-left { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 200px; }
+    .support-emoji { font-size: 2rem; }
+    .support-left strong { font-size: 0.95rem; display: block; margin-bottom: 2px; }
+    .support-left p { font-size: 0.8rem; color: var(--text2); margin: 0; }
+    .support-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .btn-coffee {
+      background: #FF813F; color: #fff; padding: 12px 24px; border-radius: 8px;
+      font-weight: 600; font-size: 0.9rem; text-decoration: none;
+    }
+    .btn-coffee:hover { background: #e07030; }
+    .btn-kofi {
+      background: #29abe0; color: #fff; padding: 12px 24px; border-radius: 8px;
+      font-weight: 600; font-size: 0.9rem; text-decoration: none;
+    }
+    .btn-kofi:hover { background: #1e8ab8; }
+
+    .site-footer {
+      text-align: center; padding: 32px 0 48px; border-top: 1px solid var(--border);
+      color: var(--text3); font-size: 0.82rem;
+    }
+    .site-footer a { color: var(--green-bright); text-decoration: none; }
+    .site-footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="lang-bar">
+      <a href="/">中文</a>
+    </div>
+
+    <section class="hero">
+      <div class="hero-tag">💰 Open Source · Free · No Ads</div>
+      <h1>Take control of <em>your money</em></h1>
+      <p>FinKit is a suite of privacy-first financial tools — debt payoff planner, loan comparison, and FIRE calculator — all running locally in your browser. No sign-ups, no tracking, no data collection.</p>
+      <a href="#tools" class="hero-cta">🚀 Try It Free</a>
+      <p class="hero-cta-sub">No sign-up · No download · Instant use</p>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="num">3</div><div class="lbl">Core Tools</div></div>
+        <div class="hero-stat"><div class="num">100%</div><div class="lbl">Open Source</div></div>
+        <div class="hero-stat"><div class="num">0</div><div class="lbl">Data Uploaded</div></div>
+      </div>
+    </section>
+
+    <section id="tools">
+      <div class="tools">
+        <a href="/en/debt-payoff-planner/index.html" class="tool-card debt">
+          <div class="tool-icon">📋</div>
+          <h2>DebtPayoff Planner</h2>
+          <p class="desc">Compare snowball vs avalanche repayment strategies. Full amortization timeline, interest comparison, and milestone tracking for every debt.</p>
+          <div class="tool-features">
+            <span class="feature-tag">Snowball vs Avalanche</span>
+            <span class="feature-tag">Timeline</span>
+            <span class="feature-tag">CSV Export</span>
+            <span class="feature-tag">Print Report</span>
+          </div>
+        </a>
+
+        <a href="/en/loan-compare/index.html" class="tool-card loan">
+          <div class="tool-icon">🏦</div>
+          <h2>LoanCompare</h2>
+          <p class="desc">Compare multiple loan offers side-by-side. Monthly payments, total interest, total cost breakdown, and a composite score for the best deal.</p>
+          <div class="tool-features">
+            <span class="feature-tag">Multi-loan Compare</span>
+            <span class="feature-tag">PMT Calculator</span>
+            <span class="feature-tag">Scoring</span>
+            <span class="feature-tag">Visual Charts</span>
+          </div>
+        </a>
+
+        <a href="/en/fire-calculator/index.html" class="tool-card fire">
+          <div class="tool-icon">🔥</div>
+          <h2>FIRE Calculator</h2>
+          <p class="desc">Compound growth projection, FIRE number (4% rule), Coast FIRE age, and inflation-adjusted analysis. Plan your path to financial independence.</p>
+          <div class="tool-features">
+            <span class="feature-tag">Compound Growth</span>
+            <span class="feature-tag">FIRE Number</span>
+            <span class="feature-tag">Coast FIRE</span>
+            <span class="feature-tag">Inflation-Adjusted</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <div class="pro-banner">
+      <div class="pro-banner-icon">⚡</div>
+      <div class="pro-banner-body">
+        <h3>FinKit Pro — Coming Soon</h3>
+        <p>Cloud sync, multi-currency, PDF reports, repayment reminders — supercharge your toolkit.</p>
+        <ul>
+          <li>Multi-currency & live rates</li>
+          <li>Cloud auto-backup</li>
+          <li>Professional PDF reports</li>
+          <li>Scheduled reminders</li>
+        </ul>
+      </div>
+      <div>
+        <a href="mailto:hi@finkit.dev?subject=FinKit Pro Pre-order" class="pro-banner-cta">Pre-order · $1/mo</a>
+        <p style="font-size:0.7rem;color:var(--text3);text-align:center;margin-top:6px;">$3/mo after launch</p>
+      </div>
+    </div>
+
+    <section class="how-section">
+      <h2>Three Steps to Get Started</h2>
+      <div class="how-steps">
+        <div class="how-step">
+          <div class="step-num">1</div>
+          <h4>Pick a Tool</h4>
+          <p>Choose debt planning, loan comparison, or FIRE calculation</p>
+        </div>
+        <div class="how-step">
+          <div class="step-num">2</div>
+          <h4>Enter Your Data</h4>
+          <p>All computation happens locally — nothing leaves your browser</p>
+        </div>
+        <div class="how-step">
+          <div class="step-num">3</div>
+          <h4>Take Action</h4>
+          <p>Export your plan and start executing — clear goals make persistence easier</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="support-banner">
+      <div class="support-left">
+        <span class="support-emoji">☕</span>
+        <div>
+          <strong>Support FinKit</strong>
+          <p>These tools are free and open source forever. Your support helps us ship new features.</p>
+        </div>
+      </div>
+      <div class="support-right">
+        <a href="https://buymeacoffee.com/finkit" target="_blank" rel="noopener" class="btn-coffee">☕ Buy Me a Coffee</a>
+        <a href="https://ko-fi.com/finkit" target="_blank" rel="noopener" class="btn-kofi">❤️ Ko-fi</a>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <p>FinKit &copy; 2026 · <a href="https://github.com/q-b23/finkit">GitHub</a> · <a href="mailto:hi@finkit.dev">hi@finkit.dev</a></p>
+      <p>All data processed locally. Nothing uploaded. · Deploy on <a href="https://vercel.com">Vercel</a> for free.</p>
+    </footer>
+  </div>
+</body>
+</html>
