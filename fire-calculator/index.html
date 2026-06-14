@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FIRE Calculator · 财务自由计算器</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="header-brand">
+        <svg class="logo-icon" viewBox="0 0 32 32" fill="none">
+          <path d="M16 4l2 6 6 2-6 2-2 6-2-6-6-2 6-2 2-6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+        <h1>FIRE <span>Calculator</span></h1>
+      </div>
+      <p class="header-sub">复利增长 · 财务自由 · 提前退休路径规划</p>
+    </header>
+
+    <div class="layout">
+      <aside class="panel panel-input">
+        <h2>你的财务参数</h2>
+
+        <div class="input-section">
+          <h3>💰 当前资产</h3>
+          <div class="field">
+            <label>现有储蓄 / 投资本金 (¥)</label>
+            <div class="input-with-icon">
+              <span class="input-icon">¥</span>
+              <input type="number" id="currentSavings" value="100000" min="0" step="10000">
+            </div>
+          </div>
+          <div class="field">
+            <label>每月定投金额 (¥)</label>
+            <div class="input-with-icon">
+              <span class="input-icon">¥</span>
+              <input type="number" id="monthlyContribution" value="5000" min="0" step="500">
+            </div>
+          </div>
+        </div>
+
+        <div class="input-section">
+          <h3>📈 增长假设</h3>
+          <div class="field">
+            <label>预期年化收益率 (%)</label>
+            <div class="input-with-icon">
+              <span class="input-icon">%</span>
+              <input type="number" id="annualReturn" value="7" min="0" max="50" step="0.5">
+            </div>
+            <span class="field-hint">标普500长期平均约 7-10%</span>
+          </div>
+          <div class="field">
+            <label>年通胀率 (%)</label>
+            <div class="input-with-icon">
+              <span class="input-icon">%</span>
+              <input type="number" id="inflationRate" value="3" min="0" max="20" step="0.5">
+            </div>
+          </div>
+        </div>
+
+        <div class="input-section">
+          <h3>🎯 财务自由目标</h3>
+          <div class="field">
+            <label>目标年支出 (¥)</label>
+            <div class="input-with-icon">
+              <span class="input-icon">¥</span>
+              <input type="number" id="annualExpenses" value="240000" min="0" step="10000">
+            </div>
+            <span class="field-hint">按照 4% 安全提款率计算 FIRE 目标</span>
+          </div>
+          <div class="field">
+            <label>计算年限</label>
+            <div class="input-with-icon">
+              <span class="input-icon">📅</span>
+              <input type="number" id="timeHorizon" value="30" min="1" max="60" step="5">
+            </div>
+            <span class="field-hint">年</span>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-full" id="btnCalculate">
+          计算我的 FIRE 路线图
+        </button>
+      </aside>
+
+      <main class="panel panel-results" id="resultsPanel">
+        <div class="results-placeholder">
+          <div class="placeholder-icon">
+            <svg viewBox="0 0 64 64" fill="none">
+              <circle cx="32" cy="32" r="24" stroke="currentColor" stroke-width="2"/>
+              <path d="M32 16v16l12 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <p>调整左侧参数，点击计算生成你的 FIRE 路线图</p>
+        </div>
+
+        <div class="results-content" id="resultsContent" style="display:none;"></div>
+      </main>
+    </div>
+
+    <footer class="footer">
+      <p>FIRE Calculator &copy; 2026 · 仅供参考，不构成投资建议</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

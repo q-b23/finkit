@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinKit · 个人理财工具箱</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0e14;
+      --card-bg: #12171f;
+      --border: #1e2736;
+      --text: #e6e9ef;
+      --text2: #8a94a6;
+      --text3: #5a6377;
+      --green: #3a7d5f;
+      --green-bright: #4ae08a;
+      --gold: #c9a84c;
+      --gold-bright: #f0d060;
+      --amber: #c9712c;
+      --teal: #3a8a7e;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 40% at 20% 20%, rgba(58,125,95,0.04) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 30% at 80% 70%, rgba(201,168,76,0.03) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .page { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 64px 0 48px;
+    }
+    .hero-tag {
+      display: inline-block;
+      background: rgba(74,224,138,0.1);
+      color: var(--green-bright);
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .hero h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--green-bright), var(--gold-bright));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      color: var(--text2);
+      font-size: 1.05rem;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* Tool Cards */
+    .tools {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+    @media (max-width: 680px) { .tools { grid-template-columns: 1fr; } }
+
+    .tool-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .tool-card:hover {
+      border-color: #3a4a60;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .tool-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 3px;
+    }
+    .tool-card.debt::after {
+      background: linear-gradient(90deg, var(--green), var(--teal));
+    }
+    .tool-card.fire::after {
+      background: linear-gradient(90deg, var(--amber), var(--gold));
+    }
+    .tool-icon {
+      font-size: 2.2rem;
+      margin-bottom: 16px;
+    }
+    .tool-card h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .tool-card .desc {
+      color: var(--text2);
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+    .tool-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .feature-tag {
+      font-size: 0.72rem;
+      padding: 3px 10px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      color: var(--text3);
+    }
+
+    /* Footer */
+    .site-footer {
+      text-align: center;
+      padding: 32px 0 48px;
+      border-top: 1px solid var(--border);
+      color: var(--text3);
+      font-size: 0.82rem;
+    }
+    .site-footer p + p { margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <div class="hero-tag">Open Source · 免费用</div>
+      <h1>掌控你的<em>财务未来</em></h1>
+      <p>一套开源的极简财务工具，帮助你规划还债策略、计算复利增长、规划提前退休路线。</p>
+    </section>
+
+    <div class="tools">
+      <a href="debt-payoff-planner/index.html" class="tool-card debt">
+        <div class="tool-icon">📋</div>
+        <h2>DebtPayoff Planner</h2>
+        <p class="desc">债务还款规划器 — 对比雪球法与雪崩法，找到最优还款策略，看清每一笔债务的还清时间。</p>
+        <div class="tool-features">
+          <span class="feature-tag">雪球法 vs 雪崩法</span>
+          <span class="feature-tag">还款时间线</span>
+          <span class="feature-tag">利息对比</span>
+          <span class="feature-tag">导出 CSV</span>
+          <span class="feature-tag">打印报表</span>
+        </div>
+      </a>
+
+      <a href="fire-calculator/index.html" class="tool-card fire">
+        <div class="tool-icon">🔥</div>
+        <h2>FIRE Calculator</h2>
+        <p class="desc">财务自由计算器 — 复利增长模拟、FIRE 目标金额、Coast FIRE 时间、通胀调整分析。</p>
+        <div class="tool-features">
+          <span class="feature-tag">复利投影</span>
+          <span class="feature-tag">FIRE 数字</span>
+          <span class="feature-tag">Coast FIRE</span>
+          <span class="feature-tag">通胀调整</span>
+          <span class="feature-tag">可视化图表</span>
+        </div>
+      </a>
+    </div>
+
+    <footer class="site-footer">
+      <p>FinKit &copy; 2026 · 数据仅在本地处理，不会上传服务器</p>
+      <p>部署到 Vercel / Netlify / Cloudflare Pages 零成本上线</p>
+    </footer>
+  </div>
+</body>
+</html>

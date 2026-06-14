@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DebtPayoff Planner — 债务还款规划器</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-brand">
+        <svg class="logo-icon" viewBox="0 0 32 32" fill="none">
+          <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="2"/>
+          <path d="M12 20l4-8 4 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h1>DebtPayoff <span>Planner</span></h1>
+      </div>
+      <p class="header-sub">雪球法 vs 雪崩法 · 找到最优还债策略</p>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="layout">
+
+      <!-- Left: Debt Input Panel -->
+      <aside class="panel panel-input">
+        <div class="panel-header">
+          <h2>你的债务清单</h2>
+          <button class="btn btn-add" id="btnAddDebt">+ 添加债务</button>
+        </div>
+
+        <div class="debt-list" id="debtList">
+          <!-- Debt cards injected by JS -->
+        </div>
+
+        <div class="empty-state" id="emptyState">
+          <div class="empty-icon">📋</div>
+          <p>还没有添加债务</p>
+          <p class="empty-hint">点击上方按钮开始</p>
+        </div>
+
+        <div class="summary-card" id="summaryCard" style="display:none;">
+          <div class="summary-row">
+            <span>总债务</span>
+            <strong id="totalDebt">¥0</strong>
+          </div>
+          <div class="summary-row">
+            <span>月最低还款</span>
+            <strong id="totalMinPayment">¥0</strong>
+          </div>
+          <div class="summary-row highlight">
+            <span>加权平均利率</span>
+            <strong id="avgRate">0%</strong>
+          </div>
+        </div>
+
+        <div class="input-group" id="extraPaymentGroup" style="display:none;">
+          <label for="extraPayment">每月额外还款预算</label>
+          <div class="input-with-icon">
+            <span class="input-icon">¥</span>
+            <input type="number" id="extraPayment" value="0" min="0" step="100" placeholder="0">
+          </div>
+          <p class="input-hint">用于加速还债的额外资金（最低还款以外的部分）</p>
+        </div>
+
+        <button class="btn btn-primary btn-full" id="btnCalculate" style="display:none;">
+          开始计算策略
+        </button>
+      </aside>
+
+      <!-- Right: Results Panel -->
+      <main class="panel panel-results" id="resultsPanel">
+        <div class="results-placeholder">
+          <div class="placeholder-icon">
+            <svg viewBox="0 0 64 64" fill="none">
+              <rect x="8" y="8" width="20" height="20" rx="3" stroke="currentColor" stroke-width="2"/>
+              <rect x="36" y="8" width="20" height="20" rx="3" stroke="currentColor" stroke-width="2"/>
+              <rect x="8" y="36" width="20" height="20" rx="3" stroke="currentColor" stroke-width="2"/>
+              <rect x="36" y="36" width="20" height="20" rx="3" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </div>
+          <p>添加债务并点击计算，查看两种策略对比</p>
+        </div>
+
+        <!-- Results content injected by JS -->
+        <div class="results-content" id="resultsContent" style="display:none;"></div>
+      </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>DebtPayoff Planner &copy; 2026 · 数据仅在本地处理，不会上传</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
