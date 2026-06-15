@@ -11,8 +11,6 @@
   body {
     @apply bg-white text-zinc-900 antialiased;
   }
-
-  /* Inter font via next/font in layout — this is the fallback stack */
 }
 
 /* ---- Hero widget slider overrides (dark background) ---- */

@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import Script from "next/script";
 import Sidebar from "@/components/Sidebar";
 import Footer from "@/components/Footer";
 import "./globals.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
 
 const BASE_URL = process.env.FINKIT_BASE_URL ?? "https://finkit.com";
 const PLAUSIBLE_DOMAIN = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN ?? "finkit.com";
@@ -62,7 +69,7 @@ export const metadata: Metadata = {
 /**
  * RootLayout wraps every page with:
  * - Privacy-first Plausible analytics (self-hostable, no cookies)
- * - System font stack via Tailwind (Inter → system-ui → sans-serif)
+ * - Inter font via next/font (self-hosted at build time, no CDN)
  * - Responsive sidebar (fixed left on desktop, drawer on mobile)
  * - Main content area offset to leave room for the sidebar on desktop
  */
@@ -80,7 +87,7 @@ export default function RootLayout({
           strategy="afterInteractive"
         />
       </head>
-      <body className="min-h-screen bg-white font-sans text-zinc-900 antialiased">
+      <body className={`${inter.variable} min-h-screen bg-white font-sans text-zinc-900 antialiased`}>
         <Sidebar />
 
         {/*
