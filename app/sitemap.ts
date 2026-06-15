@@ -4,10 +4,10 @@ import { MetadataRoute } from "next";
  * Dynamic sitemap for FinKit.
  *
  * Excludes internal/auth/debug pages. All production URLs use the canonical
- * base URL (FINKIT_BASE_URL env var, falling back to https://finkit.com).
+ * base URL (FINKIT_BASE_URL env var, falling back to https://getfinkit.com).
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = process.env.FINKIT_BASE_URL ?? "https://finkit.com";
+  const base = process.env.FINKIT_BASE_URL ?? "https://getfinkit.com";
 
   const routes: MetadataRoute.Sitemap = [
     {

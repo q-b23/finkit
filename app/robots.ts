@@ -11,7 +11,7 @@ import { MetadataRoute } from "next";
  * Sitemap reference uses the canonical base URL.
  */
 export default function robots(): MetadataRoute.Robots {
-  const base = process.env.FINKIT_BASE_URL ?? "https://finkit.com";
+  const base = process.env.FINKIT_BASE_URL ?? "https://getfinkit.com";
 
   return {
     rules: [

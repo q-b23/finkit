@@ -11,8 +11,8 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-const BASE_URL = process.env.FINKIT_BASE_URL ?? "https://finkit.com";
-const PLAUSIBLE_DOMAIN = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN ?? "finkit.com";
+const BASE_URL = process.env.FINKIT_BASE_URL ?? "https://getfinkit.com";
+const PLAUSIBLE_DOMAIN = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN ?? "getfinkit.com";
 
 /**
  * Global SEO metadata with OG, Twitter Cards, and canonical.

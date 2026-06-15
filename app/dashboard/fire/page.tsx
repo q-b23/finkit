@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { FIRECalculator } from "@/components/FIRECalculator";
 
-const BASE_URL = process.env.FINKIT_BASE_URL ?? "https://finkit.com";
+const BASE_URL = process.env.FINKIT_BASE_URL ?? "https://getfinkit.com";
 
 /**
  * Page-specific SEO metadata targeting long-tail FIRE keywords.
