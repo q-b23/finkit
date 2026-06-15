@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Flame, Scale, Banknote, Shield } from "lucide-react";
+import { ArrowRight, Flame, Scale, Banknote, Shield, Github } from "lucide-react";
+import MiniWealthVisualizer from "@/components/MiniWealthVisualizer";
 
 /**
  * Per-page SEO metadata for the landing page.
@@ -43,67 +44,116 @@ const FEATURES = [
 ];
 
 /**
- * Landing page — minimal hero with CTA, feature grid, and privacy reassurance.
+ * Landing page with:
+ * - Dark hero section (single-column on mobile, two-column on md+)
+ * - Feature grid (responsive: 1 → 2 → 3 columns)
+ * - Privacy reassurance footer
  */
 export default function LandingPage() {
   return (
-    <div className="mx-auto max-w-5xl px-6 py-16 md:py-24 lg:py-32">
-      {/* ---- Hero ---- */}
-      <section className="animate-fade-in text-center">
-        <h1 className="text-balance text-4xl font-bold tracking-tight text-zinc-900 sm:text-5xl lg:text-6xl">
-          Take Control of Your Financial Future,{" "}
-          <span className="text-zinc-400">Privately.</span>
-        </h1>
+    <>
+      {/* ================================================================
+          HERO — dark background, stacks vertically on mobile
+          ================================================================ */}
+      <section className="relative overflow-hidden bg-zinc-950 px-4 py-16 sm:px-6 md:py-24 lg:px-8 lg:py-32">
+        {/* Subtle background texture */}
+        <div
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgb(16_185_129_/_0.08),_transparent_50%)]"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_rgb(255_255_255_/_0.03),_transparent_50%)]"
+          aria-hidden
+        />
 
-        <p className="mx-auto mt-6 max-w-2xl text-balance text-lg leading-relaxed text-zinc-500">
-          Open-source tools to plan your debt payoff and calculate your path to
-          FIRE. 100% local, zero tracking.
-        </p>
+        <div className="relative mx-auto max-w-6xl">
+          <div className="flex flex-col items-center gap-10 md:flex-row md:gap-12 lg:gap-16">
+            {/* ================================================================
+                LEFT COLUMN — Hook, copy, and CTAs
+                ================================================================ */}
+            <div className="w-full text-left animate-fade-in md:flex-1">
+              <h1 className="text-balance text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-6xl">
+                Take Control of Your{" "}
+                <span className="text-emerald-400">Financial Future.</span>{" "}
+                Privately.
+              </h1>
 
-        <div className="mt-10">
-          <Link
-            href="/dashboard/fire"
-            className="inline-flex items-center gap-2 rounded-xl bg-zinc-900 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-zinc-800 hover:shadow-md active:scale-[0.98]"
-          >
-            Start Planning
-            <ArrowRight className="h-4 w-4" />
-          </Link>
+              <p className="mt-5 max-w-xl text-balance text-base leading-relaxed text-zinc-400 sm:text-lg md:text-xl">
+                Open-source tools to crush debt and calculate your path to
+                FIRE. 100% local, zero tracking. Your data never leaves your
+                browser.
+              </p>
+
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
+                <Link
+                  href="/dashboard/fire"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:bg-emerald-400 hover:shadow-emerald-500/40 active:scale-[0.98] sm:w-auto"
+                >
+                  Go to Dashboard
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+
+                <a
+                  href="https://github.com/q-b23/finkit"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/15 px-6 py-3 text-sm font-semibold text-white/80 transition-all hover:border-white/30 hover:text-white active:scale-[0.98] sm:w-auto"
+                >
+                  <Github className="h-4 w-4" />
+                  View on GitHub
+                </a>
+              </div>
+            </div>
+
+            {/* ================================================================
+                RIGHT COLUMN — Interactive Mini Wealth Visualizer
+                ================================================================ */}
+            <div className="w-full animate-slide-up md:flex-1">
+              <MiniWealthVisualizer />
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* ---- Feature Grid ---- */}
-      <section className="mt-24 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {FEATURES.map(({ icon: Icon, title, description, href, accent }) => (
-          <Link
-            key={href}
-            href={href}
-            className="group rounded-2xl border border-zinc-100 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
-          >
-            <div
-              className={`inline-flex h-10 w-10 items-center justify-center rounded-xl ${accent}`}
+      {/* ================================================================
+          FEATURE GRID — white background, responsive columns
+          ================================================================ */}
+      <section className="mx-auto max-w-5xl px-4 py-20 sm:px-6 sm:py-24">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {FEATURES.map(({ icon: Icon, title, description, href, accent }) => (
+            <Link
+              key={href}
+              href={href}
+              className="group rounded-2xl border border-zinc-100 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
             >
-              <Icon className="h-5 w-5" />
-            </div>
+              <div
+                className={`inline-flex h-10 w-10 items-center justify-center rounded-xl ${accent}`}
+              >
+                <Icon className="h-5 w-5" />
+              </div>
 
-            <h3 className="mt-4 text-lg font-semibold tracking-tight text-zinc-900">
-              {title}
-            </h3>
+              <h3 className="mt-4 text-lg font-semibold tracking-tight text-zinc-900">
+                {title}
+              </h3>
 
-            <p className="mt-2 text-sm leading-relaxed text-zinc-500">
-              {description}
-            </p>
+              <p className="mt-2 text-sm leading-relaxed text-zinc-500">
+                {description}
+              </p>
 
-            <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-zinc-900 opacity-0 transition-opacity group-hover:opacity-100">
-              Open tool
-              <ArrowRight className="h-3.5 w-3.5" />
-            </span>
-          </Link>
-        ))}
+              <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-zinc-900 opacity-0 transition-opacity group-hover:opacity-100">
+                Open tool
+                <ArrowRight className="h-3.5 w-3.5" />
+              </span>
+            </Link>
+          ))}
+        </div>
       </section>
 
-      {/* ---- Privacy Reassurance ---- */}
-      <section className="mt-24 border-t border-zinc-100 pt-12 text-center">
-        <div className="mx-auto flex max-w-md flex-col items-center gap-4">
+      {/* ================================================================
+          PRIVACY REASSURANCE
+          ================================================================ */}
+      <section className="border-t border-zinc-100 pb-20 pt-12 text-center sm:pb-24">
+        <div className="mx-auto flex max-w-md flex-col items-center gap-4 px-4 sm:px-6">
           <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-zinc-50">
             <Shield className="h-6 w-6 text-zinc-400" />
           </div>
@@ -111,11 +161,11 @@ export default function LandingPage() {
             Your data stays on your device
           </h2>
           <p className="text-sm leading-relaxed text-zinc-500">
-            Every calculation runs locally in your browser. No accounts required.
-            No analytics. No tracking. Just you and your numbers.
+            Every calculation runs locally in your browser. No accounts
+            required. No invasive tracking. Just you and your numbers.
           </p>
         </div>
       </section>
-    </div>
+    </>
   );
 }

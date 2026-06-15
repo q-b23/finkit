@@ -1,45 +1,70 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import Sidebar from "@/components/Sidebar";
 import Footer from "@/components/Footer";
 import "./globals.css";
 
+const BASE_URL = process.env.FINKIT_BASE_URL ?? "https://finkit.com";
+const PLAUSIBLE_DOMAIN = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN ?? "finkit.com";
+
 /**
- * Global SEO metadata.
- * Page-level overrides (title, description) are set per-route via the Metadata API.
+ * Global SEO metadata with OG, Twitter Cards, and canonical.
+ * Page-level overrides (title, description) are set per-route.
  */
 export const metadata: Metadata = {
+  metadataBase: new URL(BASE_URL),
   title: {
     default: "FinKit — Free & Open Source Personal Finance Toolkit",
     template: "%s · FinKit",
   },
   description:
-    "Debt payoff planner, loan comparison, and FIRE calculator. Privacy-first, no tracking, everything runs locally in your browser.",
+    "Free debt payoff planner, loan comparison calculator, and FIRE retirement calculator. Privacy-first — every calculation runs locally in your browser. No accounts, no tracking.",
   keywords: [
-    "FIRE calculator",
+    "free FIRE calculator",
+    "financial independence retire early",
     "debt payoff planner",
+    "snowball vs avalanche calculator",
     "loan comparison",
-    "financial independence",
-    "personal finance",
+    "compound interest calculator",
+    "personal finance tools",
     "open source",
   ],
   robots: { index: true, follow: true },
   openGraph: {
     title: "FinKit — Free & Open Source Personal Finance Toolkit",
     description:
-      "Debt payoff planner, loan comparison, and FIRE calculator. Privacy-first, no tracking.",
-    type: "website",
+      "Free debt payoff planner, loan comparison, and FIRE calculator. Privacy-first, no tracking.",
+    url: BASE_URL,
     siteName: "FinKit",
+    locale: "en_US",
+    type: "website",
+    images: [
+      {
+        url: `${BASE_URL}/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: "FinKit — Take control of your financial future, privately.",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "FinKit — Free & Open Source Personal Finance Toolkit",
+    description:
+      "Free debt payoff planner, loan comparison, and FIRE calculator. Privacy-first, no tracking.",
+    images: [`${BASE_URL}/og-image.png`],
+  },
+  alternates: {
+    canonical: BASE_URL,
   },
 };
 
 /**
  * RootLayout wraps every page with:
+ * - Privacy-first Plausible analytics (self-hostable, no cookies)
  * - System font stack via Tailwind (Inter → system-ui → sans-serif)
  * - Responsive sidebar (fixed left on desktop, drawer on mobile)
  * - Main content area offset to leave room for the sidebar on desktop
- *
- * Note: The Inter font is declared in tailwind.config.ts as the primary
- * sans-serif family. It falls back gracefully if not installed locally.
  */
 export default function RootLayout({
   children,
@@ -48,6 +73,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <Script
+          src="https://plausible.io/js/script.js"
+          data-domain={PLAUSIBLE_DOMAIN}
+          strategy="afterInteractive"
+        />
+      </head>
       <body className="min-h-screen bg-white font-sans text-zinc-900 antialiased">
         <Sidebar />
 

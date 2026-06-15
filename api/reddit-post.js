@@ -2,6 +2,9 @@
 // Deploys to: finkit-topaz.vercel.app/api/reddit-post
 // Runs on Vercel's US servers, so Reddit sees a US IP
 
+export const maxDuration = 30; // seconds — moved from vercel.json
+
+
 export default async function handler(req, res) {
   // CORS — allow from anywhere
   res.setHeader('Access-Control-Allow-Origin', '*');

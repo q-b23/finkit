@@ -15,6 +15,65 @@
   /* Inter font via next/font in layout — this is the fallback stack */
 }
 
+/* ---- Hero widget slider overrides (dark background) ---- */
+@layer components {
+  .hero-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    border-radius: 9999px;
+    background: rgb(255 255 255 / 0.1);
+    outline: none;
+    cursor: pointer;
+    /* Prevent iOS auto-zoom on focus by using 16px minimum font-size */
+    font-size: 16px;
+    touch-action: manipulation;
+  }
+
+  .hero-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    /* 24x24 core + 12px border = 48x48 total touch target */
+    width: 24px;
+    height: 24px;
+    border-radius: 9999px;
+    background: #10b981;
+    border: 12px solid transparent;
+    background-clip: padding-box;
+    box-shadow: 0 0 0 4px rgb(16 185 129 / 0.2);
+    transition: box-shadow 0.15s ease, transform 0.1s ease;
+  }
+
+  .hero-slider::-webkit-slider-thumb:hover {
+    box-shadow: 0 0 0 6px rgb(16 185 129 / 0.3);
+  }
+
+  .hero-slider::-webkit-slider-thumb:active {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 8px rgb(16 185 129 / 0.35), 0 0 16px rgb(16 185 129 / 0.25);
+  }
+
+  .hero-slider::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border-radius: 9999px;
+    border: 12px solid transparent;
+    background: #10b981;
+    background-clip: padding-box;
+    box-shadow: 0 0 0 4px rgb(16 185 129 / 0.2);
+    transition: box-shadow 0.15s ease, transform 0.1s ease;
+  }
+
+  .hero-slider::-moz-range-thumb:hover {
+    box-shadow: 0 0 0 6px rgb(16 185 129 / 0.3);
+  }
+
+  .hero-slider::-moz-range-thumb:active {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 8px rgb(16 185 129 / 0.35), 0 0 16px rgb(16 185 129 / 0.25);
+  }
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

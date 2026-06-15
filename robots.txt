@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://finkit-topaz.vercel.app/sitemap.xml
