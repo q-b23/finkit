@@ -1,15 +1,27 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
 import Sidebar from "@/components/Sidebar";
 import Footer from "@/components/Footer";
 import "./globals.css";
 
 const inter = Inter({
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
+  weight: ["300", "400", "500", "600", "700", "800"],
   display: "swap",
+  preload: true,
   variable: "--font-inter",
 });
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+  preload: true,
+  variable: "--font-mono",
+});
+
 
 const BASE_URL = process.env.FINKIT_BASE_URL ?? "https://getfinkit.com";
 const PLAUSIBLE_DOMAIN = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN ?? "getfinkit.com";
@@ -81,13 +93,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <meta charSet="utf-8" />
+        <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
         <Script
           src="https://plausible.io/js/script.js"
           data-domain={PLAUSIBLE_DOMAIN}
           strategy="afterInteractive"
         />
       </head>
-      <body className={`${inter.variable} min-h-screen bg-white font-sans text-zinc-900 antialiased`}>
+      <body className={`${inter.variable} ${jetbrainsMono.variable} min-h-screen bg-white font-sans text-zinc-900 antialiased`}>
         <Sidebar />
 
         {/*
