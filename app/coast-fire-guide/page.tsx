@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import RelatedArticles from "@/components/RelatedArticles";
 
 export const metadata: Metadata = {
   title: "Coast FIRE Guide — Let Your Investments Do the Work",
@@ -98,6 +99,8 @@ export default function CoastFireGuidePage() {
           </Link>
         </div>
       </article>
+
+      <RelatedArticles category="fire" />
     </div>
   );
 }

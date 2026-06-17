@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import RelatedArticles from "@/components/RelatedArticles";
 
 export const metadata: Metadata = {
   title: "Mortgage Payoff Calculator — How to Pay Off Your Mortgage Early",
@@ -100,6 +101,8 @@ export default function MortgagePayoffPage() {
           </Link>
         </div>
       </article>
+
+      <RelatedArticles category="mortgage" />
     </div>
   );
 }

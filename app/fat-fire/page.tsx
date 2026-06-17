@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import RelatedArticles from "@/components/RelatedArticles";
 
 export const metadata: Metadata = {
   title: "Fat FIRE — Retire Early Without Sacrificing Lifestyle",
@@ -112,6 +113,8 @@ export default function FatFirePage() {
           </Link>
         </div>
       </article>
+
+      <RelatedArticles category="fire" />
     </div>
   );
 }

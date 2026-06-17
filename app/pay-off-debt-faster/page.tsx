@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import RelatedArticles from "@/components/RelatedArticles";
 
 export const metadata: Metadata = {
   title: "Pay Off Debt Faster — 7 Proven Strategies That Actually Work",
@@ -84,6 +85,8 @@ export default function PayOffDebtFasterPage() {
           </Link>
         </div>
       </article>
+
+      <RelatedArticles category="debt" />
     </div>
   );
 }

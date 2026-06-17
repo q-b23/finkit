@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import RelatedArticles from "@/components/RelatedArticles";
 
 export const metadata: Metadata = {
   title: "Credit Card Payoff Calculator — How to Eliminate Credit Card Debt Fast",
@@ -106,6 +107,8 @@ export default function CreditCardPayoffPage() {
           </Link>
         </div>
       </article>
+
+      <RelatedArticles category="debt" />
     </div>
   );
 }

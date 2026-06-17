@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import RelatedArticles from "@/components/RelatedArticles";
 
 export const metadata: Metadata = {
   title: "Debt Avalanche vs Snowball — Which Strategy Saves More?",
@@ -94,6 +95,8 @@ export default function DebtAvalancheVsSnowballPage() {
           </Link>
         </div>
       </article>
+
+      <RelatedArticles category="debt" />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import RelatedArticles from "@/components/RelatedArticles";
 
 export const metadata: Metadata = {
   title: "How Long to Retire — The Compound Growth Formula",
@@ -83,6 +84,8 @@ export default function HowLongToRetirePage() {
           </Link>
         </div>
       </article>
+
+      <RelatedArticles category="fire" />
     </div>
   );
 }

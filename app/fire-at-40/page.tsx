@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import RelatedArticles from "@/components/RelatedArticles";
 
 export const metadata: Metadata = {
   title: "FIRE at 40 — Can You Retire by 40? Real Numbers",
@@ -92,6 +93,8 @@ export default function FireAt40Page() {
           </Link>
         </div>
       </article>
+
+      <RelatedArticles category="fire" />
     </div>
   );
 }

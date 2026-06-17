@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import RelatedArticles from "@/components/RelatedArticles";
 
 export const metadata: Metadata = {
   title: "Compound Interest Examples — See the Math in Action",
@@ -85,6 +86,8 @@ export default function CompoundInterestExamplesPage() {
           </Link>
         </div>
       </article>
+
+      <RelatedArticles category="investing" />
     </div>
   );
 }

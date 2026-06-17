@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import RelatedArticles from "@/components/RelatedArticles";
 
 export const metadata: Metadata = {
   title: "Lean FIRE — Financial Independence on a Minimal Budget",
@@ -103,6 +104,8 @@ export default function LeanFirePage() {
           </Link>
         </div>
       </article>
+
+      <RelatedArticles category="fire" />
     </div>
   );
 }
