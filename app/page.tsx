@@ -119,7 +119,7 @@ export default function LandingPage() {
           FEATURE GRID — white background, responsive columns
           ================================================================ */}
       <section className="mx-auto max-w-5xl px-4 py-20 sm:px-6 sm:py-24">
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {FEATURES.map(({ icon: Icon, title, description, href, accent }) => (
             <Link
               key={href}
@@ -162,10 +162,10 @@ export default function LandingPage() {
             In-depth articles with real numbers, formulas, and examples. No fluff.
           </p>
         </div>
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:gap-5 sm:grid-cols-2 lg:grid-cols-3">
           <Link
             href="/how-long-to-retire"
-            className="group rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+            className="group rounded-2xl border border-zinc-100 bg-white p-4 sm:p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
           >
             <span className="inline-block rounded-full bg-amber-50 px-3 py-0.5 text-xs font-medium text-amber-700 mb-3">FIRE</span>
             <h3 className="font-semibold text-zinc-900 group-hover:text-zinc-700 transition-colors">
@@ -177,7 +177,7 @@ export default function LandingPage() {
           </Link>
           <Link
             href="/fire-at-40"
-            className="group rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+            className="group rounded-2xl border border-zinc-100 bg-white p-4 sm:p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
           >
             <span className="inline-block rounded-full bg-amber-50 px-3 py-0.5 text-xs font-medium text-amber-700 mb-3">FIRE</span>
             <h3 className="font-semibold text-zinc-900 group-hover:text-zinc-700 transition-colors">
@@ -189,7 +189,7 @@ export default function LandingPage() {
           </Link>
           <Link
             href="/compound-interest-examples"
-            className="group rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+            className="group rounded-2xl border border-zinc-100 bg-white p-4 sm:p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
           >
             <span className="inline-block rounded-full bg-purple-50 px-3 py-0.5 text-xs font-medium text-purple-700 mb-3">Investing</span>
             <h3 className="font-semibold text-zinc-900 group-hover:text-zinc-700 transition-colors">
@@ -201,7 +201,7 @@ export default function LandingPage() {
           </Link>
           <Link
             href="/debt-avalanche-vs-snowball"
-            className="group rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+            className="group rounded-2xl border border-zinc-100 bg-white p-4 sm:p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
           >
             <span className="inline-block rounded-full bg-emerald-50 px-3 py-0.5 text-xs font-medium text-emerald-700 mb-3">Debt</span>
             <h3 className="font-semibold text-zinc-900 group-hover:text-zinc-700 transition-colors">
@@ -213,7 +213,7 @@ export default function LandingPage() {
           </Link>
           <Link
             href="/coast-fire-guide"
-            className="group rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+            className="group rounded-2xl border border-zinc-100 bg-white p-4 sm:p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
           >
             <span className="inline-block rounded-full bg-amber-50 px-3 py-0.5 text-xs font-medium text-amber-700 mb-3">FIRE</span>
             <h3 className="font-semibold text-zinc-900 group-hover:text-zinc-700 transition-colors">
@@ -225,7 +225,7 @@ export default function LandingPage() {
           </Link>
           <Link
             href="/pay-off-debt-faster"
-            className="group rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+            className="group rounded-2xl border border-zinc-100 bg-white p-4 sm:p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
           >
             <span className="inline-block rounded-full bg-emerald-50 px-3 py-0.5 text-xs font-medium text-emerald-700 mb-3">Debt</span>
             <h3 className="font-semibold text-zinc-900 group-hover:text-zinc-700 transition-colors">
@@ -237,7 +237,7 @@ export default function LandingPage() {
           </Link>
           <Link
             href="/credit-card-payoff"
-            className="group rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+            className="group rounded-2xl border border-zinc-100 bg-white p-4 sm:p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
           >
             <span className="inline-block rounded-full bg-emerald-50 px-3 py-0.5 text-xs font-medium text-emerald-700 mb-3">Debt</span>
             <h3 className="font-semibold text-zinc-900 group-hover:text-zinc-700 transition-colors">
@@ -249,7 +249,7 @@ export default function LandingPage() {
           </Link>
           <Link
             href="/mortgage-payoff"
-            className="group rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+            className="group rounded-2xl border border-zinc-100 bg-white p-4 sm:p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
           >
             <span className="inline-block rounded-full bg-blue-50 px-3 py-0.5 text-xs font-medium text-blue-700 mb-3">Mortgage</span>
             <h3 className="font-semibold text-zinc-900 group-hover:text-zinc-700 transition-colors">
@@ -261,7 +261,7 @@ export default function LandingPage() {
           </Link>
           <Link
             href="/barista-fire"
-            className="group rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+            className="group rounded-2xl border border-zinc-100 bg-white p-4 sm:p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
           >
             <span className="inline-block rounded-full bg-amber-50 px-3 py-0.5 text-xs font-medium text-amber-700 mb-3">FIRE</span>
             <h3 className="font-semibold text-zinc-900 group-hover:text-zinc-700 transition-colors">
@@ -273,7 +273,7 @@ export default function LandingPage() {
           </Link>
           <Link
             href="/lean-fire"
-            className="group rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+            className="group rounded-2xl border border-zinc-100 bg-white p-4 sm:p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
           >
             <span className="inline-block rounded-full bg-amber-50 px-3 py-0.5 text-xs font-medium text-amber-700 mb-3">FIRE</span>
             <h3 className="font-semibold text-zinc-900 group-hover:text-zinc-700 transition-colors">
@@ -285,7 +285,7 @@ export default function LandingPage() {
           </Link>
           <Link
             href="/fat-fire"
-            className="group rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+            className="group rounded-2xl border border-zinc-100 bg-white p-4 sm:p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
           >
             <span className="inline-block rounded-full bg-amber-50 px-3 py-0.5 text-xs font-medium text-amber-700 mb-3">FIRE</span>
             <h3 className="font-semibold text-zinc-900 group-hover:text-zinc-700 transition-colors">

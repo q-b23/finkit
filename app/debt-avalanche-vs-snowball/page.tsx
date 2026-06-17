@@ -13,7 +13,7 @@ export default function DebtAvalancheVsSnowballPage() {
     <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 md:py-24">
       <Link
         href="/"
-        className="inline-flex items-center gap-1.5 text-sm text-zinc-400 hover:text-zinc-600 transition-colors mb-8"
+        className="inline-flex items-center gap-1.5 text-sm text-zinc-400 hover:text-zinc-600 transition-colors mb-8 -mx-1 px-1 py-1.5"
       >
         <ArrowLeft className="h-3.5 w-3.5" />
         Back to FinKit

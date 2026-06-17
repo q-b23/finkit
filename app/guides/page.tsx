@@ -98,7 +98,7 @@ export default function GuidesPage() {
         </p>
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         {GUIDES.map((guide) => (
           <Link
             key={guide.slug}
@@ -134,7 +134,7 @@ export default function GuidesPage() {
         <h2 className="text-xl font-semibold tracking-tight text-zinc-900 mb-6">
           Long-Form Articles
         </h2>
-        <div className="grid gap-6 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
           <Link
             href="/debt-avalanche-vs-snowball"
             className="group rounded-2xl border border-zinc-100 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
