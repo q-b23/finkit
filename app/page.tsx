@@ -259,6 +259,42 @@ export default function LandingPage() {
               Cut years off your loan with extra principal and bi-weekly payments.
             </p>
           </Link>
+          <Link
+            href="/barista-fire"
+            className="group rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+          >
+            <span className="inline-block rounded-full bg-amber-50 px-3 py-0.5 text-xs font-medium text-amber-700 mb-3">FIRE</span>
+            <h3 className="font-semibold text-zinc-900 group-hover:text-zinc-700 transition-colors">
+              Barista FIRE
+            </h3>
+            <p className="mt-1.5 text-sm text-zinc-500">
+              Low-stress job + investments. Halves your required nest egg.
+            </p>
+          </Link>
+          <Link
+            href="/lean-fire"
+            className="group rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+          >
+            <span className="inline-block rounded-full bg-amber-50 px-3 py-0.5 text-xs font-medium text-amber-700 mb-3">FIRE</span>
+            <h3 className="font-semibold text-zinc-900 group-hover:text-zinc-700 transition-colors">
+              Lean FIRE
+            </h3>
+            <p className="mt-1.5 text-sm text-zinc-500">
+              Fastest path to FI. K/year real budget breakdown.
+            </p>
+          </Link>
+          <Link
+            href="/fat-fire"
+            className="group rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+          >
+            <span className="inline-block rounded-full bg-amber-50 px-3 py-0.5 text-xs font-medium text-amber-700 mb-3">FIRE</span>
+            <h3 className="font-semibold text-zinc-900 group-hover:text-zinc-700 transition-colors">
+              Fat FIRE
+            </h3>
+            <p className="mt-1.5 text-sm text-zinc-500">
+              K+/year retirement. Income-to-timeline projection table.
+            </p>
+          </Link>
         </div>
       </section>
 

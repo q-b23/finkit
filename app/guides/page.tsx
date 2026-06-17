@@ -255,6 +255,51 @@ export default function GuidesPage() {
               Read article <ArrowRight className="h-3.5 w-3.5" />
             </span>
           </Link>
+          <Link
+            href="/barista-fire"
+            className="group rounded-2xl border border-zinc-100 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+          >
+            <span className="inline-block rounded-full bg-amber-50 px-3 py-0.5 text-xs font-medium text-amber-700 mb-3">FIRE</span>
+            <h3 className="text-lg font-semibold tracking-tight text-zinc-900 group-hover:text-zinc-700 transition-colors">
+              Barista FIRE — Retire Early Without Quitting Work
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-zinc-500">
+              The middle path: a low-stress job covers expenses while investments grow. Halves your required nest egg.
+            </p>
+            <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-zinc-900 opacity-0 transition-opacity group-hover:opacity-100">
+              Read article <ArrowRight className="h-3.5 w-3.5" />
+            </span>
+          </Link>
+          <Link
+            href="/lean-fire"
+            className="group rounded-2xl border border-zinc-100 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+          >
+            <span className="inline-block rounded-full bg-amber-50 px-3 py-0.5 text-xs font-medium text-amber-700 mb-3">FIRE</span>
+            <h3 className="text-lg font-semibold tracking-tight text-zinc-900 group-hover:text-zinc-700 transition-colors">
+              Lean FIRE — Financial Independence on a Minimal Budget
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-zinc-500">
+              The fastest path to FI. Retire on K–K/year with a real sample budget and Lean vs Fat comparison.
+            </p>
+            <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-zinc-900 opacity-0 transition-opacity group-hover:opacity-100">
+              Read article <ArrowRight className="h-3.5 w-3.5" />
+            </span>
+          </Link>
+          <Link
+            href="/fat-fire"
+            className="group rounded-2xl border border-zinc-100 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+          >
+            <span className="inline-block rounded-full bg-amber-50 px-3 py-0.5 text-xs font-medium text-amber-700 mb-3">FIRE</span>
+            <h3 className="text-lg font-semibold tracking-tight text-zinc-900 group-hover:text-zinc-700 transition-colors">
+              Fat FIRE — Retire Early Without Sacrificing Lifestyle
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-zinc-500">
+              K+/year in retirement. Income-to-timeline table, career paths, and the lifestyle creep trap.
+            </p>
+            <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-zinc-900 opacity-0 transition-opacity group-hover:opacity-100">
+              Read article <ArrowRight className="h-3.5 w-3.5" />
+            </span>
+          </Link>
         </div>
       </div>
 
