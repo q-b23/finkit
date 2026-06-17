@@ -27,6 +27,11 @@ export const metadata: Metadata = {
 export default function FireCalculatorPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 md:py-20">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: "{\"@context\": \"https://schema.org\", \"@type\": \"FAQPage\", \"mainEntity\": [{\"@type\": \"Question\", \"name\": \"What is a FIRE number?\", \"acceptedAnswer\": {\"@type\": \"Answer\", \"text\": \"Your FIRE number is the total amount you need invested to retire early. It is calculated using the 4% rule: multiply your annual expenses by 25. If you spend $48,000/year, your FIRE number is $1.2 million.\"}}, {\"@type\": \"Question\", \"name\": \"What is Coast FIRE?\", \"acceptedAnswer\": {\"@type\": \"Answer\", \"text\": \"Coast FIRE is the point where your existing investments will grow to your FIRE number by your target retirement age, without any additional contributions. The calculator finds this milestone.\"}}, {\"@type\": \"Question\", \"name\": \"Why does the FIRE calculator use 7% return?\", \"acceptedAnswer\": {\"@type\": \"Answer\", \"text\": \"The 7% figure represents the historical real return of the US stock market (S&P 500 ~10% nominal minus ~3% inflation). It is a conservative, inflation-adjusted estimate used by most FIRE calculations.\"}}]}" }}
+      />
+
       <section className="mb-10">
         <h1 className="text-3xl font-bold tracking-tight text-zinc-900">
           Free FIRE Calculator — Plan Your Path to Financial Independence

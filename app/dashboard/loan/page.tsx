@@ -11,6 +11,11 @@ export const metadata: Metadata = {
 export default function LoanComparePage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 md:py-20">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: "{\"@context\": \"https://schema.org\", \"@type\": \"FAQPage\", \"mainEntity\": [{\"@type\": \"Question\", \"name\": \"What should I compare when shopping for a loan?\", \"acceptedAnswer\": {\"@type\": \"Answer\", \"text\": \"Focus on three numbers: monthly payment, total interest paid, and total cost (principal + interest). A lower monthly payment might hide a longer term and higher total cost. Use this tool to see all three side by side.\"}}, {\"@type\": \"Question\", \"name\": \"What is a good APR for a mortgage in 2026?\", \"acceptedAnswer\": {\"@type\": \"Answer\", \"text\": \"A good mortgage APR for a borrower with excellent credit (740+) is typically 6.0-6.5% for a 30-year fixed and 5.5-6.0% for a 15-year fixed. Auto loans range from 5-8% for prime borrowers.\"}}, {\"@type\": \"Question\", \"name\": \"How is the composite score calculated?\", \"acceptedAnswer\": {\"@type\": \"Answer\", \"text\": \"The score equally weights three factors: lowest monthly payment, lowest total interest, and lowest total cost. Each loan is ranked on each factor, and the ranks are averaged. A score of 100 means the loan is best on all three measures.\"}}]}" }}
+      />
+
       <section className="mb-10">
         <h1 className="text-3xl font-bold tracking-tight text-zinc-900">
           Loan Comparison Calculator — Find the Best Deal

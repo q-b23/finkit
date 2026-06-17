@@ -14,6 +14,11 @@ export const metadata: Metadata = {
 export default function DebtPlannerPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 md:py-20">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: "{\"@context\": \"https://schema.org\", \"@type\": \"FAQPage\", \"mainEntity\": [{\"@type\": \"Question\", \"name\": \"Which debt payoff method saves more money?\", \"acceptedAnswer\": {\"@type\": \"Answer\", \"text\": \"The avalanche method (highest interest rate first) is mathematically optimal and always saves the most in interest. However, the snowball method (smallest balance first) has higher completion rates because early wins build momentum.\"}}, {\"@type\": \"Question\", \"name\": \"How do I use the debt payoff planner?\", \"acceptedAnswer\": {\"@type\": \"Answer\", \"text\": \"Add each debt with its name, balance, interest rate, and minimum monthly payment. Then enter how much extra you can pay each month beyond the minimums. The planner instantly calculates your debt-free date and total interest for both snowball and avalanche strategies.\"}}, {\"@type\": \"Question\", \"name\": \"Should I use snowball or avalanche?\", \"acceptedAnswer\": {\"@type\": \"Answer\", \"text\": \"If you have struggled to stick with financial plans, choose snowball \u2014 the quick wins from paying off small debts first keep you motivated. If you are disciplined and want to minimize total interest paid, choose avalanche.\"}}]}" }}
+      />
+
       {/* SEO Intro */}
       <section className="mb-10">
         <h1 className="text-3xl font-bold tracking-tight text-zinc-900">
