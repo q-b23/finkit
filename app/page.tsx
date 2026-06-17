@@ -223,6 +223,42 @@ export default function LandingPage() {
               The point where your money works harder than you do.
             </p>
           </Link>
+          <Link
+            href="/pay-off-debt-faster"
+            className="group rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+          >
+            <span className="inline-block rounded-full bg-emerald-50 px-3 py-0.5 text-xs font-medium text-emerald-700 mb-3">Debt</span>
+            <h3 className="font-semibold text-zinc-900 group-hover:text-zinc-700 transition-colors">
+              Pay Off Debt Faster
+            </h3>
+            <p className="mt-1.5 text-sm text-zinc-500">
+              7 concrete strategies — bi-weekly, windfalls, balance transfers.
+            </p>
+          </Link>
+          <Link
+            href="/credit-card-payoff"
+            className="group rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+          >
+            <span className="inline-block rounded-full bg-emerald-50 px-3 py-0.5 text-xs font-medium text-emerald-700 mb-3">Debt</span>
+            <h3 className="font-semibold text-zinc-900 group-hover:text-zinc-700 transition-colors">
+              Credit Card Payoff
+            </h3>
+            <p className="mt-1.5 text-sm text-zinc-500">
+              Escape the minimum payment trap. Real APR comparison table.
+            </p>
+          </Link>
+          <Link
+            href="/mortgage-payoff"
+            className="group rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+          >
+            <span className="inline-block rounded-full bg-blue-50 px-3 py-0.5 text-xs font-medium text-blue-700 mb-3">Mortgage</span>
+            <h3 className="font-semibold text-zinc-900 group-hover:text-zinc-700 transition-colors">
+              Mortgage Payoff
+            </h3>
+            <p className="mt-1.5 text-sm text-zinc-500">
+              Cut years off your loan with extra principal and bi-weekly payments.
+            </p>
+          </Link>
         </div>
       </section>
 

@@ -210,6 +210,51 @@ export default function GuidesPage() {
               Read article <ArrowRight className="h-3.5 w-3.5" />
             </span>
           </Link>
+          <Link
+            href="/pay-off-debt-faster"
+            className="group rounded-2xl border border-zinc-100 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+          >
+            <span className="inline-block rounded-full bg-emerald-50 px-3 py-0.5 text-xs font-medium text-emerald-700 mb-3">Debt</span>
+            <h3 className="text-lg font-semibold tracking-tight text-zinc-900 group-hover:text-zinc-700 transition-colors">
+              Pay Off Debt Faster — 7 Proven Strategies
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-zinc-500">
+              Bi-weekly payments, windfalls, balance transfers, and side hustles. Concrete strategies with real savings numbers.
+            </p>
+            <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-zinc-900 opacity-0 transition-opacity group-hover:opacity-100">
+              Read article <ArrowRight className="h-3.5 w-3.5" />
+            </span>
+          </Link>
+          <Link
+            href="/credit-card-payoff"
+            className="group rounded-2xl border border-zinc-100 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+          >
+            <span className="inline-block rounded-full bg-emerald-50 px-3 py-0.5 text-xs font-medium text-emerald-700 mb-3">Debt</span>
+            <h3 className="text-lg font-semibold tracking-tight text-zinc-900 group-hover:text-zinc-700 transition-colors">
+              Credit Card Payoff — Kill High-APR Debt Fast
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-zinc-500">
+              The minimum payment trap, balance transfer strategy, and debt consolidation — with a real APR comparison table.
+            </p>
+            <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-zinc-900 opacity-0 transition-opacity group-hover:opacity-100">
+              Read article <ArrowRight className="h-3.5 w-3.5" />
+            </span>
+          </Link>
+          <Link
+            href="/mortgage-payoff"
+            className="group rounded-2xl border border-zinc-100 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+          >
+            <span className="inline-block rounded-full bg-blue-50 px-3 py-0.5 text-xs font-medium text-blue-700 mb-3">Mortgage</span>
+            <h3 className="text-lg font-semibold tracking-tight text-zinc-900 group-hover:text-zinc-700 transition-colors">
+              Mortgage Payoff — Cut Years Off Your Loan
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-zinc-500">
+              Bi-weekly payments, extra principal, recasting, and refinance — with an interest savings table for each strategy.
+            </p>
+            <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-zinc-900 opacity-0 transition-opacity group-hover:opacity-100">
+              Read article <ArrowRight className="h-3.5 w-3.5" />
+            </span>
+          </Link>
         </div>
       </div>
 
