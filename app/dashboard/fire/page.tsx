@@ -1,11 +1,9 @@
 import { Metadata } from "next";
+import Link from "next/link";
 import { FIRECalculator } from "@/components/FIRECalculator";
 
 const BASE_URL = process.env.FINKIT_BASE_URL ?? "https://getfinkit.com";
 
-/**
- * Page-specific SEO metadata targeting long-tail FIRE keywords.
- */
 export const metadata: Metadata = {
   title: "Free FIRE Calculator — Financial Independence, Retire Early",
   description:
@@ -21,51 +19,88 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Free FIRE Calculator — Financial Independence, Retire Early",
     description:
-      "Calculate your FIRE number and Coast FIRE age. Free, private, open source.",
+      "Project compound growth, find your FIRE number, and discover your Coast FIRE age. Free, private, open source.",
     url: `${BASE_URL}/dashboard/fire`,
   },
-  alternates: {
-    canonical: `${BASE_URL}/dashboard/fire`,
-  },
 };
 
-/**
- * JSON-LD WebApplication schema for Google rich snippets.
- */
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  name: "FinKit FIRE Calculator",
-  url: `${BASE_URL}/dashboard/fire`,
-  description:
-    "A free, privacy-first FIRE (Financial Independence, Retire Early) calculator that runs entirely in your browser. Compute your FIRE number, project compound growth, and discover your Coast FIRE age — no sign-up, no tracking, no servers involved.",
-  applicationCategory: "FinanceApplication",
-  operatingSystem: "Web Browser",
-  offers: {
-    "@type": "Offer",
-    price: "0",
-    priceCurrency: "USD",
-  },
-  author: {
-    "@type": "Organization",
-    name: "FinKit",
-    url: BASE_URL,
-  },
-  browserRequirements: "Requires JavaScript",
-  permissions: "No personal data collected. All calculations run client-side.",
-};
-
-/**
- * FIRE Calculator page with rich snippet schema markup.
- */
 export default function FireCalculatorPage() {
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+    <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 md:py-20">
+      <section className="mb-10">
+        <h1 className="text-3xl font-bold tracking-tight text-zinc-900">
+          Free FIRE Calculator — Plan Your Path to Financial Independence
+        </h1>
+        <p className="mt-4 max-w-2xl text-base leading-relaxed text-zinc-500">
+          Adjust your monthly savings, current age, and target retirement age below. The calculator projects your nest egg using compound interest (7% annual return) and shows your Coast FIRE age — the point where you can stop contributing and let your investments grow to your target on their own.
+        </p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <Link href="/how-long-to-retire" className="text-sm text-amber-600 hover:text-amber-700 underline underline-offset-2">
+            How long to retire →
+          </Link>
+          <Link href="/fire-at-40" className="text-sm text-amber-600 hover:text-amber-700 underline underline-offset-2">
+            FIRE at 40: real numbers →
+          </Link>
+          <Link href="/coast-fire-guide" className="text-sm text-amber-600 hover:text-amber-700 underline underline-offset-2">
+            Coast FIRE guide →
+          </Link>
+        </div>
+      </section>
+
       <FIRECalculator />
-    </>
+
+      <section className="mt-16 border-t border-zinc-100 pt-12">
+        <h2 className="text-2xl font-bold tracking-tight text-zinc-900 mb-8">
+          Frequently Asked Questions
+        </h2>
+
+        <div className="space-y-8">
+          <div>
+            <h3 className="text-lg font-semibold text-zinc-900 mb-2">
+              What is a FIRE number?
+            </h3>
+            <p className="text-sm leading-relaxed text-zinc-500">
+              Your FIRE number is the total amount you need invested to retire early. It is calculated using the 4% rule: multiply your annual expenses by 25. If you spend $48,000/year, your FIRE number is $1.2 million. This calculator projects how your monthly savings grow toward that target.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold text-zinc-900 mb-2">
+              What is Coast FIRE?
+            </h3>
+            <p className="text-sm leading-relaxed text-zinc-500">
+              Coast FIRE is the point where your existing investments will grow to your FIRE number by your target retirement age, without any additional contributions. The calculator finds this milestone so you know exactly when you can stop saving and let compound interest do the rest.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold text-zinc-900 mb-2">
+              Why does the calculator use 7% return?
+            </h3>
+            <p className="text-sm leading-relaxed text-zinc-500">
+              The 7% figure represents the historical real return of the US stock market (S&P 500 ~10% nominal minus ~3% inflation). It is a conservative, inflation-adjusted estimate used by most FIRE calculations. Your actual results will vary based on market conditions.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold text-zinc-900 mb-2">
+              How accurate is this FIRE calculator?
+            </h3>
+            <p className="text-sm leading-relaxed text-zinc-500">
+              The math is exact — it uses the standard compound interest formula. Accuracy depends on your inputs. Use realistic numbers: your actual monthly savings, a conservative return rate, and your true expenses. The calculator gives you a projection, not a guarantee.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold text-zinc-900 mb-2">
+              Is my financial data safe?
+            </h3>
+            <p className="text-sm leading-relaxed text-zinc-500">
+              Yes. Every calculation runs locally in your browser. Your numbers — income, savings, age — never leave your device. No accounts, no servers, no tracking. Open your browser's Network tab and you will see zero data sent out.
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
   );
 }
