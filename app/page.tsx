@@ -149,6 +149,83 @@ export default function LandingPage() {
         </div>
       </section>
 
+
+      {/* ================================================================
+          LONG-FORM ARTICLES
+          ================================================================ */}
+      <section className="mx-auto max-w-5xl px-4 pb-20 sm:px-6 sm:pb-24">
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold tracking-tight text-zinc-900">
+            Deep Dives
+          </h2>
+          <p className="mt-2 text-sm text-zinc-500">
+            In-depth articles with real numbers, formulas, and examples. No fluff.
+          </p>
+        </div>
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <Link
+            href="/how-long-to-retire"
+            className="group rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+          >
+            <span className="inline-block rounded-full bg-amber-50 px-3 py-0.5 text-xs font-medium text-amber-700 mb-3">FIRE</span>
+            <h3 className="font-semibold text-zinc-900 group-hover:text-zinc-700 transition-colors">
+              How Long to Retire
+            </h3>
+            <p className="mt-1.5 text-sm text-zinc-500">
+              Savings rate to retirement timeline — with a quick-reference table.
+            </p>
+          </Link>
+          <Link
+            href="/fire-at-40"
+            className="group rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+          >
+            <span className="inline-block rounded-full bg-amber-50 px-3 py-0.5 text-xs font-medium text-amber-700 mb-3">FIRE</span>
+            <h3 className="font-semibold text-zinc-900 group-hover:text-zinc-700 transition-colors">
+              FIRE at 40
+            </h3>
+            <p className="mt-1.5 text-sm text-zinc-500">
+              The math, the income required, and the Barista FIRE alternative.
+            </p>
+          </Link>
+          <Link
+            href="/compound-interest-examples"
+            className="group rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+          >
+            <span className="inline-block rounded-full bg-purple-50 px-3 py-0.5 text-xs font-medium text-purple-700 mb-3">Investing</span>
+            <h3 className="font-semibold text-zinc-900 group-hover:text-zinc-700 transition-colors">
+              Compound Interest Examples
+            </h3>
+            <p className="mt-1.5 text-sm text-zinc-500">
+              Three real scenarios: Sarah, Mike, and Alex. See who wins.
+            </p>
+          </Link>
+          <Link
+            href="/debt-avalanche-vs-snowball"
+            className="group rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+          >
+            <span className="inline-block rounded-full bg-emerald-50 px-3 py-0.5 text-xs font-medium text-emerald-700 mb-3">Debt</span>
+            <h3 className="font-semibold text-zinc-900 group-hover:text-zinc-700 transition-colors">
+              Avalanche vs Snowball
+            </h3>
+            <p className="mt-1.5 text-sm text-zinc-500">
+              Side-by-side with real numbers — see the dollar difference.
+            </p>
+          </Link>
+          <Link
+            href="/coast-fire-guide"
+            className="group rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+          >
+            <span className="inline-block rounded-full bg-amber-50 px-3 py-0.5 text-xs font-medium text-amber-700 mb-3">FIRE</span>
+            <h3 className="font-semibold text-zinc-900 group-hover:text-zinc-700 transition-colors">
+              Coast FIRE Guide
+            </h3>
+            <p className="mt-1.5 text-sm text-zinc-500">
+              The point where your money works harder than you do.
+            </p>
+          </Link>
+        </div>
+      </section>
+
       {/* ================================================================
           PRIVACY REASSURANCE
           ================================================================ */}

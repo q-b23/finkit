@@ -127,6 +127,92 @@ export default function GuidesPage() {
           </Link>
         ))}
       </div>
+
+
+      {/* Long-Form Articles */}
+      <div className="mt-16 pt-12 border-t border-zinc-100">
+        <h2 className="text-xl font-semibold tracking-tight text-zinc-900 mb-6">
+          Long-Form Articles
+        </h2>
+        <div className="grid gap-6 sm:grid-cols-2">
+          <Link
+            href="/debt-avalanche-vs-snowball"
+            className="group rounded-2xl border border-zinc-100 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+          >
+            <span className="inline-block rounded-full bg-emerald-50 px-3 py-0.5 text-xs font-medium text-emerald-700 mb-3">Debt</span>
+            <h3 className="text-lg font-semibold tracking-tight text-zinc-900 group-hover:text-zinc-700 transition-colors">
+              Debt Avalanche vs Snowball — Which Strategy Saves More?
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-zinc-500">
+              Side-by-side comparison with real numbers. See exactly how much interest and time each method costs you.
+            </p>
+            <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-zinc-900 opacity-0 transition-opacity group-hover:opacity-100">
+              Read article <ArrowRight className="h-3.5 w-3.5" />
+            </span>
+          </Link>
+          <Link
+            href="/how-long-to-retire"
+            className="group rounded-2xl border border-zinc-100 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+          >
+            <span className="inline-block rounded-full bg-amber-50 px-3 py-0.5 text-xs font-medium text-amber-700 mb-3">FIRE</span>
+            <h3 className="text-lg font-semibold tracking-tight text-zinc-900 group-hover:text-zinc-700 transition-colors">
+              How Long to Retire — The Compound Growth Formula
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-zinc-500">
+              Your savings rate is the single biggest lever. See exactly how it translates to years until retirement.
+            </p>
+            <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-zinc-900 opacity-0 transition-opacity group-hover:opacity-100">
+              Read article <ArrowRight className="h-3.5 w-3.5" />
+            </span>
+          </Link>
+          <Link
+            href="/fire-at-40"
+            className="group rounded-2xl border border-zinc-100 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+          >
+            <span className="inline-block rounded-full bg-amber-50 px-3 py-0.5 text-xs font-medium text-amber-700 mb-3">FIRE</span>
+            <h3 className="text-lg font-semibold tracking-tight text-zinc-900 group-hover:text-zinc-700 transition-colors">
+              FIRE at 40 — Can You Retire by 40? Real Numbers
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-zinc-500">
+              Breaking down the math to retire at 40. Savings targets, income requirements, and Barista FIRE as a realistic path.
+            </p>
+            <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-zinc-900 opacity-0 transition-opacity group-hover:opacity-100">
+              Read article <ArrowRight className="h-3.5 w-3.5" />
+            </span>
+          </Link>
+          <Link
+            href="/coast-fire-guide"
+            className="group rounded-2xl border border-zinc-100 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+          >
+            <span className="inline-block rounded-full bg-amber-50 px-3 py-0.5 text-xs font-medium text-amber-700 mb-3">FIRE</span>
+            <h3 className="text-lg font-semibold tracking-tight text-zinc-900 group-hover:text-zinc-700 transition-colors">
+              Coast FIRE Guide — Let Your Investments Do the Work
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-zinc-500">
+              Find your Coast FIRE age — the point where your investments grow to your target without another contribution.
+            </p>
+            <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-zinc-900 opacity-0 transition-opacity group-hover:opacity-100">
+              Read article <ArrowRight className="h-3.5 w-3.5" />
+            </span>
+          </Link>
+          <Link
+            href="/compound-interest-examples"
+            className="group rounded-2xl border border-zinc-100 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-zinc-200 hover:shadow-md"
+          >
+            <span className="inline-block rounded-full bg-purple-50 px-3 py-0.5 text-xs font-medium text-purple-700 mb-3">Investing</span>
+            <h3 className="text-lg font-semibold tracking-tight text-zinc-900 group-hover:text-zinc-700 transition-colors">
+              Compound Interest Examples — See the Math in Action
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-zinc-500">
+              Three real scenarios showing how time, rate, and contributions multiply your savings over decades.
+            </p>
+            <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-zinc-900 opacity-0 transition-opacity group-hover:opacity-100">
+              Read article <ArrowRight className="h-3.5 w-3.5" />
+            </span>
+          </Link>
+        </div>
+      </div>
+
     </div>
   );
 }
