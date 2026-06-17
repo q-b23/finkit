@@ -1,5 +1,6 @@
 "use client";
 
+import DonateButton from "@/components/DonateButton";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -129,6 +130,8 @@ export default function Sidebar() {
           <br />
           Everything runs locally.
         </p>
+
+        <DonateButton variant="sidebar" />
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import DonateButton from "@/components/DonateButton";
 
 /**
  * Minimal footer rendered at the bottom of every page via the root layout.
@@ -27,6 +28,8 @@ export default function Footer() {
             >
               GitHub
             </a>
+
+            <DonateButton variant="footer" />
           </div>
         </div>
       </div>
