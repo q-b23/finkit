@@ -1,5 +1,6 @@
 "use client";
 
+import Logo from "@/components/Logo";
 import DonateButton from "@/components/DonateButton";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -14,19 +15,25 @@ import {
   X,
   BookOpen,
   Newspaper,
-  TrendingDown,
+  Home,
+  ArrowLeftRight,
+  Clock,
+  PiggyBank,
 } from "lucide-react";
 
 /**
  * Navigation items rendered in the sidebar.
- * Each route maps to a Lucide icon and a human-readable label.
+ * Ordered by priority: housing decisions first, then tools, then content.
  */
 const NAV_ITEMS = [
   { href: "/", label: "Overview", icon: LayoutDashboard },
-  { href: "/dashboard/fire", label: "FIRE Calculator", icon: Flame },
+  { href: "/decision/mortgage", label: "Affordability", icon: Home },
+  { href: "/decision/rent-vs-buy", label: "Rent vs Buy", icon: ArrowLeftRight },
+  { href: "/decision/timing", label: "Market Timing", icon: Clock },
+  { href: "/decision/mortgage-vs-invest", label: "Pay Down or Invest", icon: PiggyBank },
   { href: "/dashboard/debt", label: "Debt Planner", icon: Scale },
+  { href: "/dashboard/fire", label: "FIRE Calculator", icon: Flame },
   { href: "/dashboard/loan", label: "Loan Compare", icon: Banknote },
-  { href: "/dashboard/loans", label: "Loan Matrix", icon: TrendingDown },
   { href: "/guides", label: "Guides", icon: BookOpen },
   { href: "/blog", label: "Blog", icon: Newspaper },
 ] as const;
@@ -90,9 +97,7 @@ export default function Sidebar() {
         className="flex items-center gap-2 px-3 py-4"
         onClick={() => setMobileOpen(false)}
       >
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-900">
-          <span className="text-sm font-bold text-white">F</span>
-        </div>
+        <Logo />
         <span className="text-lg font-semibold tracking-tight text-zinc-900">
           FinKit
         </span>
@@ -152,9 +157,7 @@ export default function Sidebar() {
             className="flex items-center gap-2"
             onClick={() => setMobileOpen(false)}
           >
-            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-zinc-900">
-              <span className="text-xs font-bold text-white">F</span>
-            </div>
+            <Logo className="h-7 w-7" />
             <span className="text-base font-semibold tracking-tight text-zinc-900">
               FinKit
             </span>

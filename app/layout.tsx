@@ -33,11 +33,11 @@ const PLAUSIBLE_DOMAIN = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN ?? "getfinkit.
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "FinKit — Free & Open Source Personal Finance Toolkit",
+    default: "FinKit — US Home Affordability & Financial Decision System",
     template: "%s · FinKit",
   },
   description:
-    "Free debt payoff planner, loan comparison calculator, and FIRE retirement calculator. Privacy-first — every calculation runs locally in your browser. No accounts, no tracking.",
+    "Will you become house poor? FinKit analyzes your finances and tells you what you can safely afford. Rent vs buy, mortgage risk, debt freedom — all free, private, and local.",
   keywords: [
     "free FIRE calculator",
     "financial independence retire early",
@@ -50,9 +50,9 @@ export const metadata: Metadata = {
   ],
   robots: { index: true, follow: true },
   openGraph: {
-    title: "FinKit — Free & Open Source Personal Finance Toolkit",
+    title: "FinKit — Will You Become House Poor?",
     description:
-      "Free debt payoff planner, loan comparison, and FIRE calculator. Privacy-first, no tracking.",
+      "Before you buy a home, know your number. Free affordability analysis, rent vs buy comparison, and mortgage risk scoring — all private, no accounts.",
     url: BASE_URL,
     siteName: "FinKit",
     locale: "en_US",
@@ -68,9 +68,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "FinKit — Free & Open Source Personal Finance Toolkit",
+    title: "FinKit — Will You Become House Poor?",
     description:
-      "Free debt payoff planner, loan comparison, and FIRE calculator. Privacy-first, no tracking.",
+      "Before you buy a home, know your number. Free affordability analysis, rent vs buy comparison, and mortgage risk scoring.",
     images: [`${BASE_URL}/og-image.png`],
   },
   alternates: {

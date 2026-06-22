@@ -1,3 +1,4 @@
+import Logo from "@/components/Logo";
 import Link from "next/link";
 import DonateButton from "@/components/DonateButton";
 
@@ -10,9 +11,12 @@ export default function Footer() {
     <footer className="border-t border-zinc-100 bg-white">
       <div className="px-6 py-8 md:ml-64 md:px-12">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2.5">
+            <Logo className="h-6 w-6" />
           <p className="text-xs text-zinc-400">
             Built for financial freedom. Everything runs locally.
           </p>
+          </div>
           <div className="flex items-center gap-6">
             <Link
               href="/privacy"
