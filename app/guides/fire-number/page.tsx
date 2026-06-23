@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import RelatedArticles from "@/components/RelatedArticles";
 
 export const metadata: Metadata = {
   title: "How to Calculate Your FIRE Number (Step by Step)",
@@ -154,6 +155,8 @@ export default function FireNumberGuide() {
           <li>Consider a 3-3.5% withdrawal rate for retirements longer than 30 years</li>
           <li>Coast FIRE lets you stop contributing early if compound growth does the rest</li>
         </ul>
+      <RelatedArticles category="fire" />
+
       </article>
     </div>
   );

@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import RelatedArticles from "@/components/RelatedArticles";
 
 export const metadata: Metadata = {
   title: "What Is Coast FIRE?",
@@ -33,6 +34,8 @@ export default function CoastFireGuide() {
           </div>
           <Link href="/dashboard/fire" className="shrink-0 rounded-xl bg-amber-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-amber-700 transition-colors">Open FIRE Calculator</Link>
         </div>
+      <RelatedArticles category="fire" />
+
       </article>
     </div>
   );

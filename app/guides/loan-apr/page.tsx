@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import RelatedArticles from "@/components/RelatedArticles";
 
 export const metadata: Metadata = {
   title: "What Is a Good APR? Mortgage, Auto, and Personal Loan Guide",
@@ -29,6 +30,8 @@ export default function LoanAprGuide() {
           </div>
           <Link href="/dashboard/loan" className="shrink-0 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition-colors">Compare Loans</Link>
         </div>
+      <RelatedArticles category="mortgage" />
+
       </article>
     </div>
   );

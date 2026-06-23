@@ -1,5 +1,5 @@
 // Vercel Serverless Function — Reddit Post Proxy
-// Deploys to: finkit-topaz.vercel.app/api/reddit-post
+// Deploys to: getfinkit.com/api/reddit-post
 // Runs on Vercel's US servers, so Reddit sees a US IP
 
 export const maxDuration = 30; // seconds — moved from vercel.json

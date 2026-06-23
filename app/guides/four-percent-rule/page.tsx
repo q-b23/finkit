@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import RelatedArticles from "@/components/RelatedArticles";
 
 export const metadata: Metadata = {
   title: "The 4% Rule Explained",
@@ -70,6 +71,8 @@ export default function FourPercentRuleGuide() {
             Open FIRE Calculator
           </Link>
         </div>
+      <RelatedArticles category="fire" />
+
       </article>
     </div>
   );

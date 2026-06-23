@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import RelatedArticles from "@/components/RelatedArticles";
 
 export const metadata: Metadata = {
   title: "Debt Payoff Timeline Guide",
@@ -29,6 +30,8 @@ export default function DebtPayoffTimelineGuide() {
           </div>
           <Link href="/dashboard/debt" className="shrink-0 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700 transition-colors">Try Debt Planner</Link>
         </div>
+      <RelatedArticles category="debt" />
+
       </article>
     </div>
   );
