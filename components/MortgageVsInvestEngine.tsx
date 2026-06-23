@@ -4,20 +4,15 @@ import { useState, useMemo } from "react";
 import { PiggyBank, TrendingUp, Shield, Info, DollarSign, Clock } from "lucide-react";
 import SaveResultButton from "@/components/SaveResultButton";
 import { useAutoSave } from "@/hooks/useAutoSave";
+import { calcPMT } from "@/lib/loan-math";
 
 /* ------------------------------------------------------------------ */
 /*  Mortgage math helpers                                             */
 /* ------------------------------------------------------------------ */
 
-function monthlyPMT(principal: number, annualRate: number, years: number): number {
-  const r = annualRate / 100 / 12;
-  const n = years * 12;
-  if (r === 0) return principal / n;
-  return (principal * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-}
 
 function totalInterest(principal: number, annualRate: number, years: number): number {
-  const monthly = monthlyPMT(principal, annualRate, years);
+  const monthly = calcPMT(principal, annualRate, years);
   return monthly * years * 12 - principal;
 }
 
@@ -33,7 +28,7 @@ function remainingBalanceAfterExtra(
   let balance = principal;
   let months = 0;
   let totalPaid = 0;
-  const basePayment = monthlyPMT(principal, annualRate, years);
+  const basePayment = calcPMT(principal, annualRate, years);
   const totalPayment = basePayment + extraMonthly;
 
   while (balance > 0 && months < originalMonths) {

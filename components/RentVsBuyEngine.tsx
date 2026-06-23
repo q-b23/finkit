@@ -4,17 +4,12 @@ import { useState, useMemo } from "react";
 import { ArrowLeftRight, TrendingUp, TrendingDown, Home, Building2, Clock, Info } from "lucide-react";
 import SaveResultButton from "@/components/SaveResultButton";
 import { useAutoSave } from "@/hooks/useAutoSave";
+import { calcPMT } from "@/lib/loan-math";
 
 /* ------------------------------------------------------------------ */
 /*  Rent vs Buy math (local only)                                     */
 /* ------------------------------------------------------------------ */
 
-function monthlyPMT(principal: number, annualRate: number, years: number): number {
-  const r = annualRate / 100 / 12;
-  const n = years * 12;
-  if (r === 0) return principal / n;
-  return (principal * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-}
 
 interface RvBResult {
   /** Positive = buying wins, negative = renting wins */
@@ -77,7 +72,7 @@ function analyzeCore(params: {
   // --- BUYING SIDE ---
   const downPayment = params.homePrice * (params.downPct / 100);
   const loan = params.homePrice - downPayment;
-  const monthlyPI = monthlyPMT(loan, params.rate, 30);
+  const monthlyPI = calcPMT(loan, params.rate, 30);
   const monthlyTax = (params.homePrice * (params.taxRate / 100)) / 12;
   const monthlyInsurance = params.insurance;
   const monthlyMaintenance = (params.homePrice * (params.maintenancePct / 100)) / 12;

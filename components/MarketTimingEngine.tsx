@@ -4,17 +4,12 @@ import { useState, useMemo } from "react";
 import { Clock, TrendingUp, TrendingDown, Info, Calendar, DollarSign, Percent } from "lucide-react";
 import SaveResultButton from "@/components/SaveResultButton";
 import { useAutoSave } from "@/hooks/useAutoSave";
+import { calcPMT } from "@/lib/loan-math";
 
 /* ------------------------------------------------------------------ */
 /*  Mortgage math helpers                                             */
 /* ------------------------------------------------------------------ */
 
-function monthlyPMT(principal: number, annualRate: number, years: number): number {
-  const r = annualRate / 100 / 12;
-  const n = years * 12;
-  if (r === 0) return principal / n;
-  return (principal * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-}
 
 function remainingBalance(principal: number, annualRate: number, totalMonths: number, paymentsMade: number): number {
   if (paymentsMade >= totalMonths) return 0;
@@ -66,7 +61,7 @@ function timingAnalysis(params: {
   // --- BUY NOW ---
   const downNow = homePrice * (downPct / 100);
   const loanNow = homePrice - downNow;
-  const nowMonthly = monthlyPMT(loanNow, currentRate, 30);
+  const nowMonthly = calcPMT(loanNow, currentRate, 30);
   const totalPaymentsNow = nowMonthly * horizonYears * 12;
   const remainingNow = remainingBalance(loanNow, currentRate, 360, horizonYears * 12);
   const futurePriceNow = homePrice * Math.pow(1 + appreciation / 100, horizonYears);
@@ -79,7 +74,7 @@ function timingAnalysis(params: {
   const extraDownSaved = monthlySavings * waitMonths;
   const downLater = futurePrice * (downPct / 100) + extraDownSaved;
   const loanLater = Math.max(0, futurePrice - downLater);
-  const waitMonthly = monthlyPMT(loanLater, futureRate, 30);
+  const waitMonthly = calcPMT(loanLater, futureRate, 30);
 
   const remainingMonthsAfterWait = Math.max(0, horizonYears * 12 - waitMonths);
   const totalPaymentsWait = waitMonthly * remainingMonthsAfterWait;
