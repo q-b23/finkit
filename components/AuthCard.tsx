@@ -116,7 +116,7 @@ export default function AuthCard() {
             Terms of Service
           </a>{" "}
           and{" "}
-          <a href="#" className="underline underline-offset-2 hover:text-zinc-600 dark:hover:text-zinc-300">
+          <a href="/privacy" className="underline underline-offset-2 hover:text-zinc-600 dark:hover:text-zinc-300">
             Privacy Policy
           </a>
           .
