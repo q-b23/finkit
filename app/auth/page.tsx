@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { AuthCard } from "@/components/AuthCard";
+import AuthCard from "@/components/AuthCard";
 
 export const metadata: Metadata = {
   title: "Sign In",

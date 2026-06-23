@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { LoanCompare } from "@/components/LoanCompare";
+import LoanCompare from "@/components/LoanCompare";
 
 export const metadata: Metadata = {
   title: "Loan Comparison Calculator — Compare Multiple Loans Side by Side",

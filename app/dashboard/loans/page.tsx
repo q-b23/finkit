@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { LoanComparisonMatrix } from "@/components/LoanComparisonMatrix";
+import LoanComparisonMatrix from "@/components/LoanComparisonMatrix";
 
 export const metadata: Metadata = {
   title: "Loan Comparison Matrix",

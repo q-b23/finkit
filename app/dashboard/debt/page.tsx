@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { DebtPayoffPlanner } from "@/components/DebtPayoffPlanner";
+import DebtPayoffPlanner from "@/components/DebtPayoffPlanner";
 
 export const metadata: Metadata = {
   title: "Debt Payoff Planner — Snowball vs Avalanche Calculator",

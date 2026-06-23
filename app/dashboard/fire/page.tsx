@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { FIRECalculator } from "@/components/FIRECalculator";
+import FIRECalculator from "@/components/FIRECalculator";
 
 const BASE_URL = process.env.FINKIT_BASE_URL ?? "https://getfinkit.com";
 
