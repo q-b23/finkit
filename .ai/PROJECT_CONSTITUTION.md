@@ -120,7 +120,65 @@ Existing FIRE-related content (calculators, guides, blog articles) is grandfathe
 
 ---
 
-## VI. CORE MODULES
+---
+
+## VI. MOBILE + DESKTOP EXPERIENCE POLICY
+
+### Experience Priority
+
+User experience priority is:
+
+1. Mobile
+2. Tablet
+3. Desktop
+
+FinKit must provide an excellent experience on both mobile and desktop. However, mobile usability has the **highest priority** because most first-time visitors arrive from Google Mobile Search, Reddit, Facebook, Instagram, and TikTok.
+
+### Required Screen Sizes
+
+Every page must be tested and verified at these breakpoints:
+
+**Mobile:** 320px, 375px, 390px, 414px
+
+**Tablet:** 768px
+
+**Desktop:** 1024px, 1280px, 1440px
+
+### Mobile Requirements
+
+- No horizontal scrolling at any mobile breakpoint
+- Touch-friendly controls throughout
+- Minimum touch target size: **44px × 44px** (per WCAG 2.1)
+- Sticky CTA when appropriate (e.g., "Check My Affordability" on scroll)
+- Fast page loading (static generation, self-hosted fonts)
+- Readable typography at all mobile widths (minimum 16px base)
+- Simple navigation (sidebar collapses to hamburger drawer)
+- Optimized calculator inputs (stack vertically, large tap targets)
+- Optimized form spacing (no cramming, generous padding)
+
+### Desktop Requirements
+
+- Efficient use of screen space (sidebar + main content layout)
+- Side-by-side layouts when beneficial (e.g., input panel + results)
+- Keyboard-friendly interactions (Tab order, Enter to submit, Esc to dismiss)
+- Professional appearance
+- Fast rendering
+
+### Development Rule
+
+Every new feature must be reviewed for all three experiences:
+
+1. Mobile Experience
+2. Tablet Experience
+3. Desktop Experience
+
+A feature is **not considered complete** until all three experiences are verified at the required breakpoints listed above.
+
+### SEO Rule
+
+Mobile usability is considered part of SEO quality. Mobile performance, readability, and accessibility must be preserved during all future updates. The existing responsive infrastructure (Tailwind `md:` breakpoint pattern, sidebar drawer on mobile, `pt-14` top-bar offset) must be maintained.
+
+## VII. CORE MODULES
 
 ### Decision Engines
 
@@ -142,7 +200,7 @@ Existing FIRE-related content (calculators, guides, blog articles) is grandfathe
 
 ---
 
-## VII. PROTECTED MODULES
+## VIII. PROTECTED MODULES
 
 These modules **must not be rewritten** without explicit project-owner approval:
 
@@ -155,7 +213,7 @@ Modifications that fix bugs or improve performance are allowed. Architectural re
 
 ---
 
-## VIII. ARCHITECTURE
+## IX. ARCHITECTURE
 
 ### Stack
 
@@ -215,7 +273,7 @@ The `components/` directory is a **single flat directory**. No subdirectories, n
 
 ---
 
-## IX. CODE CONVENTIONS
+## X. CODE CONVENTIONS
 
 ### TypeScript
 
@@ -256,7 +314,7 @@ The `components/` directory is a **single flat directory**. No subdirectories, n
 
 ---
 
-## X. THE SINGLE SOURCE OF TRUTH DOCTRINE
+## XI. THE SINGLE SOURCE OF TRUTH DOCTRINE
 
 > **Every business-logic function must exist exactly once.**
 
@@ -278,7 +336,7 @@ New math functions:
 
 ---
 
-## XI. ROUTING & SEO
+## XII. ROUTING & SEO
 
 ### Route Organization
 
@@ -310,7 +368,7 @@ New math functions:
 
 ---
 
-## XII. DARK MODE
+## XIII. DARK MODE
 
 - Tailwind `darkMode: "class"` — toggled by adding/removing `dark` class on `<html>`.
 - Theme state persisted in `localStorage` key `finkit-theme`.
@@ -320,7 +378,7 @@ New math functions:
 
 ---
 
-## XIII. TESTING STANDARDS
+## XIV. TESTING STANDARDS
 
 ### What Must Be Tested
 
@@ -338,7 +396,7 @@ New math functions:
 
 ---
 
-## XIV. GIT WORKFLOW
+## XV. GIT WORKFLOW
 
 - Branch prefix: `codex/` for feature branches.
 - Commit messages: [Conventional Commits](https://www.conventionalcommits.org/) format.
@@ -354,7 +412,7 @@ New math functions:
 
 ---
 
-## XV. BANNED PATTERNS
+## XVI. BANNED PATTERNS
 
 These are **never** allowed in the codebase:
 
@@ -373,7 +431,7 @@ These are **never** allowed in the codebase:
 
 ---
 
-## XVI. DEVELOPMENT RULES
+## XVII. DEVELOPMENT RULES
 
 1. Reuse existing code whenever possible.
 2. Prefer modification over replacement.
@@ -388,7 +446,7 @@ These are **never** allowed in the codebase:
 
 ---
 
-## XVII. AI EXECUTION RULE
+## XVIII. AI EXECUTION RULE
 
 For every future task:
 
@@ -404,7 +462,7 @@ For every future task:
 
 ---
 
-## XVIII. SUCCESS METRIC
+## XIX. SUCCESS METRIC
 
 Every future feature must answer at least one of these questions:
 
@@ -417,7 +475,7 @@ If a feature does not support these goals, it should be questioned before implem
 
 ---
 
-## XIX. AMENDMENT PROCESS
+## XX. AMENDMENT PROCESS
 
 This constitution is amended only by the project owner:
 
