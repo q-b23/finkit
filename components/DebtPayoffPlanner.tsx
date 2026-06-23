@@ -14,34 +14,7 @@ import {
 } from "lucide-react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 
-/* ── Types ── */
-
-interface Debt {
-  id: string;
-  name: string;
-  balance: number;
-  apr: number;
-  minPayment: number;
-}
-
-type Strategy = "snowball" | "avalanche";
-
-interface PayoffStep {
-  order: number;
-  name: string;
-  balance: number;
-  apr: number;
-  monthsToPayoff: number;
-  interestPaid: number;
-}
-
-interface PayoffResult {
-  steps: PayoffStep[];
-  totalMonths: number;
-  totalInterest: number;
-  totalPaid: number;
-  debtFreeDate: Date;
-}
+import { simulatePayoff, type DebtEntry, type PayoffStrategy } from "@/lib/debt-math";
 
 /* ── Helpers ── */
 
@@ -63,114 +36,18 @@ function formatShortCurrency(n: number): string {
  * Simulate paying off debts month-by-month.
  * Returns ordered payoff steps with interest paid and months-to-payoff per debt.
  */
-function simulatePayoff(
-  debts: Debt[],
-  strategy: Strategy,
-  extraMonthly: number
-): PayoffResult | null {
-  if (debts.length === 0) return null;
-
-  // Deep-clone debts into a mutable working list
-  const working = debts.map((d) => ({
-    id: d.id,
-    name: d.name,
-    balance: d.balance,
-    apr: d.apr,
-    minPayment: d.minPayment,
-  }));
-
-  // Sort by strategy
-  const sortFn =
-    strategy === "snowball"
-      ? (a: typeof working[number], b: typeof working[number]) => a.balance - b.balance
-      : (a: typeof working[number], b: typeof working[number]) => b.apr - a.apr;
-
-  const payoffSteps: PayoffStep[] = [];
-  let month = 0;
-  let totalInterest = 0;
-  const paidOff = new Set<string>();
-
-  // Cap at 600 months (50 years) to prevent infinite loops
-  while (working.length > 0 && month < 600) {
-    month++;
-
-    // Each month: apply interest, make minimum payments, then apply extra
-    for (const d of working) {
-      const monthlyRate = d.apr / 100 / 12;
-      const interest = d.balance * monthlyRate;
-      totalInterest += interest;
-      d.balance += interest;
-
-      // Pay minimum (or remaining balance if less)
-      const payment = Math.min(d.minPayment, d.balance);
-      d.balance -= payment;
-    }
-
-    // Apply extra payment to the first debt in strategy order
-    if (extraMonthly > 0 && working.length > 0) {
-      const sorted = [...working].sort(sortFn);
-      for (const d of sorted) {
-        if (d.balance <= 0.01) continue;
-        const extra = Math.min(extraMonthly, d.balance);
-        d.balance -= extra;
-        break; // Extra only goes to one debt per month
-      }
-    }
-
-    // Check which debts just got paid off
-    for (const d of [...working]) {
-      if (d.balance <= 0.01 && !paidOff.has(d.id)) {
-        paidOff.add(d.id);
-        payoffSteps.push({
-          order: payoffSteps.length + 1,
-          name: d.name,
-          balance: debts.find((orig) => orig.id === d.id)!.balance,
-          apr: d.apr,
-          monthsToPayoff: month,
-          interestPaid: 0, // computed below
-        });
-      }
-    }
-
-    // Remove paid-off debts
-    for (let i = working.length - 1; i >= 0; i--) {
-      if (working[i].balance <= 0.01) working.splice(i, 1);
-    }
-  }
-
-  // Assign interest per debt proportionally
-  const totalPrincipal = debts.reduce((sum, d) => sum + d.balance, 0);
-  for (const step of payoffSteps) {
-    const original = debts.find((d) => d.id === step.name || d.name === step.name);
-    const share = original ? original.balance / totalPrincipal : 0;
-    step.interestPaid = Math.round(totalInterest * share * 100) / 100;
-  }
-
-  // Compute debt-free date
-  const now = new Date();
-  const debtFreeDate = new Date(now);
-  debtFreeDate.setMonth(debtFreeDate.getMonth() + month);
-
-  return {
-    steps: payoffSteps,
-    totalMonths: month,
-    totalInterest: Math.round(totalInterest * 100) / 100,
-    totalPaid: Math.round((totalPrincipal + totalInterest) * 100) / 100,
-    debtFreeDate,
-  };
-}
 
 /* ── Component ── */
 
 export default function DebtPayoffPlanner() {
   /* ── LocalStorage-backed state ── */
-  const [debts, setDebts] = useLocalStorage<Debt[]>("finkit-debts", [
+  const [debts, setDebts] = useLocalStorage<DebtEntry[]>("finkit-debts", [
     { id: generateId(), name: "Credit Card A", balance: 5200, apr: 22.99, minPayment: 150 },
     { id: generateId(), name: "Auto Loan", balance: 12500, apr: 6.5, minPayment: 350 },
     { id: generateId(), name: "Student Loan", balance: 18000, apr: 5.05, minPayment: 220 },
   ]);
 
-  const [strategy, setStrategy] = useLocalStorage<Strategy>("finkit-strategy", "avalanche");
+  const [strategy, setStrategy] = useLocalStorage<PayoffStrategy>("finkit-strategy", "avalanche");
   const [extraMonthly, setExtraMonthly] = useLocalStorage<number>("finkit-extra", 200);
 
   /* ── Derived state ── */
@@ -183,6 +60,13 @@ export default function DebtPayoffPlanner() {
     () => simulatePayoff(debts, strategy, extraMonthly),
     [debts, strategy, extraMonthly]
   );
+
+  const debtFreeDate = useMemo(() => {
+    if (result.totalMonths === 0) return null;
+    const d = new Date();
+    d.setMonth(d.getMonth() + result.totalMonths);
+    return d;
+  }, [result.totalMonths]);
 
   /* ── Handlers ── */
   function addDebt() {
@@ -197,7 +81,7 @@ export default function DebtPayoffPlanner() {
     setDebts((prev) => prev.filter((d) => d.id !== id));
   }
 
-  function updateDebt(id: string, field: keyof Debt, raw: string) {
+  function updateDebt(id: string, field: keyof DebtEntry, raw: string) {
     setDebts((prev) =>
       prev.map((d) => {
         if (d.id !== id) return d;
@@ -417,7 +301,7 @@ export default function DebtPayoffPlanner() {
           </div>
 
           {/* ── Results ── */}
-          {result && (
+          {result.steps.length > 0 && (
             <>
               {/* Summary Cards */}
               <div className="grid grid-cols-3 gap-4">
@@ -460,10 +344,10 @@ export default function DebtPayoffPlanner() {
                       Estimated Debt-Free Date
                     </p>
                     <p className="text-2xl font-bold text-emerald-700 dark:text-emerald-300 tabular-nums">
-                      {result.debtFreeDate.toLocaleDateString("en-US", {
+                      {(debtFreeDate ? debtFreeDate.toLocaleDateString("en-US", {
                         month: "long",
                         year: "numeric",
-                      })}
+                      }) : "")}
                     </p>
                   </div>
                   <div className="ml-auto text-right">
@@ -522,7 +406,7 @@ export default function DebtPayoffPlanner() {
                             {step.name}
                           </td>
                           <td className="px-5 py-3 text-zinc-600 dark:text-zinc-400 tabular-nums">
-                            {formatCurrency(step.balance)}
+                            {formatCurrency(step.initialBalance)}
                           </td>
                           <td className="px-5 py-3 text-zinc-600 dark:text-zinc-400 tabular-nums">
                             {step.apr.toFixed(2)}%
@@ -533,7 +417,7 @@ export default function DebtPayoffPlanner() {
                             </span>
                           </td>
                           <td className="px-5 py-3 text-amber-600 dark:text-amber-400 tabular-nums">
-                            {formatCurrency(step.interestPaid)}
+                            {formatCurrency(step.estimatedInterest)}
                           </td>
                         </tr>
                       ))}
