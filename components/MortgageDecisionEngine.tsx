@@ -33,7 +33,7 @@ interface DecisionResult {
   summary: string;
 }
 
-function analyze(params: {
+export function analyze(params: {
   grossIncome: number;
   takeHome: number;
   homePrice: number;
@@ -349,6 +349,7 @@ export default function MortgageDecisionEngine() {
 /*  Reusable input field                                               */
 /* ------------------------------------------------------------------ */
 
+let _fieldIdCounter = 0;
 function Field({
   label, value, onChange, prefix, suffix, step
 }: {
@@ -359,15 +360,17 @@ function Field({
   suffix?: string;
   step?: number;
 }) {
+    const id = `field-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${++_fieldIdCounter}`;
   return (
     <div>
-      <label className="block text-sm font-medium text-zinc-700 mb-1.5">{label}</label>
+      <label htmlFor={id} className="block text-sm font-medium text-zinc-700 mb-1.5">{label}</label>
       <div className="relative">
         {prefix && (
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-zinc-400">{prefix}</span>
         )}
         <input
           type="number"
+          id={id}
           value={value}
           onChange={e => onChange(Number(e.target.value) || 0)}
           step={step}
