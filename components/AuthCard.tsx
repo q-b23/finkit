@@ -112,7 +112,7 @@ export default function AuthCard() {
         {/* Footer */}
         <p className="mt-6 text-center text-xs text-zinc-400 dark:text-zinc-500">
           By continuing, you agree to FinKit&rsquo;s{" "}
-          <a href="#" className="underline underline-offset-2 hover:text-zinc-600 dark:hover:text-zinc-300">
+          <a href="/terms" className="underline underline-offset-2 hover:text-zinc-600 dark:hover:text-zinc-300">
             Terms of Service
           </a>{" "}
           and{" "}

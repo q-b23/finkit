@@ -19,6 +19,12 @@ export default function Footer() {
           </div>
           <div className="flex items-center gap-6">
             <Link
+              href="/terms"
+              className="text-xs text-zinc-400 hover:text-zinc-600 transition-colors"
+            >
+              Terms
+            </Link>
+            <Link
               href="/privacy"
               className="text-xs text-zinc-400 hover:text-zinc-600 transition-colors"
             >
