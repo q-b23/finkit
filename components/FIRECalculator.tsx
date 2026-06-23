@@ -1,31 +1,13 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { yearsToFire as calcYearsToFire } from "@/lib/fire-math";
 
 const fmt = (n: number): string => {
   if (n >= 1_000_000) return "$" + (n / 1_000_000).toFixed(2) + "M";
   return "$" + n.toLocaleString("en-US", { maximumFractionDigits: 0 });
 };
 
-function calcYearsToFire(
-  current: number,
-  monthly: number,
-  annualReturn: number,
-  fireNumber: number
-): number | null {
-  if (fireNumber <= 0 || annualReturn <= 0) return null;
-  if (current >= fireNumber) return 0;
-  const r = annualReturn / 100 / 12;
-  if (r === 0 && monthly === 0) return null;
-  if (r === 0) return Math.ceil((fireNumber - current) / (monthly * 12));
-  // Solve: FV = PV*(1+r)^n + PMT*((1+r)^n - 1)/r >= fireNumber
-  // (1+r)^n >= (fireNumber * r + PMT) / (PV * r + PMT)
-  const numerator = fireNumber * r + monthly;
-  const denominator = current * r + monthly;
-  if (denominator <= 0) return null;
-  const months = Math.log(numerator / denominator) / Math.log(1 + r);
-  return Math.ceil(months / 12);
-}
 
 export default function FIRECalculator() {
   const [currentSavings, setCurrentSavings] = useState(50000);

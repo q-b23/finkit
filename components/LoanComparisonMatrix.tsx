@@ -10,6 +10,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { calcPMT } from "@/lib/loan-math";
 
 /* ── Types ── */
 
@@ -30,23 +31,7 @@ interface ComparisonData {
   optionB: LoanOption;
 }
 
-/* ── Math ── */
 
-/**
- * Standard PMT (amortization) formula.
- * Returns the fixed monthly payment for a fully-amortizing loan.
- */
-function calcPMT(principal: number, apr: number, termYears: number): number {
-  const monthlyRate = apr / 100 / 12;
-  const n = termYears * 12;
-
-  if (monthlyRate === 0 || n === 0) return principal / Math.max(n, 1);
-
-  return (
-    (principal * monthlyRate * Math.pow(1 + monthlyRate, n)) /
-    (Math.pow(1 + monthlyRate, n) - 1)
-  );
-}
 
 function computeResult(opt: LoanOption): LoanResult {
   const monthly = calcPMT(opt.amount, opt.apr, opt.termYears);

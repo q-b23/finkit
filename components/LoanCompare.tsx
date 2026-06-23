@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from 'react';
+import { calcPMT } from "@/lib/loan-math";
 
 interface LoanOption {
   id: number;
@@ -19,23 +20,8 @@ interface LoanResult {
 }
 
 function calculateLoan(loan: LoanOption): LoanResult {
-  const monthlyRate = loan.apr / 100 / 12;
+  const monthlyPayment = calcPMT(loan.amount, loan.apr, loan.termMonths / 12);
   const n = loan.termMonths;
-
-  if (monthlyRate === 0) {
-    return {
-      monthlyPayment: loan.amount / n,
-      totalInterest: 0,
-      totalPaid: loan.amount,
-      interestRatio: 0,
-      score: 100,
-    };
-  }
-
-  const monthlyPayment =
-    (loan.amount * monthlyRate * Math.pow(1 + monthlyRate, n)) /
-    (Math.pow(1 + monthlyRate, n) - 1);
-
   const totalPaid = monthlyPayment * n;
   const totalInterest = totalPaid - loan.amount;
   const interestRatio = (totalInterest / totalPaid) * 100;
