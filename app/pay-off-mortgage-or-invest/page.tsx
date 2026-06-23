@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import RelatedArticles from "@/components/RelatedArticles";
 
 export const metadata: Metadata = {
   title: "Pay Off Mortgage or Invest? — Guaranteed Return vs Market Returns",
@@ -253,6 +254,8 @@ export default function PayOffMortgageOrInvestPage() {
             a="Liquidity. Once you pay down a mortgage, that money is locked in home equity. You can't access it without selling or taking out a home equity loan (at higher rates). Before making a large principal payment, ensure you have a fully funded emergency fund (6+ months of expenses) and aren't sacrificing retirement contributions."
           />
         </section>
+      <RelatedArticles category="mortgage" />
+
       </article>
 
       {/* ================================================================

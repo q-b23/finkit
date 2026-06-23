@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import RelatedArticles from "@/components/RelatedArticles";
 
 export const metadata: Metadata = {
   title: "Am I House Poor? — The 4 Signs + What to Do About It",
@@ -244,6 +245,8 @@ export default function AmIHousePoorPage() {
             a="Ignore what the bank says you qualify for. Calculate what percentage of your take-home pay will go to total housing costs. Keep it under 40%. Use a risk score tool that shows you where the line is — not just a yes/no from a lender's formula. And budget for maintenance (1% of home value per year) and property tax reassessments before you commit."
           />
         </section>
+      <RelatedArticles category="mortgage" />
+
       </article>
 
       {/* ================================================================

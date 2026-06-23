@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import RelatedArticles from "@/components/RelatedArticles";
 
 export const metadata: Metadata = {
   title: "Is Now a Bad Time to Buy a House? — Rate & Market Timing Analysis",
@@ -220,6 +221,8 @@ export default function IsNowABadTimeToBuyPage() {
             a="Nobody knows. Current forecasts range from 4.5% to 7.5%. The Federal Reserve has signaled potential rate cuts, but mortgage rates don't move in lockstep with the Fed funds rate. Rather than trying to predict rates, model multiple rate scenarios and see at what point waiting becomes worthwhile for your situation."
           />
         </section>
+      <RelatedArticles category="mortgage" />
+
       </article>
 
       {/* ================================================================

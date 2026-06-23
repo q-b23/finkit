@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import RelatedArticles from "@/components/RelatedArticles";
 
 export const metadata: Metadata = {
   title: "Can I Afford a House in the US? — Your Numbers, Not the Bank's Formula",
@@ -351,6 +352,8 @@ export default function CanIAffordAHousePage() {
             a="Yes — significantly. At 6.5% interest vs 3% in 2021, the monthly payment on the same loan is about 50% higher. A $400,000 mortgage costs roughly $842 more per month. This means the same income buys a lot less house today than it did in 2021, even at identical home prices."
           />
         </section>
+      <RelatedArticles category="mortgage" />
+
       </article>
 
       {/* ================================================================

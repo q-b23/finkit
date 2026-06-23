@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import RelatedArticles from "@/components/RelatedArticles";
 
 export const metadata: Metadata = {
   title: "Rent vs Buy in 2026 — Which Actually Builds More Wealth?",
@@ -314,6 +315,8 @@ export default function RentVsBuyDecisionPage() {
             a="Over long enough time horizons, yes — but not always. Building equity through mortgage paydown is slow: in year one at 6.5%, only about 18% of your payment goes to principal. Home appreciation historically averages 3%–5% annually, but it's not guaranteed and varies dramatically by market. The wealth-building case for buying gets stronger the longer you stay."
           />
         </section>
+      <RelatedArticles category="mortgage" />
+
       </article>
 
       {/* ================================================================

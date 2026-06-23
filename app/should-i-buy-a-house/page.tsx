@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import RelatedArticles from "@/components/RelatedArticles";
 
 export const metadata: Metadata = {
   title: "Should You Buy a House in 2026? — Don't Ask the Bank. Ask Your Numbers.",
@@ -240,6 +241,8 @@ export default function ShouldIBuyAHousePage() {
             a="Lenders allow up to 43%–50% DTI, but the safe range for actual living is 28%–36% of gross income for housing alone. In take-home terms (which matter more day-to-day), aim for under 40%. Above 50% of take-home going to housing is the house poor zone."
           />
         </section>
+      <RelatedArticles category="mortgage" />
+
       </article>
 
       {/* ================================================================
