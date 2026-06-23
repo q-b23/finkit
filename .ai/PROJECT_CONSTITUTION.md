@@ -2,19 +2,26 @@
 
 Last amended: 2026-06-23
 
-This document governs all development on the FinKit codebase. It is the single source of truth for architecture, conventions, and standards. When in doubt, this document answers the question.
+**This file is the highest-priority project rulebook.** Every future task must read this file first. Nothing in this file may be changed automatically. Only the project owner may modify it.
 
 ---
 
-## I. Product Identity
+## I. PROJECT IDENTITY
 
-FinKit is a **privacy-first personal finance decision system** for US homebuyers. Its core thesis: the most expensive financial mistake in America is buying too much house. Every feature must serve one of three purposes:
+**Product Name:** FinKit
 
-1. Help users decide whether they can afford a specific house (risk scoring)
-2. Compare financial alternatives (rent vs buy, mortgage vs invest, debt strategies)
-3. Educate users on personal finance concepts (guides, blog)
+**Product Type:** Home Affordability Decision Assistant
 
-The product is **not** a general-purpose calculator site. Features that don't serve the homebuying decision funnel belong elsewhere.
+**Product Mission:** Help ordinary households make safer housing decisions. Reduce uncertainty. Improve financial confidence. Provide simple decision support.
+
+### Product Principles
+
+1. Lightweight — no unnecessary complexity
+2. Privacy-first — no account required, no server-side storage of financial data
+3. Local-first calculations — everything runs in the browser
+4. Simple UX — easy to understand, fast to use
+5. Fast loading — static generation, self-hosted fonts
+6. Decisions, not just numbers — every result includes a plain-English recommendation
 
 ### Voice & Tone
 
@@ -25,7 +32,130 @@ The product is **not** a general-purpose calculator site. Features that don't se
 
 ---
 
-## II. Architecture
+## II. TARGET MARKET
+
+### Primary Market (Current Focus)
+
+**United States** only.
+
+All defaults, examples, and calculations assume US mortgage conventions (30-year fixed, property tax rates, FICO-adjacent DTI thresholds, USD).
+
+### Future Markets (Not Yet Implemented)
+
+- Canada
+- United Kingdom
+- Australia
+
+These markets must not be targeted in code, content, or SEO until explicitly approved. Do not add multi-currency, multi-language, or region-specific tax rules without owner approval.
+
+### Primary User
+
+- **Age:** 35-50
+- **Profile:** Middle-income households
+- **Context:** People considering home purchases, managing mortgage decisions, families concerned about affordability
+- **Technical level:** Not financially sophisticated. Needs clear answers, not raw numbers.
+
+---
+
+## III. CORE USER QUESTIONS
+
+Every feature must answer at least one of these:
+
+1. Can I afford this house?
+2. Can I safely afford this mortgage?
+3. What is my true monthly housing cost?
+4. Will this mortgage create financial stress?
+5. Should I buy now or wait?
+
+### Core User Pain Points
+
+- High mortgage rates
+- Housing affordability concerns
+- Monthly payment anxiety
+- Hidden housing costs (taxes, insurance, maintenance)
+- Financial uncertainty
+- Budget pressure
+
+---
+
+## IV. NON-GOALS
+
+FinKit must **never** become:
+
+- Investment platform
+- Retirement planning platform
+- Financial advisor / robo-advisor
+- Trading platform
+- Large SaaS
+- CRM
+- Social network
+
+Features that drift toward these non-goals must be questioned before implementation.
+
+---
+
+## V. SEO STRATEGY
+
+### Primary SEO Topics
+
+- Home affordability
+- Mortgage affordability
+- Mortgage stress / house poor
+- Housing costs
+- Buy vs Rent
+- Home buying decisions
+- Mortgage comparison
+
+### SEO Topics to Avoid
+
+The following topics must not be primary SEO targets. Existing content on these topics should not be expanded:
+
+- Retirement planning
+- FIRE movement (Financial Independence Retire Early)
+- Investment portfolio tracking
+- Stock investing
+- Crypto investing
+
+Existing FIRE-related content (calculators, guides, blog articles) is grandfathered but must not be expanded or promoted as primary SEO targets. New content should focus on housing affordability.
+
+---
+
+## VI. CORE MODULES
+
+### Decision Engines
+
+- `MortgageDecisionEngine` — Affordability risk scoring and recommendation
+- `RentVsBuyEngine` — 5-year rent vs buy comparison
+- `MarketTimingEngine` — Market timing analysis
+- `MortgageVsInvestEngine` — Pay off mortgage vs invest comparison
+
+### Calculator Tools
+
+- `DebtPayoffPlanner` — Snowball vs avalanche debt payoff
+- `LoanCompare` / `LoanComparisonMatrix` — Loan comparison
+
+### Planned / Future
+
+- `AffordabilityScore` — Standalone affordability score widget
+- `BuyVsRent` — Simplified buy vs rent decision tool
+- `HousingCostAnalysis` — Total cost of ownership breakdown
+
+---
+
+## VII. PROTECTED MODULES
+
+These modules **must not be rewritten** without explicit project-owner approval:
+
+- Deployment configuration (`vercel.json`, `next.config.js`)
+- Authentication system (`AuthCard`, `/auth` route)
+- Theme system (`ThemeProvider`, `DarkModeToggle`, dark mode infrastructure)
+- Core calculations (`lib/debt-math.ts`, `lib/fire-math.ts`, `lib/loan-math.ts`)
+
+Modifications that fix bugs or improve performance are allowed. Architectural rewrites or replacements require approval.
+
+---
+
+## VIII. ARCHITECTURE
 
 ### Stack
 
@@ -43,7 +173,7 @@ The product is **not** a general-purpose calculator site. Features that don't se
 ### Directory Structure
 
 ```
-app/            # Next.js App Router — 38 static routes
+app/            # Next.js App Router — 39 static routes
   layout.tsx    # Root layout: metadata, fonts, ThemeProvider, Sidebar, Footer
   page.tsx      # Landing page (hero, decision cards, MiniWealthVisualizer)
   globals.css   # Tailwind directives + hero slider overrides
@@ -53,7 +183,9 @@ app/            # Next.js App Router — 38 static routes
   blog/         # Blog index
   terms/        # Terms of Service
   privacy/      # Privacy Policy
-components/     # Single flat directory — all 18 UI components
+  auth/         # Authentication (placeholder)
+  debug/        # Diagnostic page (excluded from robots/sitemap)
+components/     # Single flat directory — all UI components
 lib/            # Pure math modules (single source of truth)
   debt-math.ts  # Debt payoff simulation (snowball/avalanche)
   fire-math.ts  # FIRE number, years-to-FIRE, Coast FIRE, compounding
@@ -65,27 +197,25 @@ hooks/          # Custom React hooks
 __tests__/      # Test files (mirrors lib/ + hooks/ structure)
 api/            # Vercel serverless functions
 public/         # Static assets (og-image.png)
+.ai/            # Project governance (this file, task definitions)
 ```
 
 ### Component Architecture
 
 The `components/` directory is a **single flat directory**. No subdirectories, no barrel files, no index.ts re-exports. Every component is a self-contained `.tsx` file imported directly.
 
-Components fall into three categories:
+**Shared UI:**
+`Sidebar`, `Footer`, `Logo`, `DonateButton`, `DarkModeToggle`, `ThemeProvider`, `RelatedArticles`, `ResumeCard`, `EmailCapture`, `SaveResultButton`, `MiniWealthVisualizer`
 
-**Shared UI** (used across multiple pages):
-- `Sidebar`, `Footer`, `Logo`, `DonateButton`, `DarkModeToggle`
-- `RelatedArticles`, `ResumeCard`, `EmailCapture`, `SaveResultButton`
+**Engine Components** (interactive, 400-510 lines each):
+`MortgageDecisionEngine`, `RentVsBuyEngine`, `MarketTimingEngine`, `MortgageVsInvestEngine`
 
-**Engine Components** (interactive decision tools, 400-510 lines each):
-- `MortgageDecisionEngine`, `RentVsBuyEngine`, `MarketTimingEngine`, `MortgageVsInvestEngine`
-
-**Tool Components** (interactive calculators):
-- `DebtPayoffPlanner`, `FIRECalculator`, `LoanCompare`, `LoanComparisonMatrix`
+**Tool Components:**
+`DebtPayoffPlanner`, `FIRECalculator`, `LoanCompare`, `LoanComparisonMatrix`
 
 ---
 
-## III. Code Conventions
+## IX. CODE CONVENTIONS
 
 ### TypeScript
 
@@ -99,7 +229,7 @@ Components fall into three categories:
 
 - `@/` path alias for all internal imports. No relative paths above one level.
 - Import order: React/hooks → third-party → `@/components/` → `@/lib/` → `@/hooks/`.
-- Use `import type` for type-only imports when the import is only used as a type.
+- Use `import type` for type-only imports.
 
 ### React Components
 
@@ -107,28 +237,26 @@ Components fall into three categories:
 - Content-only pages (SEO, blog, guides) are server components (no directive).
 - State management: `useState` for local state, `useLocalStorage` for persistence.
 - Derived state: `useMemo` (no `useCallback` unless passing to memo'd children).
-- Components with 5+ `useState` calls should be refactored into sub-components or custom hooks.
+- Components with 5+ `useState` calls should be refactored.
 
 ### Styling
 
 - Tailwind classes only. No inline styles, no CSS modules, no styled-components.
 - Color palette: `zinc` (primary), `emerald`/`amber`/`red`/`blue`/`purple` (accents by domain).
 - All components support dark mode via `dark:` variant classes.
-- Responsive: `md:` breakpoint for desktop/mobile split. Sidebar is fixed on desktop, drawer on mobile.
+- Responsive: `md:` breakpoint for desktop/mobile split.
 - Custom CSS in `globals.css` only for Tailwind layer directives and cross-browser slider styling.
 
 ### Naming
 
 - Components: PascalCase, one component per file, filename matches default export.
 - Functions: camelCase. Math functions use descriptive names (`calcPMT`, `simulatePayoff`).
-- Files: kebab-case for pages (`should-i-buy-a-house/`), PascalCase for components.
+- Files: kebab-case for pages, PascalCase for components.
 - Props: descriptive names. No single-letter props except `n` in pure math functions.
 
 ---
 
-## IV. The Single Source of Truth Doctrine
-
-This is the most important rule in the codebase:
+## X. THE SINGLE SOURCE OF TRUTH DOCTRINE
 
 > **Every business-logic function must exist exactly once.**
 
@@ -139,9 +267,9 @@ The `lib/` directory is the single source of truth for all mathematical computat
 - FIRE number / years-to-FIRE → use `lib/fire-math.ts`
 - Compound interest → use `lib/fire-math.ts` `compound`
 
-When a component needs math it imports from `lib/`. If the lib doesn't return a field the component needs (e.g., `debtFreeDate`), **compute it from the lib's return value** — do not duplicate the function.
+When a component needs math it imports from `lib/`. If the lib doesn't return a field the component needs, **compute it from the lib's return value** — do not duplicate the function.
 
-Each lib module has a corresponding test file in `__tests__/`. Tests cover the lib, not the component's rendering. Component tests cover the integration (inputs → lib → outputs in UI).
+Each lib module has a corresponding test file in `__tests__/`. Tests cover the lib, not the component's rendering.
 
 New math functions:
 1. Write the function in the appropriate `lib/` module
@@ -150,15 +278,15 @@ New math functions:
 
 ---
 
-## V. Routing & SEO
+## XI. ROUTING & SEO
 
 ### Route Organization
 
 - **`/`** — Landing page (hero + 5 decision cards)
 - **`/decision/*`** — Interactive decision engines (mortgage affordability, rent vs buy, market timing, mortgage vs invest)
-- **`/dashboard/*`** — Interactive tools (FIRE calculator, debt planner, loan compare, loan comparison matrix)
+- **`/dashboard/*`** — Interactive tools
 - **`/guides/*`** — Educational long-form content (7 pages)
-- **`/` (root-level)** — Blog articles (11 pages: `debt-avalanche-vs-snowball`, `pay-off-debt-faster`, etc.)
+- **`/` (root-level)** — Blog articles (11 pages)
 - **`/should-i-buy-a-house`**, etc. — SEO landing pages (6 pages)
 
 ### Metadata
@@ -176,13 +304,13 @@ New math functions:
 
 ### Sitemap & Robots
 
-- Dynamic `sitemap.ts` — all routes with priorities (1.0 → 0.3) and change frequencies.
+- Dynamic `sitemap.ts` — all public routes with priorities (1.0 → 0.3) and change frequencies.
 - Dynamic `robots.ts` — allows all, disallows `/api/`, `/auth/`, `/debug`.
 - New routes must be added to the sitemap before merge.
 
 ---
 
-## VI. Dark Mode
+## XII. DARK MODE
 
 - Tailwind `darkMode: "class"` — toggled by adding/removing `dark` class on `<html>`.
 - Theme state persisted in `localStorage` key `finkit-theme`.
@@ -192,14 +320,14 @@ New math functions:
 
 ---
 
-## VII. Testing Standards
+## XIII. TESTING STANDARDS
 
 ### What Must Be Tested
 
-1. **All `lib/` functions** — unit tests for every exported function. Edge cases required (zero inputs, negative inputs, boundary conditions).
+1. **All `lib/` functions** — unit tests for every exported function. Edge cases required.
 2. **All `hooks/`** — unit tests via `renderHook`. SSR safety, persistence, edge cases.
 3. **Engine `analyze` functions** — unit tests for core decision logic (export `analyze` if not already).
-4. **Component rendering** — at minimum: smoke test (renders without error), key metrics present, interactive elements accessible.
+4. **Component rendering** — smoke test (renders without error), key metrics present.
 
 ### Test Conventions
 
@@ -210,7 +338,7 @@ New math functions:
 
 ---
 
-## VIII. Git Workflow
+## XIV. GIT WORKFLOW
 
 - Branch prefix: `codex/` for feature branches.
 - Commit messages: [Conventional Commits](https://www.conventionalcommits.org/) format.
@@ -219,31 +347,79 @@ New math functions:
   - `refactor:` — code change with no behavioral change
   - `chore:` — cleanup, dependency updates
   - `perf:` — performance improvement
+  - `docs:` — documentation changes
 - Never amend commits unless explicitly requested.
 - Never `git reset --hard` or `git checkout --` unless explicitly requested.
+- Preserve existing Git history. Never force-push to main.
 
 ---
 
-## IX. Banned Patterns
+## XV. BANNED PATTERNS
 
 These are **never** allowed in the codebase:
 
-- Duplicate business logic (see Section IV)
+- Duplicate business logic (see Section X)
 - Barrel files (`index.ts` re-exports) — import directly from the source file
 - Component subdirectories in `components/` — flat directory only
 - `any` types without explicit justification comment
 - Inline styles or CSS modules — Tailwind only
 - Relative imports beyond one level — use `@/` alias
-- `console.log` in production code — use proper logging or remove
-- Hardcoded URLs that should be environment variables — use `process.env` or constants
-- `file://` URIs in links — use proper HTTP URLs
+- `console.log` in production code
+- Hardcoded URLs that should be environment variables
+- `file://` URIs in links
 - Purple-on-white default color schemes — use zinc palette
+- Rebuilding the project from scratch
+- Scanning the entire repository unless explicitly requested
 
 ---
 
-## X. Amendment Process
+## XVI. DEVELOPMENT RULES
 
-This constitution is amended by:
+1. Reuse existing code whenever possible.
+2. Prefer modification over replacement.
+3. Never rebuild the project from scratch.
+4. Never scan the entire repository unless explicitly requested.
+5. Read PROJECT_CONSTITUTION.md first for every task.
+6. Read only task-related files.
+7. Minimize token usage.
+8. Preserve deployment configuration.
+9. Preserve SEO assets whenever possible.
+10. Preserve existing Git history.
+
+---
+
+## XVII. AI EXECUTION RULE
+
+For every future task:
+
+**Step 1:** Load PROJECT_CONSTITUTION.md
+
+**Step 2:** Load TASK.md (if one exists for the task)
+
+**Step 3:** Inspect only relevant files
+
+**Step 4:** Generate minimal changes
+
+**Step 5:** Update CHANGELOG.md with the change description
+
+---
+
+## XVIII. SUCCESS METRIC
+
+Every future feature must answer at least one of these questions:
+
+- Can I afford this house?
+- Can I safely afford this mortgage?
+- What is my real monthly housing cost?
+- Should I buy or wait?
+
+If a feature does not support these goals, it should be questioned before implementation.
+
+---
+
+## XIX. AMENDMENT PROCESS
+
+This constitution is amended only by the project owner:
 
 1. Proposing the change with rationale
 2. Updating this document
@@ -251,3 +427,9 @@ This constitution is amended by:
 4. All subsequent work must respect the amended constitution
 
 Amendments that contradict established architecture require refactoring existing code to match before the amendment is considered complete.
+
+---
+
+**END OF CONSTITUTION**
+
+This document is the permanent source of truth for the project.
