@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
 import Sidebar from "@/components/Sidebar";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import Footer from "@/components/Footer";
 import "./globals.css";
 
@@ -91,7 +92,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
@@ -99,6 +100,11 @@ export default function RootLayout({
           src="https://plausible.io/js/script.js"
           data-domain={PLAUSIBLE_DOMAIN}
           strategy="afterInteractive"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem("finkit-theme")||(window.matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.classList.add(t)}catch(e){}`,
+          }}
         />
       </head>
       <body className={`${inter.variable} ${jetbrainsMono.variable} min-h-screen bg-white font-sans text-zinc-900 antialiased`}>
@@ -109,9 +115,11 @@ export default function RootLayout({
           - On desktop, ml-64 pushes content right of the fixed sidebar.
           - On mobile (md breakpoint applies), ml-0 and pt-14 accounts for the top bar.
         */}
-        <main className="min-h-screen pt-14 md:ml-64 md:pt-0">
-          {children}
-        </main>
+        <ThemeProvider>
+          <main className="min-h-screen pt-14 md:ml-64 md:pt-0">
+            {children}
+          </main>
+        </ThemeProvider>
         <Footer />
       </body>
     </html>

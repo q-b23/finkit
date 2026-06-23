@@ -2,6 +2,7 @@
 
 import Logo from "@/components/Logo";
 import DonateButton from "@/components/DonateButton";
+import DarkModeToggle from "@/components/DarkModeToggle";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -117,6 +118,8 @@ export default function Sidebar() {
 
       {/* Footer */}
       <div className="border-t border-zinc-100 px-3 py-4">
+        <DarkModeToggle />
+
         <Link
           href="/auth"
           onClick={() => setMobileOpen(false)}
