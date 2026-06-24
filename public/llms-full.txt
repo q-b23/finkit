@@ -1,0 +1,98 @@
+# FinKit — Home Affordability Decision Assistant
+# Full page descriptions for LLM context windows
+# https://getfinkit.com
+
+---
+
+## Product Identity
+
+FinKit is a Home Affordability Decision Assistant for US households ages 35-50. It answers five core questions through interactive, client-side tools: Can I afford this house? Will this mortgage create financial stress? Should I buy or rent? What hidden housing costs am I forgetting? Should I buy a house right now?
+
+All calculations run locally in the browser. No accounts required. No data stored on servers. Privacy-first by design.
+
+---
+
+## / (Homepage)
+Landing page with hero section ("Will You Become House Poor?"), five decision cards ranked by anxiety priority, a three-step "Decisions, Not Just Calculators" section, and a privacy trust footer. Features a sticky CTA that appears on scroll: "Check My Affordability."
+
+## /decision/mortgage
+Interactive Mortgage Stress Test. Inputs: income, home price, down payment, interest rate, tax rate, insurance, HOA, monthly debts. Outputs: 0-100 stress score with ring visualization, stress level (Safe/Cautious/Risky/Avoid), monthly cost breakdown, DTI ratio, remaining disposable income, safe price ceiling, danger zone visualization, and down payment scenario comparison table (5%/10%/20%). Includes "Where's the line?" affordability zone bar and plain-English summary.
+
+## /affordability-score
+Standalone Affordability Score page embedding the full Mortgage Stress Test engine. Targets "home affordability calculator" and "can I afford this house" SEO keywords. Same functionality as /decision/mortgage with different page framing.
+
+## /decision/rent-vs-buy
+Interactive Rent vs Buy Calculator. Inputs: home price, down payment, interest rate, tax rate, insurance, HOA, monthly rent, stay years, and advanced assumptions (appreciation, investment returns, maintenance, closing/selling costs, rent increases). Outputs: winner determination (Likely Better to Buy / Likely Better to Rent / Too Close to Call), total cost comparison with bar visualization, monthly breakdown, equity built, investment projections, break-even year, 5-year and 10-year comparison table, and plain-English summary. HOA input with backward-compatible default of 0.
+
+## /hidden-housing-costs
+Interactive Hidden Housing Cost Analyzer. Inputs: home price, monthly mortgage, property tax rate, insurance, HOA, maintenance percentage, utilities. Outputs: stacked bar chart showing mortgage vs hidden costs breakdown, total true monthly payment, hidden cost ratio with severity callout (red/amber/green), annual/5-year/30-year projection table. Core message: "Your mortgage payment is only part of the total cost of homeownership."
+
+## /decision/timing
+Market Timing Analysis engine. Evaluates current interest rates, local market conditions, and personal timeline to help users decide whether to buy now or wait.
+
+## /decision/mortgage-vs-invest
+Mortgage vs Invest engine. Compares paying down mortgage versus investing the difference, risk-adjusted with scenario analysis.
+
+## /should-i-buy-a-house
+SEO landing page targeting "should I buy a house." Opens with direct-answer paragraph for AI/SGE optimization: "It depends entirely on your numbers, not the market." Covers the gap between lender approval and actual affordability, the 4 questions to answer before house hunting, and a CTA to the mortgage stress test. Includes FAQ schema (JSON-LD) with 6 questions.
+
+## /can-i-afford-a-house
+SEO landing page targeting "can I afford a house." Addresses the affordability illusion — the gap between what a lender approves and what a buyer can safely live with. Includes FAQ schema and CTA to the affordability score tool.
+
+## /am-i-house-poor
+SEO landing page targeting "am I house poor." Diagnostic content for homeowners already feeling the squeeze: 4 signs of being house poor, what caused it, and what to do about it. Bridges users to the decision engine for future purchases.
+
+## /house-poor-calculator
+SEO landing page combining educational content with tool links. Covers: definition of house poor, 4 warning signs with numbered cards, budget reality check table ($450K home example: mortgage vs true cost), and direct links to all 4 housing tools. Includes FAQ schema.
+
+## /mortgage-stress-test-guide
+SEO landing page explaining mortgage stress testing. Covers: what a stress test is, how it works (3-step flow), stress level framework (Safe/Cautious/Risky/Avoid with percentage thresholds and descriptions), 3-question decision framework, and CTA to the stress test tool. Includes FAQ schema.
+
+## /rent-vs-buy-decision
+SEO landing page targeting "rent vs buy in 2026." Opens with direct answer: "At 6.5% rates, the old 'always buy' advice is wrong." Includes FAQ schema and CTA to the rent vs buy calculator.
+
+## /is-now-a-bad-time-to-buy
+SEO landing page targeting "is now a bad time to buy." Evaluates rate environment, market conditions, and personal factors. Includes FAQ schema.
+
+## /pay-off-mortgage-or-invest
+SEO landing page comparing mortgage payoff versus investing strategies. Includes FAQ schema.
+
+## /mortgage-payoff
+SEO landing page targeting "mortgage payoff calculator." Covers bi-weekly payments, extra principal, recasting, and refinance strategies.
+
+## /dashboard/debt
+Interactive Debt Payoff Planner. Compares snowball vs avalanche methods side by side. Shows debt-free date, total interest saved, and amortization schedule.
+
+## /dashboard/loan
+Loan Comparison Calculator. Compare multiple loan offers with monthly payments, total interest, and composite scoring.
+
+## /dashboard/loans
+Loan Comparison Matrix. Side-by-side comparison of two loan offers.
+
+## /dashboard/fire
+FIRE Calculator. Grandfathered content — not a primary SEO target. Calculates FIRE number, projects compound growth, finds Coast FIRE age.
+
+---
+
+## Architecture
+
+- Next.js 14 App Router, 48 static routes
+- TypeScript strict mode
+- Tailwind CSS v3 with dark mode (class-based)
+- All business logic in lib/ (loan-math.ts, debt-math.ts, fire-math.ts)
+- Components in single flat directory
+- Vercel deployment
+- Plausible analytics (privacy-first, no cookies)
+- Self-hosted fonts (Inter + JetBrains Mono)
+
+## Privacy
+
+No account required. All calculations client-side. No server-side storage of financial data. Optional email capture for return-traffic system. No selling, sharing, or enriching user data. No third-party data enrichment.
+
+## Monetization
+
+Donation-based via Buy Me a Coffee (buymeacoffee.com/finkit). No subscriptions, no paywalls, no memberships. Future premium features under consideration (Phase 4).
+
+## Contact
+
+hello@getfinkit.com or /contact

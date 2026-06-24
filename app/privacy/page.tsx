@@ -77,7 +77,7 @@ export default function PrivacyPage() {
             We do not sell, share, or enrich your email with third-party data.
           </li>
           <li>
-            You can request permanent deletion of your email at any time —
+            You can request permanent deletion of your email at any time — contact us at hello@getfinkit.com or visit /contact and
             we&apos;ll confirm within 48 hours.
           </li>
         </ul>

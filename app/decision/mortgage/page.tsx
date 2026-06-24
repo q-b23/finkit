@@ -5,9 +5,9 @@ import MortgageDecisionEngine from "@/components/MortgageDecisionEngine";
 
 import EmailCapture from "@/components/EmailCapture";
 export const metadata: Metadata = {
-  title: "Mortgage Affordability — Can You Safely Afford This House?",
+  title: "Mortgage Stress Test — Will This Mortgage Create Financial Stress?",
   description:
-    "Get your personal risk score. See exactly how much of your take-home pay goes to housing. Know where the line is between safe and house poor.",
+    "Check if your mortgage will create unhealthy financial stress. Get your stress score, see the full cost breakdown, and compare down payment scenarios — free, private, no accounts.",
 };
 
 export default function MortgageDecisionPage() {

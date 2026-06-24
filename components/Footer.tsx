@@ -14,10 +14,16 @@ export default function Footer() {
           <div className="flex items-center gap-2.5">
             <Logo className="h-6 w-6" />
           <p className="text-xs text-zinc-400">
-            Built for financial freedom. Everything runs locally.
+            Make your housing decision with confidence. Everything runs locally.
           </p>
           </div>
           <div className="flex items-center gap-6">
+            <Link
+              href="/contact"
+              className="text-xs text-zinc-400 hover:text-zinc-600 transition-colors"
+            >
+              Contact
+            </Link>
             <Link
               href="/terms"
               className="text-xs text-zinc-400 hover:text-zinc-600 transition-colors"

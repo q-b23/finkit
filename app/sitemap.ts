@@ -23,8 +23,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     { url: `${base}/is-now-a-bad-time-to-buy`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.95 },
     { url: `${base}/pay-off-mortgage-or-invest`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.95 },
+    { url: `${base}/hidden-housing-costs`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
+    { url: `${base}/house-poor-calculator`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
+    { url: `${base}/mortgage-stress-test-guide`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.85 },
 
     // ===== Decision engines =====
+    { url: `${base}/affordability-score`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
     { url: `${base}/decision/mortgage`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.9 },
     { url: `${base}/decision/rent-vs-buy`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.9 },
     { url: `${base}/decision/timing`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.9 },
@@ -62,6 +66,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     // ===== Legal =====
     { url: `${base}/terms`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.3 },
+    { url: `${base}/contact`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.5 },
     { url: `${base}/privacy`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.3 },
   ];
 

@@ -3,6 +3,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { ArrowRight, Home, ArrowLeftRight, Clock, PiggyBank, CreditCard, Shield } from "lucide-react";
 import ResumeCard from "@/components/ResumeCard";
+import StickyCTA from "@/components/StickyCTA";
 
 const MiniWealthVisualizer = dynamic(
   () => import("@/components/MiniWealthVisualizer"),
@@ -33,9 +34,9 @@ export const metadata: Metadata = {
 const DECISIONS = [
   {
     icon: Home,
-    question: "Can I actually afford this house?",
+    question: "Will this mortgage create financial stress?",
     description:
-      "Get a personalized risk score and cashflow stress analysis. See if the mortgage will leave you house poor before you sign anything.",
+      "Take the 60-second stress test. Get your stress score, monthly cost breakdown, and see exactly where the danger zone starts.",
     href: "/decision/mortgage",
     accent: "bg-red-50 text-red-600",
   },
@@ -252,6 +253,7 @@ export default function LandingPage() {
           </p>
         </div>
       </section>
+      <StickyCTA />
     </>
   );
 }

@@ -21,6 +21,7 @@ interface DecisionResult {
   monthlyPI: number;
   monthlyTax: number;
   monthlyInsurance: number;
+  monthlyHOA: number;
   totalHousing: number;
   pctTakeHome: number;
   pctGross: number;
@@ -42,12 +43,14 @@ export function analyze(params: {
   monthlyDebts: number;
   taxRate: number;
   insurance: number;
+  hoa?: number;
 }): DecisionResult {
   const loan = params.homePrice * (1 - params.downPct / 100);
   const monthlyPI = calcPMT(loan, params.rate, 30);
   const monthlyTax = (params.homePrice * (params.taxRate / 100)) / 12;
   const monthlyInsurance = params.insurance;
-  const totalHousing = monthlyPI + monthlyTax + monthlyInsurance;
+  const monthlyHOA = params.hoa ?? 0;
+  const totalHousing = monthlyPI + monthlyTax + monthlyInsurance + monthlyHOA;
   const monthlyGross = params.grossIncome / 12;
   const pctGross = (totalHousing / monthlyGross) * 100;
   const pctTakeHome = params.takeHome > 0 ? (totalHousing / params.takeHome) * 100 : 100;
@@ -81,11 +84,11 @@ export function analyze(params: {
   // Compute "the line" — what price would bring risk to ~30?
   const targetPctTakeHome = 40;
   const targetMonthlyHousing = params.takeHome * (targetPctTakeHome / 100);
-  const estimatedMonthlyPITarget = targetMonthlyHousing - monthlyTax - monthlyInsurance;
+  const estimatedMonthlyPITarget = targetMonthlyHousing - monthlyTax - monthlyInsurance - monthlyHOA;
   if (estimatedMonthlyPITarget <= 0) {
     return {
       riskScore, recommendation, recommendationColor,
-      monthlyPI, monthlyTax, monthlyInsurance, totalHousing,
+      monthlyPI, monthlyTax, monthlyInsurance, monthlyHOA, totalHousing,
       pctTakeHome, pctGross, dti, remainingDisposable, cashflowBufferPct,
       safePrice: 0, dangerZoneStart: 0,
       summary: "Your income is too low relative to your debts and expenses to safely afford a home at current rates. Consider increasing income or reducing debts first."
@@ -112,7 +115,7 @@ export function analyze(params: {
 
   return {
     riskScore, recommendation, recommendationColor,
-    monthlyPI, monthlyTax, monthlyInsurance, totalHousing,
+    monthlyPI, monthlyTax, monthlyInsurance, monthlyHOA, totalHousing,
     pctTakeHome, pctGross, dti, remainingDisposable, cashflowBufferPct,
     safePrice: Math.round(safePrice), dangerZoneStart: Math.round(dangerZoneStart),
     summary
@@ -137,14 +140,15 @@ export default function MortgageDecisionEngine() {
   const [monthlyDebts, setMonthlyDebts] = useState(600);
   const [taxRate, setTaxRate] = useState(1.1);
   const [insurance, setInsurance] = useState(150);
+  const [hoa, setHoa] = useState(0);
 
   const result = useMemo(() => analyze({
-    grossIncome, takeHome, homePrice, downPct, rate, monthlyDebts, taxRate, insurance
-  }), [grossIncome, takeHome, homePrice, downPct, rate, monthlyDebts, taxRate, insurance]);
+    grossIncome, takeHome, homePrice, downPct, rate, monthlyDebts, taxRate, insurance, hoa
+  }), [grossIncome, takeHome, homePrice, downPct, rate, monthlyDebts, taxRate, insurance, hoa]);
 
   useAutoSave(
     "mortgage",
-    "Affordability Check",
+    "Stress Test",
     `${result.recommendation} — ${result.riskScore}% risk score`,
     "/decision/mortgage",
     [result.riskScore, result.recommendation]
@@ -163,7 +167,7 @@ export default function MortgageDecisionEngine() {
           Can You Afford This House — Safely?
         </h1>
         <p className="mt-3 text-base text-zinc-500 max-w-lg">
-          Enter your numbers below. We&apos;ll calculate your risk score and
+          Enter your numbers below. We'll calculate your risk score and
           tell you where the line is — before you sign anything.
         </p>
       </div>
@@ -208,6 +212,7 @@ export default function MortgageDecisionEngine() {
           <Field label="Monthly debt payments" value={monthlyDebts} onChange={setMonthlyDebts} prefix="$" step={50} />
           <Field label="Property tax rate (%)" value={taxRate} onChange={setTaxRate} suffix="%" step={0.1} />
           <Field label="Home insurance ($/month)" value={insurance} onChange={setInsurance} prefix="$" step={10} />
+          <Field label="HOA dues ($/month)" value={hoa} onChange={setHoa} prefix="$" step={25} />
         </div>
 
         {/* ============================================================ */}
@@ -216,7 +221,7 @@ export default function MortgageDecisionEngine() {
         <div className="space-y-6">
           {/* Risk Score Ring */}
           <div className="flex flex-col items-center rounded-2xl border border-zinc-200 bg-white p-6">
-            <p className="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-3">Risk Score</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-3">Stress Score</p>
             <div className="relative flex items-center justify-center">
               <svg width="120" height="120" viewBox="0 0 120 120" className="-rotate-90">
                 <circle cx="60" cy="60" r="52" fill="none" stroke="#f4f4f5" strokeWidth="10" />
@@ -227,7 +232,8 @@ export default function MortgageDecisionEngine() {
               </svg>
               <span className="absolute text-3xl font-bold text-zinc-900">{result.riskScore}</span>
             </div>
-            <p className={`mt-3 text-lg font-bold ${result.recommendationColor}`}>
+            <p className="mt-1 text-xs font-medium uppercase tracking-wider text-zinc-400">Stress Level</p>
+            <p className={`mt-0.5 text-lg font-bold ${result.recommendationColor}`}>
               {result.recommendation}
             </p>
           </div>
@@ -237,6 +243,7 @@ export default function MortgageDecisionEngine() {
             <Metric label="Monthly P&I" value={`$${Math.round(result.monthlyPI).toLocaleString()}`} />
             <Metric label="Property Tax" value={`$${Math.round(result.monthlyTax).toLocaleString()}`} />
             <Metric label="Insurance" value={`$${Math.round(result.monthlyInsurance).toLocaleString()}`} />
+            <Metric label="HOA" value={`$${Math.round(result.monthlyHOA).toLocaleString()}`} />
             <Metric label="Total Housing" value={`$${Math.round(result.totalHousing).toLocaleString()}`} emphasis />
             <Metric label="% of Take-Home" value={`${result.pctTakeHome.toFixed(0)}%`}
               warn={result.pctTakeHome > 40} danger={result.pctTakeHome > 50} />
@@ -257,7 +264,7 @@ export default function MortgageDecisionEngine() {
         <div className="mt-8 rounded-2xl border border-zinc-200 bg-zinc-50 p-6">
           <h3 className="text-sm font-semibold text-zinc-900 mb-4 flex items-center gap-2">
             <Info className="h-4 w-4 text-zinc-400" />
-            Where&apos;s the line?
+            Your Affordability Zone
           </h3>
           <div className="flex items-center gap-4 flex-wrap">
             <div className="flex-1 min-w-0">
@@ -286,6 +293,80 @@ export default function MortgageDecisionEngine() {
       )}
 
       {/* ============================================================ */}
+      
+      {/* ============================================================ */}
+      {/*  SCENARIO COMPARISON — down payment options                     */}
+      {/* ============================================================ */}
+      <div className="mt-8 rounded-2xl border border-zinc-200 bg-white p-6">
+        <h3 className="text-sm font-semibold text-zinc-900 mb-4 flex items-center gap-2">
+          <TrendingUp className="h-4 w-4 text-zinc-400" />
+          Down Payment Scenarios
+        </h3>
+        <p className="text-xs text-zinc-400 mb-4">
+          Same home, same rate — different down payments. See how much you save.
+        </p>
+        <div className="overflow-x-auto -mx-2 px-2">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-zinc-100">
+                <th className="text-left py-2 pr-3 text-xs font-medium text-zinc-400">Down Payment</th>
+                <th className="text-right py-2 px-3 text-xs font-medium text-zinc-400">Monthly P&amp;I</th>
+                <th className="text-right py-2 px-3 text-xs font-medium text-zinc-400">Total Interest</th>
+                <th className="text-right py-2 px-3 text-xs font-medium text-zinc-400">Stress Level</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[5, 10, 20].map(pct => {
+                const s = analyze({ grossIncome, takeHome, homePrice, downPct: pct, rate, monthlyDebts, taxRate, insurance, hoa });
+                const loanAmt = homePrice * (1 - pct / 100);
+                const totalInterest = (s.monthlyPI * 360) - loanAmt;
+                const stressLabel = s.recommendation === "SAFE" ? "Low" : s.recommendation === "CAUTIOUS" ? "Moderate" : s.recommendation === "RISKY" ? "High" : "Severe";
+                const stressColor = s.recommendation === "SAFE" ? "text-emerald-600 bg-emerald-50" : s.recommendation === "CAUTIOUS" ? "text-amber-600 bg-amber-50" : s.recommendation === "RISKY" ? "text-orange-600 bg-orange-50" : "text-red-600 bg-red-50";
+                return (
+                  <tr key={pct} className={`border-b border-zinc-50 ${pct === downPct ? "bg-zinc-50 font-medium" : ""}`}>
+                    <td className="py-3 pr-3 text-zinc-900">
+                      {pct}%{pct === downPct ? " (current)" : ""}
+                    </td>
+                    <td className="text-right py-3 px-3 text-zinc-900">
+                      ${Math.round(s.monthlyPI).toLocaleString()}
+                    </td>
+                    <td className="text-right py-3 px-3 text-zinc-500">
+                      ${Math.round(totalInterest).toLocaleString()}
+                    </td>
+                    <td className="text-right py-3 pl-3">
+                      <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${stressColor}`}>{stressLabel}</span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        {downPct < 20 && (() => {
+          const current = analyze({ grossIncome, takeHome, homePrice, downPct, rate, monthlyDebts, taxRate, insurance, hoa });
+          const at20 = analyze({ grossIncome, takeHome, homePrice, downPct: 20, rate, monthlyDebts, taxRate, insurance, hoa });
+          const monthlySavings = current.monthlyPI - at20.monthlyPI;
+          const loanCurrent = homePrice * (1 - downPct / 100);
+          const loan20 = homePrice * (1 - 20 / 100);
+          const interestCurrent = (current.monthlyPI * 360) - loanCurrent;
+          const interest20 = (at20.monthlyPI * 360) - loan20;
+          const interestSavings = interestCurrent - interest20;
+          return (
+            <div className="mt-4 flex items-start gap-3 rounded-xl bg-emerald-50 border border-emerald-100 p-4">
+              <TrendingDown className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-semibold text-emerald-800">
+                  Save ${Math.round(monthlySavings).toLocaleString()}/month with 20% down
+                </p>
+                <p className="text-sm text-emerald-700 mt-1">
+                  That's ${Math.round(monthlySavings * 12).toLocaleString()}/year in cash flow and ${Math.round(interestSavings).toLocaleString()} less in total interest over the life of the loan — plus no PMI.
+                </p>
+              </div>
+            </div>
+          );
+        })()}
+      </div>
+
       {/*  SUMMARY                                                        */}
       {/* ============================================================ */}
       <div className="mt-8 rounded-2xl border border-zinc-200 bg-white p-6">
@@ -301,11 +382,11 @@ export default function MortgageDecisionEngine() {
           <div className="mt-4 flex items-start gap-3 rounded-xl bg-red-50 border border-red-100 p-4">
             <TrendingDown className="h-5 w-5 text-red-500 shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm font-semibold text-red-800">Regret risk is high</p>
+              <p className="text-sm font-semibold text-red-800">Financial stress is likely</p>
               <p className="text-sm text-red-700 mt-1">
                 Buyers in this risk zone are 3× more likely to report feeling
-                house poor within 2 years. If you&apos;re already worried,
-                that feeling doesn&apos;t go away after closing — it gets worse.
+                house poor within 2 years. If  you're already worried,
+                that feeling doesn't go away after closing — it gets worse.
               </p>
             </div>
           </div>
@@ -314,11 +395,11 @@ export default function MortgageDecisionEngine() {
           <div className="mt-4 flex items-start gap-3 rounded-xl bg-emerald-50 border border-emerald-100 p-4">
             <TrendingUp className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm font-semibold text-emerald-800">You&apos;re in the safety zone</p>
+              <p className="text-sm font-semibold text-emerald-800">Low stress — you can breathe</p>
               <p className="text-sm text-emerald-700 mt-1">
                 At this price, your housing costs are well within recommended
                 limits. You should still budget for maintenance (~1% of home
-                value/year), but you won&apos;t be house poor.
+                value/year), but you  won't be house poor.
               </p>
             </div>
           </div>
@@ -333,7 +414,7 @@ export default function MortgageDecisionEngine() {
       <div className="flex items-center justify-center mt-6">
         <SaveResultButton
           engine="mortgage"
-          label="Affordability Check"
+          label="Stress Test"
           outcome={`${result.recommendation} — ${result.riskScore}% risk score`}
           href="/decision/mortgage"
         />

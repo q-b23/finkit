@@ -19,7 +19,7 @@ interface RvBResult {
   /** "Buying saves you $X" or "Renting saves you $X" */
   winnerLabel: string;
   /** Which side wins */
-  winner: "buy" | "rent";
+  winner: "buy" | "rent" | "tossup";
   /** Green/amber for summary card */
   winnerColor: string;
   buyTotalCost: number;
@@ -40,6 +40,7 @@ function analyze(params: {
   rate: number;
   taxRate: number;
   insurance: number;
+  hoa?: number;
   monthlyRent: number;
   stayYears: number;
   appreciation: number;
@@ -58,6 +59,7 @@ function analyzeCore(params: {
   rate: number;
   taxRate: number;
   insurance: number;
+  hoa?: number;
   monthlyRent: number;
   stayYears: number;
   appreciation: number;
@@ -75,8 +77,9 @@ function analyzeCore(params: {
   const monthlyPI = calcPMT(loan, params.rate, 30);
   const monthlyTax = (params.homePrice * (params.taxRate / 100)) / 12;
   const monthlyInsurance = params.insurance;
+  const monthlyHOA = params.hoa ?? 0;
   const monthlyMaintenance = (params.homePrice * (params.maintenancePct / 100)) / 12;
-  const buyMonthly = monthlyPI + monthlyTax + monthlyInsurance + monthlyMaintenance;
+  const buyMonthly = monthlyPI + monthlyTax + monthlyInsurance + monthlyHOA + monthlyMaintenance;
 
   const totalHousingPayments = buyMonthly * months;
   const closingCosts = params.homePrice * (params.closingCostPct / 100);
@@ -125,16 +128,22 @@ function analyzeCore(params: {
   const absDiff = Math.abs(netDiff);
 
   let winnerLabel: string;
-  let winner: "buy" | "rent";
+  let winner: "buy" | "rent" | "tossup";
   let winnerColor: string;
-  if (netDiff > 0) {
+  // "Too Close to Call" when the difference is under 5% of home price
+  const tossupThreshold = params.homePrice * 0.05;
+  if (absDiff < tossupThreshold) {
+    winner = "tossup";
+    winnerColor = "text-zinc-600 bg-zinc-50 border-zinc-200";
+    winnerLabel = `Too Close to Call — the difference is only $${Math.round(absDiff).toLocaleString()} over ${params.stayYears} years`;
+  } else if (netDiff > 0) {
     winner = "buy";
     winnerColor = "text-emerald-600 bg-emerald-50 border-emerald-200";
-    winnerLabel = `Buying saves you ~$${Math.round(absDiff).toLocaleString()} over ${params.stayYears} years`;
+    winnerLabel = `Likely Better to Buy — saves ~$${Math.round(absDiff).toLocaleString()} over ${params.stayYears} years`;
   } else {
     winner = "rent";
     winnerColor = "text-amber-600 bg-amber-50 border-amber-200";
-    winnerLabel = `Renting saves you ~$${Math.round(absDiff).toLocaleString()} over ${params.stayYears} years`;
+    winnerLabel = `Likely Better to Rent — saves ~$${Math.round(absDiff).toLocaleString()} over ${params.stayYears} years`;
   }
 
   // --- BREAK-EVEN (only when requested) ---
@@ -151,7 +160,9 @@ function analyzeCore(params: {
 
   // --- SUMMARY ---
   let summary = "";
-  if (winner === "rent") {
+  if (winner === "tossup") {
+    summary = `Over ${params.stayYears} years, buying and renting come out nearly even — the difference is just $${Math.round(absDiff).toLocaleString()}. At this point, the decision comes down to lifestyle: do you want the freedom of renting or the stability of owning? Financially, there's no wrong answer.`;
+  } else if (winner === "rent") {
     summary = `Over ${params.stayYears} years, renting and investing the difference puts you about $${Math.round(absDiff).toLocaleString()} ahead. The high cost of mortgage interest at ${params.rate}% plus closing costs, maintenance, and selling commission outweigh the equity you'd build.`;
     if (breakEvenYear) {
       summary += ` Buying would only start winning after about ${breakEvenYear} years.`;
@@ -189,6 +200,7 @@ export default function RentVsBuyEngine() {
   const [rate, setRate] = useState(6.5);
   const [taxRate, setTaxRate] = useState(1.1);
   const [insurance, setInsurance] = useState(150);
+  const [hoa, setHoa] = useState(0);
   const [monthlyRent, setMonthlyRent] = useState(2200);
   const [stayYears, setStayYears] = useState(5);
   const [appreciation, setAppreciation] = useState(3);
@@ -199,12 +211,29 @@ export default function RentVsBuyEngine() {
   const [rentIncreasePct, setRentIncreasePct] = useState(3);
 
   const result = useMemo(() => analyze({
-    homePrice, downPct, rate, taxRate, insurance,
+    homePrice, downPct, rate, taxRate, insurance, hoa,
     monthlyRent, stayYears, appreciation, investmentReturn,
     maintenancePct, closingCostPct, sellingCostPct, rentIncreasePct,
-  }), [homePrice, downPct, rate, taxRate, insurance,
+  }), [homePrice, downPct, rate, taxRate, insurance, hoa,
 
       monthlyRent, stayYears, appreciation, investmentReturn,
+      maintenancePct, closingCostPct, sellingCostPct, rentIncreasePct]);
+
+  // Compute 5-year and 10-year scenarios for the comparison table
+  const result5 = useMemo(() => analyze({
+    homePrice, downPct, rate, taxRate, insurance, hoa,
+    monthlyRent, stayYears: 5, appreciation, investmentReturn,
+    maintenancePct, closingCostPct, sellingCostPct, rentIncreasePct,
+  }), [homePrice, downPct, rate, taxRate, insurance, hoa,
+      monthlyRent, appreciation, investmentReturn,
+      maintenancePct, closingCostPct, sellingCostPct, rentIncreasePct]);
+
+  const result10 = useMemo(() => analyze({
+    homePrice, downPct, rate, taxRate, insurance, hoa,
+    monthlyRent, stayYears: 10, appreciation, investmentReturn,
+    maintenancePct, closingCostPct, sellingCostPct, rentIncreasePct,
+  }), [homePrice, downPct, rate, taxRate, insurance, hoa,
+      monthlyRent, appreciation, investmentReturn,
       maintenancePct, closingCostPct, sellingCostPct, rentIncreasePct]);
 
   useAutoSave(
@@ -267,6 +296,7 @@ export default function RentVsBuyEngine() {
           <div className="grid grid-cols-2 gap-3">
             <Field label="Property tax %" value={taxRate} onChange={setTaxRate} suffix="%" step={0.1} />
             <Field label="Insurance/mo" value={insurance} onChange={setInsurance} prefix="$" step={10} />
+            <Field label="HOA/mo" value={hoa} onChange={setHoa} prefix="$" step={25} />
           </div>
 
           <hr className="border-zinc-100" />
@@ -309,7 +339,7 @@ export default function RentVsBuyEngine() {
               {stayYears}-Year Outcome
             </p>
             <p className="text-2xl font-bold">
-              {result.winner === "buy" ? "Buying Wins" : "Renting Wins"}
+              {result.winner === "buy" ? "Buying Wins" : result.winner === "rent" ? "Renting Wins" : "Too Close to Call"}
             </p>
             <p className="mt-2 text-sm opacity-80 leading-relaxed">
               {result.winnerLabel}
@@ -368,6 +398,56 @@ export default function RentVsBuyEngine() {
       </div>
 
       {/* ============================================================ */}
+      
+      {/* ============================================================ */}
+      {/*  5-YR / 10-YR COMPARISON TABLE                                 */}
+      {/* ============================================================ */}
+      <div className="mt-8 rounded-2xl border border-zinc-200 bg-white p-6">
+        <h3 className="text-sm font-semibold text-zinc-900 mb-4 flex items-center gap-2">
+          <Clock className="h-4 w-4 text-zinc-400" />
+          How Time Changes the Math
+        </h3>
+        <p className="text-xs text-zinc-400 mb-4">
+          The longer you stay, the more buying tends to win. Compare your numbers at 5 and 10 years.
+        </p>
+        <div className="overflow-x-auto -mx-2 px-2">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-zinc-100">
+                <th className="text-left py-2 pr-3 text-xs font-medium text-zinc-400">Timeframe</th>
+                <th className="text-right py-2 px-3 text-xs font-medium text-zinc-400">Buying Cost</th>
+                <th className="text-right py-2 px-3 text-xs font-medium text-zinc-400">Renting Cost</th>
+                <th className="text-right py-2 pl-3 text-xs font-medium text-zinc-400">Recommendation</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[result5, result10].map((r, i) => {
+                const years = i === 0 ? 5 : 10;
+                const isCurrent = years === stayYears;
+                const recLabel = r.winner === "tossup" ? "Tossup" : r.winner === "buy" ? "Buy" : "Rent";
+                const recColor = r.winner === "tossup" ? "text-zinc-600 bg-zinc-100" : r.winner === "buy" ? "text-emerald-600 bg-emerald-50" : "text-amber-600 bg-amber-50";
+                return (
+                  <tr key={years} className={`border-b border-zinc-50 ${isCurrent ? "bg-zinc-50 font-medium" : ""}`}>
+                    <td className="py-3 pr-3 text-zinc-900">
+                      {years} years{isCurrent ? " (your plan)" : ""}
+                    </td>
+                    <td className="text-right py-3 px-3 text-zinc-900">
+                      {fmtMoney(r.buyTotalCost)}
+                    </td>
+                    <td className="text-right py-3 px-3 text-zinc-500">
+                      {fmtMoney(r.rentTotalCost)}
+                    </td>
+                    <td className="text-right py-3 pl-3">
+                      <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${recColor}`}>{recLabel}</span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       {/*  BREAK-EVEN                                                     */}
       {/* ============================================================ */}
       {result.breakEvenYear && (

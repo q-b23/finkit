@@ -134,7 +134,7 @@ export default function Sidebar() {
         </Link>
 
         <p className="mt-3 px-3 text-[11px] leading-relaxed text-zinc-300">
-          Built for financial freedom.
+          Make your housing decision with confidence.
           <br />
           Everything runs locally.
         </p>

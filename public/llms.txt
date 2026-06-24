@@ -1,0 +1,42 @@
+# FinKit — Home Affordability Decision Assistant
+# https://getfinkit.com
+
+## Core Tools
+/decision/mortgage: Mortgage Stress Test — evaluate whether your mortgage will create financial stress
+/affordability-score: Home Affordability Score — get your 0-100 score with safe price range
+/decision/rent-vs-buy: Rent vs Buy Calculator — 5-year cost comparison with break-even
+/hidden-housing-costs: Hidden Housing Cost Analyzer — true monthly cost beyond the mortgage
+/decision/timing: Market Timing Analysis — should you buy now or wait?
+/decision/mortgage-vs-invest: Pay Down or Invest — mortgage payoff vs investing comparison
+
+## Housing Decision Guides
+/should-i-buy-a-house: Should you buy a house? 4 questions to answer first
+/can-i-afford-a-house: Can you afford a house? Your numbers, not the bank's
+/am-i-house-poor: Am I house poor? 4 signs + what to do
+/house-poor-calculator: House poor calculator — check your risk
+/mortgage-stress-test-guide: Mortgage stress test guide — how it works
+/rent-vs-buy-decision: Rent vs buy decision — which builds more wealth?
+/is-now-a-bad-time-to-buy: Is now a bad time to buy? Market timing analysis
+/pay-off-mortgage-or-invest: Pay off mortgage or invest? Wealth comparison
+/mortgage-payoff: Mortgage payoff calculator — pay off your mortgage early
+
+## Financial Tools
+/dashboard/debt: Debt Payoff Planner — snowball vs avalanche
+/dashboard/loan: Loan Comparison Calculator — compare multiple loans
+/dashboard/loans: Loan Comparison Matrix — side by side comparison
+
+## Educational Content
+/guides: Financial guides index
+/guides/debt-payoff-timeline: Debt payoff timeline guide
+/guides/loan-apr: Understanding loan APR
+/guides/snowball-vs-avalanche: Snowball vs avalanche comparison
+/guides/compound-interest: Compound interest explained
+/guides/four-percent-rule: The 4% rule explained
+/guides/fire-number: How to calculate your FIRE number
+/guides/coast-fire: Coast FIRE explained
+/blog: FinKit blog
+
+## About
+/privacy: Privacy policy
+/terms: Terms of service
+/contact: Contact FinKit

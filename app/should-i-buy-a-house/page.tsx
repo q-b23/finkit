@@ -202,7 +202,22 @@ export default function ShouldIBuyAHousePage() {
               Check My Affordability
               <ArrowRight className="h-4 w-4" />
             </Link>
-            <p className="mt-4 text-xs text-zinc-400">
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
+              <Link
+                href="/hidden-housing-costs"
+                className="text-xs text-zinc-400 hover:text-purple-600 transition-colors underline underline-offset-2"
+              >
+                Hidden Housing Costs
+              </Link>
+              <span className="text-zinc-200">·</span>
+              <Link
+                href="/decision/rent-vs-buy"
+                className="text-xs text-zinc-400 hover:text-amber-600 transition-colors underline underline-offset-2"
+              >
+                Rent vs Buy Comparison
+              </Link>
+            </div>
+            <p className="mt-3 text-xs text-zinc-400">
               No account needed. No email required. Everything runs locally.
             </p>
           </div>

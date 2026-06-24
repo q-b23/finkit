@@ -34,19 +34,20 @@ const PLAUSIBLE_DOMAIN = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN ?? "getfinkit.
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "FinKit — US Home Affordability & Financial Decision System",
+    default: "FinKit — US Home Affordability Decision Tools",
     template: "%s · FinKit",
   },
   description:
-    "Will you become house poor? FinKit analyzes your finances and tells you what you can safely afford. Rent vs buy, mortgage risk, debt freedom — all free, private, and local.",
+    "Can you afford that house? FinKit gives you a clear risk score and plain-English recommendation. Mortgage stress test, rent vs buy, hidden cost analysis — free, private, runs in your browser.",
   keywords: [
-    "free FIRE calculator",
-    "financial independence retire early",
+    "home affordability calculator",
+    "mortgage stress test",
+    "rent vs buy calculator",
+    "housing cost calculator",
+    "mortgage affordability",
+    "house poor calculator",
     "debt payoff planner",
-    "snowball vs avalanche calculator",
     "loan comparison",
-    "compound interest calculator",
-    "personal finance tools",
     "open source",
   ],
   robots: { index: true, follow: true },
@@ -63,7 +64,7 @@ export const metadata: Metadata = {
         url: `${BASE_URL}/og-image.png`,
         width: 1200,
         height: 630,
-        alt: "FinKit — Take control of your financial future, privately.",
+        alt: "FinKit — Make smarter housing decisions, privately.",
       },
     ],
   },
@@ -104,6 +105,22 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html: `try{var t=localStorage.getItem("finkit-theme")||(window.matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.classList.add(t)}catch(e){}`,
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "FinKit",
+              "url": "https://getfinkit.com",
+              "description": "Home Affordability Decision Assistant — free, private tools to help US households make smarter housing decisions.",
+              "sameAs": [
+                "https://github.com/q-b23/finkit",
+                "https://buymeacoffee.com/finkit"
+              ]
+            })
           }}
         />
       </head>
