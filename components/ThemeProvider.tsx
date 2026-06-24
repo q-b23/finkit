@@ -54,6 +54,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
 export function useTheme(): ThemeContextValue {
   const ctx = useContext(ThemeContext);
-  if (!ctx) throw new Error("useTheme must be used within ThemeProvider");
+  // During SSR/static generation the provider wrapper is skipped (mounted=false).
+  // Return safe defaults instead of throwing so prerendering can complete.
+  if (!ctx) return { theme: "light", toggleTheme: () => {} };
   return ctx;
 }

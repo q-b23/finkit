@@ -125,19 +125,19 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} ${jetbrainsMono.variable} min-h-screen bg-white font-sans text-zinc-900 antialiased`}>
-        <Sidebar />
-
-        {/*
-          Main content area:
-          - On desktop, ml-64 pushes content right of the fixed sidebar.
-          - On mobile (md breakpoint applies), ml-0 and pt-14 accounts for the top bar.
-        */}
         <ThemeProvider>
+          <Sidebar />
+
+          {/*
+            Main content area:
+            - On desktop, ml-64 pushes content right of the fixed sidebar.
+            - On mobile (md breakpoint applies), ml-0 and pt-14 accounts for the top bar.
+          */}
           <main className="min-h-screen pt-14 md:ml-64 md:pt-0">
             {children}
           </main>
+          <Footer />
         </ThemeProvider>
-        <Footer />
       </body>
     </html>
   );
