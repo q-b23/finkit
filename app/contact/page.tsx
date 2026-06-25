@@ -85,27 +85,8 @@ export default function ContactPage() {
                 Support FinKit
               </h2>
               <p className="mt-1 text-sm text-amber-700 leading-relaxed">
-                FinKit is free and always will be. If it helped you make a
-                better housing decision, consider{" "}
-                <a
-                  href="https://ko-fi.com/finkit"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline underline-offset-2 font-medium hover:text-amber-900 transition-colors"
-                >
-                  supporting us on Ko-fi
-                </a>
-                {" "}or{" "}
-                <a
-                  href="https://buymeacoffee.com/finkit"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline underline-offset-2 font-medium hover:text-amber-900 transition-colors"
-                >
-                  buying us a coffee
-                </a>
-                . Every donation helps keep the tools free, private, and
-                ad-free.
+                FinKit is free and always will be. No accounts, no ads,
+                no data collection. Everything runs locally in your browser.
               </p>
             </div>
           </div>

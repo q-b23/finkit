@@ -1,7 +1,6 @@
 "use client";
 
 import Logo from "@/components/Logo";
-import DonateButton from "@/components/DonateButton";
 import DarkModeToggle from "@/components/DarkModeToggle";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -139,7 +138,6 @@ export default function Sidebar() {
           Everything runs locally.
         </p>
 
-        <DonateButton variant="sidebar" />
       </div>
     </div>
   );

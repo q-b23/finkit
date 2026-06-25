@@ -117,8 +117,7 @@ export default function RootLayout({
               "url": "https://getfinkit.com",
               "description": "Home Affordability Decision Assistant — free, private tools to help US households make smarter housing decisions.",
               "sameAs": [
-                "https://github.com/q-b23/finkit",
-                "https://buymeacoffee.com/finkit"
+                "https://github.com/q-b23/finkit"
               ]
             })
           }}
