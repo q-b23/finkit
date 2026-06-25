@@ -4,11 +4,11 @@ import { ArrowRight, AlertTriangle, Home, TrendingDown, Shield } from "lucide-re
 import RelatedArticles from "@/components/RelatedArticles";
 
 export const metadata: Metadata = {
-  title: "Mortgage Stress Test — Will This Mortgage Create Financial Stress?",
+  title: "Mortgage Stress Test Guide: How to Evaluate Housing Stress Before You Buy",
   description:
     "A mortgage stress test evaluates whether your mortgage will create unhealthy financial pressure. Learn how it works, what a safe DTI looks like, and check your numbers — free, private, 60 seconds.",
   openGraph: {
-    title: "Free Mortgage Stress Test — Check Your Risk in 60 Seconds",
+    title: "Mortgage Stress Test Guide: Evaluate Housing Stress Before You Buy",
     description:
       "Before you commit to a mortgage, stress-test it against your real take-home pay. See your stress score, monthly breakdown, and safe price range.",
   },

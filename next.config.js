@@ -8,6 +8,12 @@ const nextConfig = {
         destination: "/debt-avalanche-vs-snowball",
         permanent: true,
       },
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.getfinkit.com" }],
+        destination: "https://getfinkit.com/:path*",
+        permanent: true,
+      },
     ];
   },
 };
