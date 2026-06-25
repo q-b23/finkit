@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import { AlertTriangle, CheckCircle, Info, TrendingDown, TrendingUp } from "lucide-react";
 import SaveResultButton from "@/components/SaveResultButton";
+import { KoFiSupportPrompt } from "@/components/KoFiSupport";
 import { useAutoSave } from "@/hooks/useAutoSave";
 import { calcPMT } from "@/lib/loan-math";
 
@@ -419,6 +420,10 @@ export default function MortgageDecisionEngine() {
           href="/decision/mortgage"
         />
       </div>
+
+        {/* Ko-fi support prompt — shown after results */}
+        <KoFiSupportPrompt />
+
         All calculations run locally in your browser. Nothing is sent anywhere.
         This is an educational tool — not financial advice.
       </p>

@@ -1,6 +1,7 @@
 import Logo from "@/components/Logo";
 import Link from "next/link";
 import DonateButton from "@/components/DonateButton";
+import { KoFiLink } from "@/components/KoFiSupport";
 
 /**
  * Minimal footer rendered at the bottom of every page via the root layout.
@@ -47,6 +48,14 @@ export default function Footer() {
 
             <DonateButton variant="footer" />
           </div>
+        </div>
+
+        {/* Ko-fi support row */}
+        <div className="mt-6 pt-5 border-t border-zinc-50 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-xs text-zinc-400">
+            Help keep FinKit free &mdash; no ads, no subscriptions, no data selling.
+          </p>
+          <KoFiLink />
         </div>
       </div>
     </footer>
