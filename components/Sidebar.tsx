@@ -2,6 +2,7 @@
 
 import Logo from "@/components/Logo";
 import DarkModeToggle from "@/components/DarkModeToggle";
+import KoFiLink from "@/components/KoFiLink";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -118,6 +119,8 @@ export default function Sidebar() {
       {/* Footer */}
       <div className="border-t border-zinc-100 px-3 py-4">
         <DarkModeToggle />
+
+        <KoFiLink variant="sidebar" />
 
         <Link
           href="/auth"

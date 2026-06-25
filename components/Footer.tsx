@@ -1,5 +1,6 @@
 import Logo from "@/components/Logo";
 import Link from "next/link";
+import KoFiLink from "@/components/KoFiLink";
 
 /**
  * Minimal footer rendered at the bottom of every page via the root layout.
@@ -43,6 +44,8 @@ export default function Footer() {
             >
               GitHub
             </a>
+
+            <KoFiLink variant="footer" />
 
           </div>
         </div>
