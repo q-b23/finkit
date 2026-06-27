@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { AlertTriangle, CheckCircle, Info, TrendingDown, TrendingUp } from "lucide-react";
 import SaveResultButton from "@/components/SaveResultButton";
+import KoFiSupportCard from "@/components/KoFiSupportCard";
 import { useAutoSave } from "@/hooks/useAutoSave";
 import { calcPMT } from "@/lib/loan-math";
 
@@ -141,6 +142,14 @@ export default function MortgageDecisionEngine() {
   const [taxRate, setTaxRate] = useState(1.1);
   const [insurance, setInsurance] = useState(150);
   const [hoa, setHoa] = useState(0);
+
+  // Track whether user has interacted with any input (for conditional KoFiSupportCard)
+  const [hasInteracted, setHasInteracted] = useState(false);
+  const mounted = useRef(false);
+  useEffect(() => {
+    if (mounted.current) setHasInteracted(true);
+    mounted.current = true;
+  }, [grossIncome, takeHome, homePrice, downPct, rate, monthlyDebts, taxRate, insurance, hoa]);
 
   const result = useMemo(() => analyze({
     grossIncome, takeHome, homePrice, downPct, rate, monthlyDebts, taxRate, insurance, hoa
@@ -423,6 +432,9 @@ export default function MortgageDecisionEngine() {
         All calculations run locally in your browser. Nothing is sent anywhere.
         This is an educational tool — not financial advice.
       </p>
+
+      {/* Ko-fi support card — shown only after user interacts with the calculator */}
+      {hasInteracted && <KoFiSupportCard />}
     </div>
   );
 }
