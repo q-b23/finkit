@@ -1,18 +1,17 @@
 /**
- * Email delivery service — single abstraction layer for all outgoing email.
+ * Email delivery service — Resend transport layer.
  *
  * Architecture:
- *   Business logic → sendEmail() → SMTP provider
+ *   Business logic → sendEmail() → Resend API
  *
- * To swap providers (Resend, Postmark, SES, SendGrid, etc.):
- *   Replace the transporter factory inside getTransporter().
- *   No business logic changes required.
+ * To swap providers: replace the transporter here.
+ * No business logic changes required.
  */
 
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
 /* ------------------------------------------------------------------ */
-/*  Email options                                                     */
+/*  Email options (unchanged public API)                              */
 /* ------------------------------------------------------------------ */
 
 export interface EmailOptions {
@@ -27,51 +26,50 @@ export interface EmailOptions {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Transporter factory — swap providers here                         */
+/*  Constants                                                         */
 /* ------------------------------------------------------------------ */
 
-function getTransporter() {
-  const host = process.env.SMTP_HOST;
-  const port = Number(process.env.SMTP_PORT || "587");
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
+const FROM_ADDRESS = "FinKit <support@getfinkit.com>";
+const REPLY_TO = "support@getfinkit.com";
 
-  if (!host || !user || !pass) {
+/* ------------------------------------------------------------------ */
+/*  Resend client factory                                             */
+/* ------------------------------------------------------------------ */
+
+function getResend(): Resend {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
     throw new Error(
-      "SMTP credentials not configured. Set SMTP_HOST, SMTP_USER, and SMTP_PASS environment variables."
+      "Resend API key not configured. Set RESEND_API_KEY environment variable."
     );
   }
-
-  return nodemailer.createTransport({
-    host,
-    port,
-    secure: port === 465,
-    auth: { user, pass },
-  });
+  return new Resend(apiKey);
 }
 
 /* ------------------------------------------------------------------ */
 /*  Public API                                                        */
 /* ------------------------------------------------------------------ */
 
-const FROM_ADDRESS = "support@getfinkit.com";
-
 /**
- * Send a single email. Returns the nodemailer info object on success.
+ * Send a single email via Resend.
  *
- * @throws if SMTP is not configured or delivery fails
+ * @throws if RESEND_API_KEY is not configured or delivery fails
  */
 export async function sendEmail(options: EmailOptions) {
-  const transporter = getTransporter();
+  const resend = getResend();
 
-  const info = await transporter.sendMail({
+  const { data, error } = await resend.emails.send({
     from: FROM_ADDRESS,
-    replyTo: FROM_ADDRESS,
-    to: options.to,
+    replyTo: REPLY_TO,
+    to: [options.to],
     subject: options.subject,
     text: options.text,
-    html: options.html || options.text,
+    html: options.html,
   });
 
-  return info;
+  if (error) {
+    throw new Error(`Resend delivery failed: ${error.message}`);
+  }
+
+  return data;
 }
