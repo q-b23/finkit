@@ -2,6 +2,8 @@
 
 import { useState, useMemo, useRef, useEffect } from "react";
 import { AlertTriangle, CheckCircle, Info, TrendingDown, TrendingUp } from "lucide-react";
+import EmailResultForm from "@/components/EmailResultForm";
+import ResultDisclaimer from "@/components/ResultDisclaimer";
 import SaveResultButton from "@/components/SaveResultButton";
 import KoFiSupportCard from "@/components/KoFiSupportCard";
 import { useAutoSave } from "@/hooks/useAutoSave";
@@ -435,8 +437,80 @@ export default function MortgageDecisionEngine() {
 
       {/* Ko-fi support card — shown only after user interacts with the calculator */}
       {hasInteracted && <KoFiSupportCard />}
+
+      {/* Email results form — shown only after user interacts */}
+      {hasInteracted && (
+        <EmailResultForm
+          subject={`FinKit Mortgage Stress Test Results`}
+          text={buildEmailText(result, { grossIncome, takeHome, homePrice, downPct, rate, monthlyDebts, taxRate, insurance, hoa })}
+        />
+      )}
+
+      <ResultDisclaimer />
     </div>
   );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Build email body from calculation results                          */
+/* ------------------------------------------------------------------ */
+
+function buildEmailText(
+  result: ReturnType<typeof analyze>,
+  inputs: {
+    grossIncome: number; takeHome: number; homePrice: number;
+    downPct: number; rate: number; monthlyDebts: number;
+    taxRate: number; insurance: number; hoa: number;
+  }
+): string {
+  const downPayment = inputs.homePrice * (inputs.downPct / 100);
+  const loanAmount = inputs.homePrice - downPayment;
+
+  return [
+    "FinKit Mortgage Stress Test Results",
+    "=====================================",
+    "",
+    "Stress Score: " + result.riskScore + "/100 — " + result.recommendation,
+    "",
+    "--- Your Inputs ---",
+    "Home Price: $" + inputs.homePrice.toLocaleString(),
+    "Down Payment: " + inputs.downPct + "% ($" + Math.round(downPayment).toLocaleString() + ")",
+    "Loan Amount: $" + Math.round(loanAmount).toLocaleString(),
+    "Interest Rate: " + inputs.rate + "%",
+    "Gross Annual Income: $" + inputs.grossIncome.toLocaleString(),
+    "Monthly Take-Home Pay: $" + inputs.takeHome.toLocaleString(),
+    "Monthly Debts: $" + inputs.monthlyDebts.toLocaleString(),
+    "Property Tax Rate: " + inputs.taxRate + "%",
+    "Monthly Insurance: $" + inputs.insurance.toLocaleString(),
+    "Monthly HOA: $" + inputs.hoa.toLocaleString(),
+    "",
+    "--- Housing Cost Breakdown ---",
+    "Monthly P&I: $" + Math.round(result.monthlyPI).toLocaleString(),
+    "Property Tax: $" + Math.round(result.monthlyTax).toLocaleString(),
+    "Insurance: $" + Math.round(result.monthlyInsurance).toLocaleString(),
+    "HOA: $" + Math.round(result.monthlyHOA).toLocaleString(),
+    "Total Housing: $" + Math.round(result.totalHousing).toLocaleString(),
+    "% of Take-Home: " + result.pctTakeHome.toFixed(0) + "%",
+    "DTI Ratio: " + result.dti.toFixed(0) + "%",
+    "Left After Housing: $" + Math.round(result.remainingDisposable).toLocaleString(),
+    "Cashflow Buffer: " + result.cashflowBufferPct.toFixed(0) + "%",
+    "",
+    "--- Summary ---",
+    result.summary,
+    "",
+    "--- Safe Price Range ---",
+    "Safe: up to $" + (result.safePrice > 0 ? Math.round(result.safePrice).toLocaleString() : "N/A"),
+    "Danger zone starts at: $" + Math.round(result.dangerZoneStart).toLocaleString(),
+    "",
+    "View more at: https://getfinkit.com/decision/mortgage",
+    "",
+    "-------------------------------------",
+    "This calculation is provided for informational purposes only.",
+    "Nothing contained in this email should be considered financial,",
+    "legal, tax, mortgage, investment, or professional advice.",
+    "Users remain solely responsible for their own financial decisions.",
+    "Sent by FinKit (https://getfinkit.com) — support@getfinkit.com",
+  ].join("\n");
 }
 
 /* ------------------------------------------------------------------ */
