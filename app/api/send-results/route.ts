@@ -7,7 +7,7 @@
  * Security:
  *   - Only POST is accepted
  *   - Email address is validated
- *   - SMTP credentials are never exposed (server-side only)
+ *   - RESEND_API_KEY is never exposed (server-side only)
  *   - No data is stored — fire-and-forget delivery
  */
 
