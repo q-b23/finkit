@@ -16,18 +16,37 @@ export default function EmailResultForm({ subject, text }: EmailResultFormProps)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!email.trim()) return;
+
+    console.log("【Frontend】用户点击发送按钮", { email: email.trim(), hasSubject: !!subject, textLength: text?.length });
+
+    if (!email.trim()) {
+      console.warn("【Frontend】邮箱地址为空，取消发送");
+      return;
+    }
 
     setStatus("sending");
+    console.log("【Frontend】开始 fetch → /api/send-results");
+
     try {
       const res = await fetch("/api/send-results", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email.trim(), subject, text }),
       });
-      if (!res.ok) throw new Error("Delivery failed");
+
+      console.log("【Frontend】收到响应", { status: res.status, ok: res.ok });
+
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        console.error("【Frontend】API 返回错误", { status: res.status, body });
+        throw new Error(body.error || "Delivery failed");
+      }
+
+      const data = await res.json();
+      console.log("【Frontend】发送成功", data);
       setStatus("sent");
-    } catch {
+    } catch (err) {
+      console.error("【Frontend】fetch 失败", err);
       setStatus("error");
     }
   }
