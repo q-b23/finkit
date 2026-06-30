@@ -20,18 +20,29 @@ const AppleIcon = () => (
 export default function AuthCard() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
 
   const handleSSO = (provider: string) => {
     setLoading(provider);
-    // In production: redirect to OAuth endpoint
-    console.log(`Continue with ${provider}`);
+    setNotice(null);
+
+    // Auth backend not yet implemented — show a friendly message after a short delay
+    setTimeout(() => {
+      setLoading(null);
+      setNotice(`Sign in with ${provider} is coming soon. All FinKit tools work without an account — no sign-in required.`);
+    }, 1200);
   };
 
   const handleEmail = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading("email");
-    // In production: send magic link or redirect to password flow
-    console.log(`Continue with email: ${email}`);
+    setNotice(null);
+
+    // Magic-link / password auth not yet implemented — show a friendly message
+    setTimeout(() => {
+      setLoading(null);
+      setNotice("Email sign-in is coming soon. All FinKit tools work without an account — no sign-in required.");
+    }, 1200);
   };
 
   return (
@@ -101,6 +112,13 @@ export default function AuthCard() {
               {loading === "email" && <Spinner />}
             </button>
           </form>
+
+          {/* Notice */}
+          {notice && (
+            <p className="mt-4 rounded-lg bg-amber-50 border border-amber-100 px-4 py-3 text-sm text-amber-800 text-center leading-relaxed dark:bg-amber-950 dark:border-amber-900 dark:text-amber-200">
+              {notice}
+            </p>
+          )}
 
           {/* Privacy Notice */}
           <p className="mt-6 text-center text-xs leading-relaxed text-zinc-400 dark:text-zinc-500">
