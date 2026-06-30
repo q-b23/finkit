@@ -43,6 +43,9 @@ export interface EmailOptions {
 const FROM_ADDRESS = "FinKit <support@getfinkit.com>";
 const REPLY_TO = "support@getfinkit.com";
 
+/** Seconds before a Resend API call is considered timed out. */
+const RESEND_TIMEOUT_MS = 15_000;
+
 /* ------------------------------------------------------------------ */
 /*  Resend client factory                                             */
 /* ------------------------------------------------------------------ */
@@ -51,21 +54,56 @@ function getResend(): Resend {
   const apiKey = process.env.RESEND_API_KEY;
 
   if (!apiKey) {
-    console.error(
-      "【Resend】错误：未读取到 RESEND_API_KEY 环境变量。请在 Vercel → Settings → Environment Variables 中添加 RESEND_API_KEY。"
-    );
+    console.error("【Resend】错误：未读取到 RESEND_API_KEY。");
+    console.error("【Resend】请检查：");
+    console.error("【Resend】  - Vercel Project Settings");
+    console.error("【Resend】  - Environment Variables");
+    console.error("【Resend】  - Production 环境是否添加");
+    console.error("【Resend】  - 修改后是否重新 Deploy");
     throw new Error(
       "Resend API key not configured. Set RESEND_API_KEY environment variable."
     );
   }
 
-  // Log partial key for debugging (first 6 chars only — safe to expose)
-  const keyPreview = apiKey.length > 6
-    ? apiKey.slice(0, 3) + "…" + apiKey.slice(-3)
+  // Safe key preview: first 3 chars + ... + last 3 chars
+  const preview = apiKey.length > 6
+    ? apiKey.slice(0, 3) + "..." + apiKey.slice(-3)
     : "***";
-  console.log(`【Resend】已读取 RESEND_API_KEY（预览: ${keyPreview}）`);
+  console.log(`【Resend】API Key 已加载：${preview}`);
 
   return new Resend(apiKey);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Error diagnosis                                                   */
+/* ------------------------------------------------------------------ */
+
+function diagnoseError(err: unknown): void {
+  const msg = err instanceof Error ? err.message : String(err);
+
+  if (/domain/i.test(msg)) {
+    console.error("【Resend】诊断：域名可能未验证。请检查 Resend Domains。");
+    console.error("【Resend】  → https://resend.com/domains");
+  } else if (/401|unauthorized/i.test(msg)) {
+    console.error("【Resend】诊断：API Key 无效或权限不足。");
+  } else if (/429|rate/i.test(msg)) {
+    console.error("【Resend】诊断：可能触发 Resend 免费额度限制。");
+  } else if (/fetch|network|timeout/i.test(msg)) {
+    console.error("【Resend】诊断：可能是网络异常或 Resend 服务暂时不可用。");
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Timeout helper                                                    */
+/* ------------------------------------------------------------------ */
+
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error("Resend request timeout")), ms)
+    ),
+  ]);
 }
 
 /* ------------------------------------------------------------------ */
@@ -75,19 +113,21 @@ function getResend(): Resend {
 /**
  * Send a single email via Resend.
  *
- * @throws if RESEND_API_KEY is not configured or delivery fails
+ * @throws if RESEND_API_KEY is not configured, parameters are invalid,
+ *         the request times out, or delivery fails
  */
 export async function sendEmail(options: EmailOptions): Promise<{ id: string }> {
-  console.log("【Resend】准备发送邮件 →", {
+  // ── 1. Pre-send log ──────────────────────────────────────────────
+  console.log("【Resend】准备发送邮件", {
     to: options.to,
     subject: options.subject,
-    textLength: options.text.length,
-    hasHtml: !!options.html,
+    from: FROM_ADDRESS,
+    nodeEnv: process.env.NODE_ENV,
   });
 
-  // Validate input
+  // ── 2. Parameter validation ──────────────────────────────────────
   if (!options.to || !options.subject || !options.text) {
-    console.error("【Resend】错误：缺少必填字段", {
+    console.error("【Resend】参数错误", {
       hasTo: !!options.to,
       hasSubject: !!options.subject,
       hasText: !!options.text,
@@ -95,63 +135,55 @@ export async function sendEmail(options: EmailOptions): Promise<{ id: string }> 
     throw new Error("Missing required email fields: to, subject, text");
   }
 
+  // ── 3. Resend client init ────────────────────────────────────────
   let resend: Resend;
   try {
     resend = getResend();
   } catch (err) {
-    console.error("【Resend】客户端初始化失败:", err instanceof Error ? err.message : err);
+    // Error already logged inside getResend(); re-throw unchanged
     throw err;
   }
 
+  // ── 4. Send with timeout + full try/catch ────────────────────────
   try {
-    const result = await resend.emails.send({
-      from: FROM_ADDRESS,
-      replyTo: REPLY_TO,
-      to: options.to,
-      subject: options.subject,
-      text: options.text,
-      html: options.html,
-    });
+    const result = await withTimeout(
+      resend.emails.send({
+        from: FROM_ADDRESS,
+        replyTo: REPLY_TO,
+        to: options.to,
+        subject: options.subject,
+        text: options.text,
+        html: options.html,
+      }),
+      RESEND_TIMEOUT_MS
+    );
 
     // Resend SDK returns { data, error }
     if (result.error) {
-      console.error("【Resend 发送失败日志】:", JSON.stringify(result.error, null, 2));
+      console.error("【Resend】发送失败", result.error);
+      diagnoseError(new Error(result.error.message));
       throw new Error(`Resend delivery failed: ${result.error.message}`);
     }
 
     if (!result.data?.id) {
-      console.error("【Resend】错误：返回数据缺少 email ID", result.data);
-      throw new Error("Resend returned success but missing email ID");
+      const err = new Error("Resend returned success but missing email ID");
+      console.error("【Resend】发送失败", err);
+      throw err;
     }
 
-    console.log("【Resend】邮件发送成功 → ID:", result.data.id);
+    // ── 5. Success log ─────────────────────────────────────────────
+    console.log("【Resend】发送成功", {
+      messageId: result.data.id,
+      to: options.to,
+      subject: options.subject,
+    });
+
     return result.data as { id: string };
 
   } catch (err) {
-    // Log the full error object for Vercel Logs debugging
-    if (err instanceof Error) {
-      console.error("【Resend 发送失败日志】:", {
-        message: err.message,
-        name: err.name,
-        stack: err.stack?.split("\n").slice(0, 3).join("\n"),
-      });
-    } else {
-      console.error("【Resend 发送失败日志】:", err);
-    }
-
-    // Common Resend error patterns — provide actionable diagnostics
-    const msg = err instanceof Error ? err.message : String(err);
-    if (msg.includes("domain not verified") || msg.includes("from") && msg.includes("valid")) {
-      console.error(
-        "【Resend】诊断：域名未验证。请在 https://resend.com/domains 中验证 getfinkit.com"
-      );
-    } else if (msg.includes("api_key") || msg.includes("unauthorized") || msg.includes("401")) {
-      console.error(
-        "【Resend】诊断：API Key 无效。请检查 Vercel 中的 RESEND_API_KEY 是否正确。"
-      );
-    } else if (msg.includes("rate") || msg.includes("429")) {
-      console.error("【Resend】诊断：触发速率限制。Resend 免费计划每天 100 封。");
-    }
+    // ── 6. Error log + diagnosis ───────────────────────────────────
+    console.error("【Resend】发送失败", err);
+    diagnoseError(err);
 
     // Re-throw so the API route can return a safe user-facing message
     throw err;
