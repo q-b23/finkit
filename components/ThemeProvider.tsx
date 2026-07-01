@@ -21,30 +21,31 @@ function getInitialTheme(): Theme {
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  // Always start with "light" so the initial server + client renders match.
+  // The correct theme is applied in the useEffect below, after hydration.
   const [theme, setTheme] = useState<Theme>("light");
-  const [mounted, setMounted] = useState(false);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    setTheme(getInitialTheme());
-    setMounted(true);
+    const actual = getInitialTheme();
+    setTheme(actual);
+    setReady(true);
   }, []);
 
   useEffect(() => {
-    if (!mounted) return;
+    if (!ready) return;
     const root = document.documentElement;
     root.classList.remove("light", "dark");
     root.classList.add(theme);
     window.localStorage.setItem(STORAGE_KEY, theme);
-  }, [theme, mounted]);
+  }, [theme, ready]);
 
   const toggleTheme = useCallback(() => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
   }, []);
 
-  if (!mounted) {
-    return <>{children}</>;
-  }
-
+  // Always render the provider so useTheme() never returns a fallback
+  // during re-renders. Initial value is "light" which matches SSR.
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       {children}
@@ -54,8 +55,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
 export function useTheme(): ThemeContextValue {
   const ctx = useContext(ThemeContext);
-  // During SSR/static generation the provider wrapper is skipped (mounted=false).
-  // Return safe defaults instead of throwing so prerendering can complete.
-  if (!ctx) return { theme: "light", toggleTheme: () => {} };
+  if (!ctx) {
+    // Provider is always rendered, so this should only happen
+    // if useTheme() is called outside <ThemeProvider>.
+    return { theme: "light", toggleTheme: () => {} };
+  }
   return ctx;
 }
