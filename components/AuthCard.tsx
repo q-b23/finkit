@@ -70,6 +70,11 @@ export default function AuthCard() {
   const countdownTimer = useRef<ReturnType<typeof setInterval> | null>(null);
   const pollAttemptRef = useRef(0);
 
+  console.log("[AUTH] AuthCard mounted");
+  console.log("[AUTH] email =", email);
+  console.log("[AUTH] isEmailDisabled =", !email.trim() || (state === "sending_email" || state === "waiting_verification"));
+  console.log("[AUTH] current state =", state);
+
   /** Stop all timers and reset retry count. */
   const stopPolling = useCallback(() => {
     if (pollTimer.current) { clearInterval(pollTimer.current); pollTimer.current = null; }
@@ -167,8 +172,12 @@ export default function AuthCard() {
   /* ---------------------------------------------------------------- */
 
   const handleEmail = async (e: React.FormEvent) => {
+    console.log("[AUTH] handleEmail entered — email =", email);
     e.preventDefault();
-    if (!email.trim()) return;
+    if (!email.trim()) {
+      console.log("[AUTH] handleEmail EXIT — email is empty, returning early");
+      return;
+    }
 
     console.log("【Frontend】点击发送 → 开始登录流程", { email: email.trim() });
     setState("sending_email");
@@ -176,6 +185,7 @@ export default function AuthCard() {
 
     try {
       console.log("【Frontend】开始 fetch → POST /api/auth/login");
+      console.log("[AUTH] about to fetch /api/auth/login");
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -183,6 +193,7 @@ export default function AuthCard() {
       });
 
       const data = await res.json();
+      console.log("[AUTH] fetch returned", res.status);
       console.log("【Frontend】收到响应", { status: res.status, ok: res.ok, data });
 
       if (res.status === 202 && data.request_id) {
@@ -287,6 +298,7 @@ export default function AuthCard() {
             <button
               type="submit"
               disabled={isEmailDisabled}
+              onClick={() => console.log("[AUTH] button clicked — disabled=", isEmailDisabled, "email=", email)}
               className="flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 dark:focus:ring-zinc-300"
             >
               {state === "waiting_verification" ? (
