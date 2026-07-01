@@ -1,6 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
+
+/* ------------------------------------------------------------------ */
+/*  Icons                                                            */
+/* ------------------------------------------------------------------ */
 
 const GoogleIcon = () => (
   <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none">
@@ -17,33 +21,223 @@ const AppleIcon = () => (
   </svg>
 );
 
+/* ------------------------------------------------------------------ */
+/*  State machine types                                              */
+/* ------------------------------------------------------------------ */
+
+type AuthState =
+  | "idle"
+  | "sending_email"
+  | "email_sent"
+  | "waiting_verification"
+  | "authenticated"
+  | "error";
+
+/* ------------------------------------------------------------------ */
+/*  Constants                                                        */
+/* ------------------------------------------------------------------ */
+
+const POLL_INTERVAL_MS = 2_000;
+const TIMEOUT_MS = 30_000;
+const MAX_RETRIES = 3;
+
+/* ------------------------------------------------------------------ */
+/*  Spinner                                                          */
+/* ------------------------------------------------------------------ */
+
+function Spinner() {
+  return (
+    <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+    </svg>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Component                                                        */
+/* ------------------------------------------------------------------ */
+
 export default function AuthCard() {
   const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState<string | null>(null);
+  const [state, setState] = useState<AuthState>("idle");
   const [notice, setNotice] = useState<string | null>(null);
+  const [requestId, setRequestId] = useState<string | null>(null);
+  const [countdown, setCountdown] = useState<number>(0);
+  const retryCount = useRef(0);
+  const pollTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const timeoutTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const countdownTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const pollAttemptRef = useRef(0);
+
+  /** Stop all timers and reset retry count. */
+  const stopPolling = useCallback(() => {
+    if (pollTimer.current) { clearInterval(pollTimer.current); pollTimer.current = null; }
+    if (timeoutTimer.current) { clearTimeout(timeoutTimer.current); timeoutTimer.current = null; }
+    if (countdownTimer.current) { clearInterval(countdownTimer.current); countdownTimer.current = null; }
+    retryCount.current = 0;
+    pollAttemptRef.current = 0;
+    setCountdown(0);
+  }, []);
+
+  /** Poll /api/auth/status for verification completion. */
+  const startPolling = useCallback((id: string) => {
+    stopPolling();
+    setState("waiting_verification");
+    console.log("【Frontend】开始轮询 /api/auth/status", { requestId: id });
+
+    // Start countdown from 30s
+    setCountdown(Math.ceil(TIMEOUT_MS / 1000));
+    countdownTimer.current = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) { return 0; }
+        return prev - 1;
+      });
+    }, 1_000);
+
+    pollTimer.current = setInterval(async () => {
+      pollAttemptRef.current++;
+      const attempt = pollAttemptRef.current;
+      console.log(`【Frontend】轮询第 ${attempt} 次`, { requestId: id });
+
+      try {
+        const res = await fetch(`/api/auth/status?request_id=${id}`);
+        console.log(`【Frontend】轮询响应`, { status: res.status, ok: res.ok, attempt });
+
+        if (!res.ok) {
+          console.error("【Frontend】poll 失败", { status: res.status, attempt });
+          // Retry on server errors
+          if (retryCount.current < MAX_RETRIES) {
+            retryCount.current++;
+            const delay = Math.pow(2, retryCount.current) * 1000;
+            console.log(`【Frontend】重试 ${retryCount.current}/${MAX_RETRIES} (${delay}ms)`);
+            return;
+          }
+          stopPolling();
+          setState("error");
+          setNotice("Unable to verify login. Please try again.");
+          console.error("【Frontend】登录失败：轮询耗尽重试次数");
+          return;
+        }
+
+        const data = await res.json();
+        console.log(`【Frontend】状态数据`, { status: data.status, hasToken: !!data.token, attempt });
+
+        if (data.status === "complete") {
+          console.log("【Frontend】登录完成！停止轮询");
+          stopPolling();
+          setState("authenticated");
+          setNotice("Signed in successfully. Redirecting...");
+          // Store session token
+          if (data.token && typeof window !== "undefined") {
+            localStorage.setItem("finkit-session", data.token);
+            console.log("【Frontend】session token 已存储");
+          }
+          // Redirect after a brief pause
+          setTimeout(() => {
+            console.log("【Frontend】重定向到 /");
+            window.location.href = "/";
+          }, 1_000);
+        } else if (data.status === "failed") {
+          console.error("【Frontend】登录失败", { error: data.error });
+          stopPolling();
+          setState("error");
+          setNotice(data.error || "Login failed. Please try again.");
+        }
+        // status === "pending" → continue polling
+
+      } catch (err) {
+        console.error("【Frontend】poll 网络异常", err);
+        if (retryCount.current < MAX_RETRIES) {
+          retryCount.current++;
+          return;
+        }
+        stopPolling();
+        setState("error");
+        setNotice("Network error. Please check your connection and try again.");
+      }
+    }, POLL_INTERVAL_MS);
+
+    // Timeout fallback: 30s max
+    timeoutTimer.current = setTimeout(() => {
+      stopPolling();
+      setState("error");
+      setNotice("Email login is taking longer than expected. Please try again.");
+      console.error("【Frontend】登录超时 (30s)", { requestId: id });
+    }, TIMEOUT_MS);
+  }, [stopPolling]);
+
+  /** Cleanup timers on unmount. */
+  useEffect(() => {
+    return () => stopPolling();
+  }, [stopPolling]);
+
+  /* ---------------------------------------------------------------- */
+  /*  Handlers                                                        */
+  /* ---------------------------------------------------------------- */
 
   const handleSSO = (provider: string) => {
-    setLoading(provider);
-    setNotice(null);
-
-    // Auth backend not yet implemented — show a friendly message after a short delay
-    setTimeout(() => {
-      setLoading(null);
-      setNotice(`Sign in with ${provider} is coming soon. All FinKit tools work without an account — no sign-in required.`);
-    }, 1200);
+    setState("error");
+    setNotice(`Sign in with ${provider} is coming soon. All FinKit tools work without an account.`);
+    console.log("【Frontend】SSO 暂不可用", { provider });
   };
 
-  const handleEmail = (e: React.FormEvent) => {
+  const handleEmail = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading("email");
+    if (!email.trim()) return;
+
+    console.log("【Frontend】点击发送 → 开始登录流程", { email: email.trim() });
+    setState("sending_email");
     setNotice(null);
 
-    // Magic-link / password auth not yet implemented — show a friendly message
-    setTimeout(() => {
-      setLoading(null);
-      setNotice("Email sign-in is coming soon. All FinKit tools work without an account — no sign-in required.");
-    }, 1200);
+    try {
+      console.log("【Frontend】开始 fetch → POST /api/auth/login");
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+
+      const data = await res.json();
+      console.log("【Frontend】收到响应", { status: res.status, ok: res.ok, data });
+
+      if (res.status === 202 && data.request_id) {
+        console.log("【Frontend】202 已处理 → 进入轮询", { requestId: data.request_id });
+        setState("email_sent");
+        setRequestId(data.request_id);
+        setNotice("Check your inbox! A verification link has been sent.");
+        startPolling(data.request_id);
+      } else {
+        console.error("【Frontend】意外响应", { status: res.status, data });
+        setState("error");
+        setNotice(data.error || "Something went wrong. Please try again.");
+      }
+    } catch (err) {
+      console.error("【Frontend】登录请求失败", err);
+      setState("error");
+      setNotice("Network error. Please check your connection and try again.");
+    }
   };
+
+  const handleRetry = () => {
+    console.log("【Frontend】用户点击重试");
+    setState("idle");
+    setNotice(null);
+    setRequestId(null);
+    stopPolling();
+  };
+
+  /* ---------------------------------------------------------------- */
+  /*  Derived state                                                   */
+  /* ---------------------------------------------------------------- */
+
+  const isLoading = state === "sending_email" || state === "waiting_verification";
+  const isEmailDisabled = !email.trim() || isLoading;
+  const isButtonDisabled = isLoading;
+
+  /* ---------------------------------------------------------------- */
+  /*  Render                                                          */
+  /* ---------------------------------------------------------------- */
 
   return (
     <div className="flex items-center justify-center bg-zinc-50 px-4 dark:bg-zinc-950">
@@ -64,31 +258,29 @@ export default function AuthCard() {
           <div className="space-y-3">
             <button
               onClick={() => handleSSO("Google")}
-              disabled={loading !== null}
+              disabled={isButtonDisabled}
               className="flex w-full items-center justify-center gap-3 rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 shadow-sm transition-all hover:border-zinc-400 hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:border-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-300"
             >
               <GoogleIcon />
               <span>Continue with Google</span>
-              {loading === "Google" && <Spinner />}
+              {isButtonDisabled && <Spinner />}
             </button>
 
             <button
               onClick={() => handleSSO("Apple")}
-              disabled={loading !== null}
+              disabled={isButtonDisabled}
               className="flex w-full items-center justify-center gap-3 rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 shadow-sm transition-all hover:border-zinc-400 hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:border-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-300"
             >
               <AppleIcon />
               <span>Continue with Apple</span>
-              {loading === "Apple" && <Spinner />}
+              {isButtonDisabled && <Spinner />}
             </button>
           </div>
 
           {/* Divider */}
           <div className="my-6 flex items-center gap-3">
             <div className="h-px flex-1 bg-zinc-200 dark:bg-zinc-700" />
-            <span className="text-xs font-medium uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
-              or
-            </span>
+            <span className="text-xs font-medium uppercase tracking-wider text-zinc-400 dark:text-zinc-500">or</span>
             <div className="h-px flex-1 bg-zinc-200 dark:bg-zinc-700" />
           </div>
 
@@ -100,24 +292,39 @@ export default function AuthCard() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="name@example.com"
               required
-              className="block w-full rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 shadow-sm transition-all focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500 dark:focus:border-zinc-300 dark:focus:ring-zinc-300"
+              disabled={isLoading}
+              className="block w-full rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 shadow-sm transition-all focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500 dark:focus:border-zinc-300 dark:focus:ring-zinc-300"
             />
 
             <button
               type="submit"
-              disabled={!email || loading !== null}
+              disabled={isEmailDisabled}
               className="flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 dark:focus:ring-zinc-300"
             >
-              <span>Continue with email</span>
-              {loading === "email" && <Spinner />}
+              {state === "waiting_verification" ? (
+                <>{countdown > 0 ? `Verifying (${countdown}s)` : "Verifying"} <Spinner /></>
+              ) : state === "sending_email" ? (
+                <>Sending <Spinner /></>
+              ) : (
+                <span>Continue with email</span>
+              )}
             </button>
           </form>
 
-          {/* Notice */}
+          {/* Notice / State Feedback */}
           {notice && (
-            <p className="mt-4 rounded-lg bg-amber-50 border border-amber-100 px-4 py-3 text-sm text-amber-800 text-center leading-relaxed dark:bg-amber-950 dark:border-amber-900 dark:text-amber-200">
+            <div className={`mt-4 rounded-lg border px-4 py-3 text-sm text-center leading-relaxed ${
+              state === "authenticated" ? "bg-emerald-50 border-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:border-emerald-900 dark:text-emerald-200" :
+              state === "error" ? "bg-red-50 border-red-100 text-red-800 dark:bg-red-950 dark:border-red-900 dark:text-red-200" :
+              "bg-amber-50 border-amber-100 text-amber-800 dark:bg-amber-950 dark:border-amber-900 dark:text-amber-200"
+            }`}>
               {notice}
-            </p>
+              {state === "error" && (
+                <button onClick={handleRetry} className="block mx-auto mt-2 text-xs font-medium underline underline-offset-2 hover:opacity-80">
+                  Try again
+                </button>
+              )}
+            </div>
           )}
 
           {/* Privacy Notice */}
@@ -130,40 +337,12 @@ export default function AuthCard() {
         {/* Footer */}
         <p className="mt-6 text-center text-xs text-zinc-400 dark:text-zinc-500">
           By continuing, you agree to FinKit&rsquo;s{" "}
-          <a href="/terms" className="underline underline-offset-2 hover:text-zinc-600 dark:hover:text-zinc-300">
-            Terms of Service
-          </a>{" "}
+          <a href="/terms" className="underline underline-offset-2 hover:text-zinc-600 dark:hover:text-zinc-300">Terms of Service</a>{" "}
           and{" "}
-          <a href="/privacy" className="underline underline-offset-2 hover:text-zinc-600 dark:hover:text-zinc-300">
-            Privacy Policy
-          </a>
+          <a href="/privacy" className="underline underline-offset-2 hover:text-zinc-600 dark:hover:text-zinc-300">Privacy Policy</a>
           .
         </p>
       </div>
     </div>
-  );
-}
-
-function Spinner() {
-  return (
-    <svg
-      className="h-4 w-4 animate-spin"
-      viewBox="0 0 24 24"
-      fill="none"
-    >
-      <circle
-        className="opacity-25"
-        cx="12"
-        cy="12"
-        r="10"
-        stroke="currentColor"
-        strokeWidth="4"
-      />
-      <path
-        className="opacity-75"
-        fill="currentColor"
-        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-      />
-    </svg>
   );
 }
