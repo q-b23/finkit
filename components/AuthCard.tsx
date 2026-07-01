@@ -298,7 +298,9 @@ export default function AuthCard() {
             <button
               type="submit"
               disabled={isEmailDisabled}
-              onClick={() => console.log("[AUTH] button clicked — disabled=", isEmailDisabled, "email=", email)}
+              onPointerDown={() => console.log("[AUTH] pointer down")
+              } onMouseDown={() => console.log("[AUTH] mouse down")
+              } onClick={() => console.log("[AUTH] button clicked — disabled=", isEmailDisabled, "email=", email)}
               className="flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 dark:focus:ring-zinc-300"
             >
               {state === "waiting_verification" ? (
