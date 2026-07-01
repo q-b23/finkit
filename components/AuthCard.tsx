@@ -131,6 +131,22 @@ export default function AuthCard() {
           if (data.token && typeof window !== "undefined") {
             localStorage.setItem("finkit-session", data.token);
             console.log("【Frontend】session token 已存储");
+
+            /* ── Welcome email: send once on first login ── */
+            const WELCOME_KEY = "finkit_welcome_email_sent";
+            if (!localStorage.getItem(WELCOME_KEY)) {
+              console.log("[WELCOME] first login detected — sending");
+              fetch("/api/auth/welcome", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: email }),
+              }).then((r) => {
+                console.log("[WELCOME] response", r.status);
+                if (r.ok) localStorage.setItem(WELCOME_KEY, "1");
+              }).catch((e) => console.error("[WELCOME] failed", e));
+            } else {
+              console.log("[WELCOME] already sent, skipping");
+            }
           }
           setTimeout(() => {
             console.log("【Frontend】重定向到 /");
