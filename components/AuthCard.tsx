@@ -86,13 +86,9 @@ export default function AuthCard() {
     setState("waiting_verification");
     console.log("【Frontend】开始轮询 /api/auth/status", { requestId: id });
 
-    // Start countdown from 30s
     setCountdown(Math.ceil(TIMEOUT_MS / 1000));
     countdownTimer.current = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) { return 0; }
-        return prev - 1;
-      });
+      setCountdown((prev) => (prev <= 1 ? 0 : prev - 1));
     }, 1_000);
 
     pollTimer.current = setInterval(async () => {
@@ -106,7 +102,6 @@ export default function AuthCard() {
 
         if (!res.ok) {
           console.error("【Frontend】poll 失败", { status: res.status, attempt });
-          // Retry on server errors
           if (retryCount.current < MAX_RETRIES) {
             retryCount.current++;
             const delay = Math.pow(2, retryCount.current) * 1000;
@@ -128,12 +123,10 @@ export default function AuthCard() {
           stopPolling();
           setState("authenticated");
           setNotice("Signed in successfully. Redirecting...");
-          // Store session token
           if (data.token && typeof window !== "undefined") {
             localStorage.setItem("finkit-session", data.token);
             console.log("【Frontend】session token 已存储");
           }
-          // Redirect after a brief pause
           setTimeout(() => {
             console.log("【Frontend】重定向到 /");
             window.location.href = "/";
@@ -144,8 +137,6 @@ export default function AuthCard() {
           setState("error");
           setNotice(data.error || "Login failed. Please try again.");
         }
-        // status === "pending" → continue polling
-
       } catch (err) {
         console.error("【Frontend】poll 网络异常", err);
         if (retryCount.current < MAX_RETRIES) {
@@ -158,7 +149,6 @@ export default function AuthCard() {
       }
     }, POLL_INTERVAL_MS);
 
-    // Timeout fallback: 30s max
     timeoutTimer.current = setTimeout(() => {
       stopPolling();
       setState("error");
@@ -175,12 +165,6 @@ export default function AuthCard() {
   /* ---------------------------------------------------------------- */
   /*  Handlers                                                        */
   /* ---------------------------------------------------------------- */
-
-  const handleSSO = (provider: string) => {
-    setState("error");
-    setNotice(`Sign in with ${provider} is coming soon. All FinKit tools work without an account.`);
-    console.log("【Frontend】SSO 暂不可用", { provider });
-  };
 
   const handleEmail = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -233,7 +217,6 @@ export default function AuthCard() {
 
   const isLoading = state === "sending_email" || state === "waiting_verification";
   const isEmailDisabled = !email.trim() || isLoading;
-  const isButtonDisabled = isLoading;
 
   /* ---------------------------------------------------------------- */
   /*  Render                                                          */
@@ -254,26 +237,30 @@ export default function AuthCard() {
             </p>
           </div>
 
-          {/* SSO Buttons */}
+          {/* SSO Buttons — intentionally disabled, coming soon */}
           <div className="space-y-3">
             <button
-              onClick={() => handleSSO("Google")}
-              disabled={isButtonDisabled}
-              className="flex w-full items-center justify-center gap-3 rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 shadow-sm transition-all hover:border-zinc-400 hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:border-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-300"
+              disabled
+              aria-disabled="true"
+              className="flex w-full items-center justify-center gap-3 rounded-lg border border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm font-medium text-zinc-400 cursor-not-allowed dark:border-zinc-800 dark:bg-zinc-800/50 dark:text-zinc-500"
             >
               <GoogleIcon />
               <span>Continue with Google</span>
-              {isButtonDisabled && <Spinner />}
+              <span className="ml-auto rounded-full bg-zinc-200 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-zinc-500 dark:bg-zinc-700 dark:text-zinc-400">
+                Soon
+              </span>
             </button>
 
             <button
-              onClick={() => handleSSO("Apple")}
-              disabled={isButtonDisabled}
-              className="flex w-full items-center justify-center gap-3 rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 shadow-sm transition-all hover:border-zinc-400 hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:border-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-300"
+              disabled
+              aria-disabled="true"
+              className="flex w-full items-center justify-center gap-3 rounded-lg border border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm font-medium text-zinc-400 cursor-not-allowed dark:border-zinc-800 dark:bg-zinc-800/50 dark:text-zinc-500"
             >
               <AppleIcon />
               <span>Continue with Apple</span>
-              {isButtonDisabled && <Spinner />}
+              <span className="ml-auto rounded-full bg-zinc-200 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-zinc-500 dark:bg-zinc-700 dark:text-zinc-400">
+                Soon
+              </span>
             </button>
           </div>
 
@@ -293,6 +280,7 @@ export default function AuthCard() {
               placeholder="name@example.com"
               required
               disabled={isLoading}
+              autoComplete="email"
               className="block w-full rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 shadow-sm transition-all focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500 dark:focus:border-zinc-300 dark:focus:ring-zinc-300"
             />
 
@@ -309,6 +297,13 @@ export default function AuthCard() {
                 <span>Continue with email</span>
               )}
             </button>
+
+            {/* Hint when email field is empty */}
+            {!email.trim() && (
+              <p className="text-center text-[11px] text-zinc-400">
+                Enter your email above to continue
+              </p>
+            )}
           </form>
 
           {/* Notice / State Feedback */}
